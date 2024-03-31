@@ -1,7 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Chess By Neel",
+  title: "Chess",
   description: "Complete Chess Game and engine made by Neel",
 };
 
