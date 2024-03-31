@@ -2,8 +2,9 @@ import React from "react";
 import { getSquareColor } from "@/app/utils/getSquareColor";
 import getTextColor from "@/app/utils/getTextColor";
 import numToLetter from "@/app/utils/numToletter";
+import Piece from "../../Piece/Piece";
 
-const Square = ({ rank, file, position, showFile, showRank }) => {
+const Square = ({ children, rank, file, position, showFile, showRank }) => {
   const squareColor = `bg-${getSquareColor(rank, file)}`;
   const textColor = `text-${getTextColor(squareColor)}`;
   return (
@@ -18,7 +19,7 @@ const Square = ({ rank, file, position, showFile, showRank }) => {
       {showRank && (
         <div className={`absolute left-2 top-1 ${textColor}`}>{rank}</div>
       )}
-      <div className="flex h-full w-full items-center justify-center"></div>
+      {children}
     </div>
   );
 };
