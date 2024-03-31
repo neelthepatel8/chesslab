@@ -11,13 +11,16 @@ module.exports = {
     "bg-squarewhite",
     "text-squareblack",
     "text-squarewhite",
+    "bg-squarewhite-selected",
+    "bg-squareblack-selected",
   ],
   theme: {
     extend: {
       colors: {
+        "squareblack-selected": "#baca44",
         squareblack: "#769656",
         squarewhite: "#eeeed2",
-        lightgreen: "#baca44",
+        "squarewhite-selected": "#FFFF8A",
         primary: "#ffffff",
         secondary: "#000000",
       },

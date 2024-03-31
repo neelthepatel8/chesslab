@@ -2,14 +2,26 @@ import React from "react";
 import { getSquareColor } from "@/app/utils/getSquareColor";
 import getTextColor from "@/app/utils/getTextColor";
 import numToLetter from "@/app/utils/numToletter";
-import Piece from "../../Piece/Piece";
 
-const Square = ({ children, rank, file, position, showFile, showRank }) => {
-  const squareColor = `bg-${getSquareColor(rank, file)}`;
+const Square = ({
+  children,
+  rank,
+  file,
+  position,
+  showFile,
+  showRank,
+  isSelected,
+  handleSquareClick,
+  pieceColor,
+}) => {
+  const squareColor = `bg-${getSquareColor(rank, file, isSelected)}`;
   const textColor = `text-${getTextColor(squareColor)}`;
+  const pointerStyle = children ? "cursor-pointer" : "";
+
   return (
     <div
-      className={`relative h-[6.5rem] w-[6.5rem] text-lg font-bold ${squareColor}`}
+      onClick={() => handleSquareClick(rank, file, children, pieceColor)}
+      className={`relative h-[6.5rem] w-[6.5rem]  pt-1 text-lg font-bold ${pointerStyle} ${squareColor}`}
     >
       {showFile && (
         <div className={`absolute bottom-0 right-2 ${textColor}`}>

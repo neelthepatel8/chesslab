@@ -6,13 +6,17 @@ const Piece = ({ type, color, position }) => {
   const pieceImage = pieceImages[`${color}_${type}`];
 
   return (
-    <Image
-      priority
-      width={100}
-      height={100}
-      src={pieceImage}
-      alt={`${color}-${type}`}
-    />
+    <>
+      {pieceImage && (
+        <Image
+          priority
+          width={100}
+          height={100}
+          src={pieceImage}
+          alt={`${color}-${type}`}
+        />
+      )}
+    </>
   );
 };
 

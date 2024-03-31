@@ -10,5 +10,12 @@ export const FILE = {
 
 export const SQUARE_COLOR = {
   BLACK: "squareblack",
+  SELECTED_BLACK: "squareblack-selected",
   WHITE: "squarewhite",
+  SELECTED_WHITE: "squarewhite-selected",
+};
+
+export const PIECE_COLOR = {
+  BLACK: "black",
+  WHITE: "white",
 };
