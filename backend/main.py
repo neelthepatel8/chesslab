@@ -43,9 +43,45 @@ async def possible_moves(websocket, message):
     }
     await websocket.send_text(json.dumps(response))
 
+
+async def make_move(websocket, message):
+    global board
+
+    if "data" not in message: await websocket.send_text(json.dumps(RESPONSE_ERROR_DATA))
+    if "from_position" not in message["data"]: await websocket.send_text(json.dumps(RESPONSE_ERROR_POSITION))
+    if "to_position" not in message["data"]: await websocket.send_text(json.dumps(RESPONSE_ERROR_POSITION))
+
+    from_pos = message['data']['from_position']
+    to_pos = message['data']['to_position']
+
+    result = board.move_piece(from_pos, to_pos)
+
+    if result < 0:
+        response = {
+            'type': 'move_piece',
+            'data': None,
+            'error': result,
+        }
+
+    else:
+        response = {
+            'type': 'move_piece',
+            'data': {
+                'fen': board.make_fen()
+            },
+            'error': None,
+        }
+
+    print("sending over: ", response)
+    await websocket.send_text(json.dumps(response))
+
+
+
+
 message_handlers = {
     'init': init_board,
-    'poss_moves': possible_moves
+    'poss_moves': possible_moves,
+    'move_piece': make_move,
 }
 
 @app.websocket("/ws")

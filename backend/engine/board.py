@@ -10,6 +10,10 @@ class Board(ABC):
         super().__init__()
         self.fen = fen
         self.board = fen_utils.build_board_from_fen(fen)
+        self.dead_pieces = {
+            'black': [],
+            'white': []
+        }
 
     def make_fen(self):
         active = 'b'
@@ -29,7 +33,9 @@ class Board(ABC):
 
         placements = fen_utils.make_compact(fen)
         all_fen = [placements, active, castling, en_passant, halfmove, full_move]
-        return ' '.join(all_fen)
+        self.fen = ' '.join(all_fen)
+
+        return self.fen
 
     def get_piece(self, piece_coords):
         rank, file = fen_utils.algebraic_to_coords(piece_coords)
@@ -37,54 +43,86 @@ class Board(ABC):
 
     def get_possible_moves(self, piece_coords):
         rank, file = fen_utils.algebraic_to_coords(piece_coords)
-        piece = self.board[rank - 1][file - 1]
+        if not (1 <= rank <= 8 and 1 <= file <= 8):
+            return None
 
+        piece = self.board[rank - 1][file - 1]
         if not piece:
             return None
 
         all_paths = piece.get_possible_paths()
-
         valid_moves = []
+
         for path in all_paths:
             valid_path = []
             for r, f in path:
+                if not (1 <= r <= 8 and 1 <= f <= 8):
+                    break
+
                 piece_at_pos = self.board[r - 1][f - 1]
-
-
                 if piece_at_pos:
-
                     if piece_at_pos.get_color() == piece.get_color():
                         break
-
                     else:
-                        if isinstance(piece, Pawn):
+                        if isinstance(piece, Pawn) and abs(piece.file - f) == 1:
                             if piece.can_move((r, f), is_capture=True):
                                 valid_path.append((r, f))
-
-                        elif piece.can_kill((r, f)):
-                            valid_path.append((r, f))
-                            break
-
-
-                else: valid_path.append((r, f))
-                print("\tValid Path: ", [fen_utils.coords_to_algebraic(r, f) for r, f in valid_path])
-
+                        elif not isinstance(piece, Pawn) or (isinstance(piece, Pawn) and abs(piece.file - f) == 1):
+                            if piece.can_kill((r, f)):
+                                valid_path.append((r, f))
+                                break
+                else:
+                    if not isinstance(piece, Pawn) or (isinstance(piece, Pawn) and piece.file == f):
+                        valid_path.append((r, f))
 
             valid_moves.extend(valid_path)
 
         if isinstance(piece, Pawn):
-            valid_diagonal_moves = []
+            final_valid_moves = []
             for move in valid_moves:
                 r, f = move
-                file_difference = abs(piece.file - f)
-                rank_difference = abs(piece.rank - r)
-                if file_difference == 1 and rank_difference == 1:
-                    piece_at_target = self.board[r - 1][f - 1]
-                    if piece_at_target and piece_at_target.get_color() != piece.get_color():
-                        valid_diagonal_moves.append(move)
-                else:
-                    valid_diagonal_moves.append(move)
-            valid_moves = valid_diagonal_moves
-
+                piece_at_target = self.board[r - 1][f - 1] if 1 <= r <= 8 and 1 <= f <= 8 else None
+                if abs(piece.file - f) == 1 and piece_at_target and piece_at_target.get_color() != piece.get_color():
+                    final_valid_moves.append(move)
+                elif abs(piece.file - f) == 0 and not piece_at_target:
+                    final_valid_moves.append(move)
+            valid_moves = final_valid_moves
 
         return valid_moves
+
+
+
+    def move_piece(self, from_pos, to_pos):
+        if not from_pos or not to_pos: return ERROR_NO_POSITIONS_PROVIDED
+
+        from_pos = fen_utils.algebraic_to_coords(from_pos)
+        to_pos = fen_utils.algebraic_to_coords(to_pos)
+
+        from_rank, from_file = from_pos
+        to_rank, to_file = to_pos
+
+        piece = self.board[from_rank - 1][from_file - 1]
+
+        if not piece: return ERROR_NO_PIECE_TO_MOVE
+
+        possible_moves = self.get_possible_moves(fen_utils.coords_to_algebraic(from_rank, from_file))
+        if to_pos not in possible_moves: return ERROR_MOVE_NOT_POSSIBLE
+
+        piece_at_pos = self.board[to_rank - 1][to_file - 1]
+
+        if not piece_at_pos:
+            self.board[from_rank - 1][from_file - 1] = None
+            self.board[to_rank - 1][to_file - 1] = piece
+            piece.update_position(to_rank, to_file)
+            self.fen = self.make_fen()
+            print("Updated board: ", self.fen)
+            return SUCCESS_MOVE_MADE_NO_KILL
+
+        self.dead_pieces[piece_at_pos.get_color()].append(piece_at_pos)
+        self.board[from_rank - 1][from_file - 1] = None
+        self.board[to_rank - 1][to_file - 1] = piece
+        piece.update_position(to_rank, to_file)
+        self.fen = self.make_fen()
+        print("Updated board: ", self.fen)
+
+        return SUCCESS_MOVE_MADE_WITH_KILL

@@ -35,14 +35,18 @@ const Board = ({ playerColor = PIECE_COLOR.WHITE }) => {
     if (latestMessage) {
       if (
         latestMessage.type === WEBSOCKET.TYPES.UPDATE ||
-        latestMessage.type === WEBSOCKET.TYPES.INIT
+        latestMessage.type === WEBSOCKET.TYPES.INIT ||
+        latestMessage.type === WEBSOCKET.TYPES.MAKE_MOVE
       ) {
+        console.log("recieved message: ", latestMessage);
+        if (latestMessage.error) return;
         const newFen = latestMessage.data?.fen;
         setCurrentFen(newFen);
         setCurrentPlayer(fen.getCurrentPlayer(newFen));
+        setPossibleMoves([]);
+        setSelectedSquare([]);
       } else if (latestMessage.type === WEBSOCKET.TYPES.POSSIBLE_MOVES) {
         const possibleMoves = latestMessage.data?.possible_moves;
-        console.log(latestMessage);
         setPossibleMoves(possibleMoves);
         console.log("Recieved Possible Moves: ", possibleMoves);
       }
@@ -60,27 +64,46 @@ const Board = ({ playerColor = PIECE_COLOR.WHITE }) => {
     sendMessage(message);
   };
 
+  const wsMovePiece = (from_pos, to_pos) => {
+    const message = {
+      type: WEBSOCKET.TYPES.MAKE_MOVE,
+      data: {
+        from_position: coordsToAlgebraic(from_pos[0], from_pos[1]),
+        to_position: coordsToAlgebraic(to_pos[0], to_pos[1]),
+      },
+    };
+    console.log("Sending message", message);
+    sendMessage(message);
+  };
+
   const handleSquareClick = (rank, file, hasPiece, pieceColor) => {
     if (hasPiece) {
-      setSelectedSquare([rank, file]);
-      wsShowPossibleMoves(rank, file);
-    } else {
+      if (selectedSquare.length > 0)
+        console.log(
+          fen.getSquarePieceColor(
+            currentFen,
+            selectedSquare[0],
+            selectedSquare[1],
+          ),
+        );
       if (selectedSquare[0] === rank && selectedSquare[1] === file) {
         setSelectedSquare([]);
         setPossibleMoves([]);
+      } else if (
+        selectedSquare.length > 0 &&
+        fen.getSquarePieceColor(
+          currentFen,
+          selectedSquare[0],
+          selectedSquare[1],
+        ) != pieceColor
+      ) {
+        wsMovePiece(selectedSquare, [rank, file]);
       } else {
-        if (!hasPiece) {
-          // const newFen = fen.movePiece(currentFen, selectedSquare, [
-          //   rank,
-          //   file,
-          // ]);
-          // setCurrentFen(newFen);
-          // setCurrentPlayer((old) =>
-          //   old == PIECE_COLOR.WHITE ? PIECE_COLOR.BLACK : PIECE_COLOR.WHITE,
-          // );
-          setSelectedSquare([]);
-        }
+        setSelectedSquare([rank, file]);
+        wsShowPossibleMoves(rank, file);
       }
+    } else {
+      if (selectedSquare.length > 0) wsMovePiece(selectedSquare, [rank, file]);
     }
   };
 

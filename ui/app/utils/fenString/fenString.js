@@ -29,8 +29,17 @@ export const getPieceType = (piece) => {
     b: "bishop",
   };
 
-  if (!piece) return console.log(piece);
+  if (!piece) return;
   return pieces[piece.toLowerCase()];
+};
+
+export const getSquarePieceColor = (fen, rank, file) => {
+  const [placement, turn, ...a] = fen.split(" ");
+  let rows = placement.split("/");
+  rows = rows.map((row) => makeComplete(row));
+  if (rows[8 - rank][file - 1].toLowerCase() == rows[8 - rank][file - 1])
+    return PIECE_COLOR.BLACK;
+  else return PIECE_COLOR.WHITE;
 };
 
 export const getPieceColor = (piece) =>

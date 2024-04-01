@@ -40,3 +40,7 @@ class Piece():
 
     def get_color(self):
         return self.color
+    
+    def update_position(self, rank, file):
+        self.rank = rank
+        self.file = file

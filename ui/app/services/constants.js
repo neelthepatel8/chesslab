@@ -3,5 +3,6 @@ export const WEBSOCKET = {
     INIT: "init",
     UPDATE: "update",
     POSSIBLE_MOVES: "poss_moves",
+    MAKE_MOVE: "move_piece",
   },
 };
