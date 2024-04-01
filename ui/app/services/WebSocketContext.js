@@ -1,3 +1,4 @@
+"use client";
 import React, { createContext, useState, useEffect, useContext } from "react";
 
 const WebSocketContext = createContext(null);
@@ -7,12 +8,13 @@ export const useWebSocket = () => useContext(WebSocketContext);
 export const WebSocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    const ws = new WebSocket("ws://your-backend-server.com");
+    const ws = new WebSocket(process.env.NEXT_PUBLIC_WEBSOCKET_URL);
 
     ws.onopen = () => {
-      console.log("WebSocket Connected");
+      setIsConnected(true);
     };
 
     ws.onmessage = (event) => {
@@ -21,7 +23,7 @@ export const WebSocketProvider = ({ children }) => {
     };
 
     ws.onclose = () => {
-      console.log("WebSocket Disconnected");
+      setIsConnected(false);
     };
 
     setSocket(ws);
@@ -40,6 +42,7 @@ export const WebSocketProvider = ({ children }) => {
   const contextValue = {
     sendMessage,
     messages,
+    isConnected,
   };
 
   return (

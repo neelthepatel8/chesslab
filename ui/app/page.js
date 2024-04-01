@@ -1,5 +1,5 @@
 import Board from "./components/Board/Board";
-import { WebSocketProvider } from "./contexts/WebSocketContext";
+import { WebSocketProvider } from "./services/WebSocketContext";
 
 export default function Home() {
   return (
