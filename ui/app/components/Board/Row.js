@@ -6,7 +6,13 @@ import * as fen from "@/app/utils/fenString/fenString";
 import Piece from "../Piece/Piece";
 
 const squares = [1, 2, 3, 4, 5, 6, 7, 8];
-const Row = ({ index, rowFenString, selectedSquare, handleSquareClick }) => {
+const Row = ({
+  index,
+  rowFenString,
+  selectedSquare,
+  handleSquareClick,
+  possibleMoves,
+}) => {
   const completeRowFen = fen.makeComplete(rowFenString);
   return (
     <div className="flex flex-row">
@@ -18,7 +24,11 @@ const Row = ({ index, rowFenString, selectedSquare, handleSquareClick }) => {
           showRank={square == FILE.MIN}
           showFile={index == RANK.MIN}
           position={coordsToAlgebraic(index, square)}
-          isSelected={selectedSquare[0] == index && selectedSquare[1] == square}
+          isSelected={
+            (selectedSquare[0] == index && selectedSquare[1] == square) ||
+            (possibleMoves.includes([coordsToAlgebraic(index, square)]) &&
+              console.log([coordsToAlgebraic(index, square)]))
+          }
           handleSquareClick={handleSquareClick}
           pieceColor={fen.getPieceColor(completeRowFen[square - 1])}
         >

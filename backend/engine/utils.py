@@ -1,4 +1,4 @@
-from constants import *
+from engine.constants import *
 
 def visualize_possible_moves(possible_moves, piece_position, piece_name):
     if possible_moves == None: return

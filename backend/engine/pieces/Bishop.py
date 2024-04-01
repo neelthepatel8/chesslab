@@ -1,5 +1,5 @@
-from piece import Piece
-from constants import *
+from engine.piece import Piece
+from engine.constants import *
 
 class Bishop(Piece):
     def __init__(self, rank, file, color) -> None:

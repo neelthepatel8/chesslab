@@ -1,0 +1,12 @@
+setup.py
+chess_engine.egg-info/PKG-INFO
+chess_engine.egg-info/SOURCES.txt
+chess_engine.egg-info/dependency_links.txt
+chess_engine.egg-info/top_level.txt
+pieces/Bishop.py
+pieces/King.py
+pieces/Knight.py
+pieces/Pawn.py
+pieces/Queen.py
+pieces/Rook.py
+pieces/__init__.py

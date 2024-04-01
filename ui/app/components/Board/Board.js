@@ -5,6 +5,7 @@ import * as fen from "@/app/utils/fenString/fenString";
 import { PIECE_COLOR } from "@/app/constants/constants";
 import { useWebSocket } from "@/app/services/WebSocketContext";
 import { WEBSOCKET } from "@/app/services/constants";
+import coordsToAlgebraic from "@/app/utils/coordsToAlgebraic";
 
 const rows = [1, 2, 3, 4, 5, 6, 7, 8].reverse();
 
@@ -22,6 +23,8 @@ const Board = ({ playerColor = PIECE_COLOR.WHITE }) => {
   const [currentPlayer, setCurrentPlayer] = useState(
     fen.getCurrentPlayer(currentFen),
   );
+
+  const [possibleMoves, setPossibleMoves] = useState([]);
 
   useEffect(() => {
     if (isConnected) {
@@ -42,30 +45,48 @@ const Board = ({ playerColor = PIECE_COLOR.WHITE }) => {
         const newFen = latestMessage.data?.fen;
         setCurrentFen(newFen);
         setCurrentPlayer(fen.getCurrentPlayer(newFen));
+      } else if (latestMessage.type === WEBSOCKET.TYPES.POSSIBLE_MOVES) {
+        const possibleMoves = latestMessage.data?.possible_moves;
+        console.log(latestMessage);
+        setPossibleMoves(possibleMoves);
+        console.log("Recieved Possible Moves: ", possibleMoves);
       }
     }
   }, [messages]);
 
+  const wsShowPossibleMoves = (rank, file) => {
+    const message = {
+      type: WEBSOCKET.TYPES.POSSIBLE_MOVES,
+      data: {
+        position: coordsToAlgebraic(rank, file),
+      },
+    };
+    console.log("Sending message", message);
+    sendMessage(message);
+  };
+
   const handleSquareClick = (rank, file, hasPiece, pieceColor) => {
-    sendMessage({ data: "hello world!" });
     // if (currentPlayer !== playerColor) return;
+
     if (selectedSquare.length === 0) {
-      if (hasPiece && pieceColor == currentPlayer)
+      // && pieceColor == currentPlayer
+      if (hasPiece) {
         setSelectedSquare([rank, file]);
+        wsShowPossibleMoves(rank, file);
+      }
     } else {
       if (selectedSquare[0] === rank && selectedSquare[1] === file) {
         setSelectedSquare([]);
       } else {
         if (!hasPiece) {
-          const newFen = fen.movePiece(currentFen, selectedSquare, [
-            rank,
-            file,
-          ]);
-
-          setCurrentFen(newFen);
-          setCurrentPlayer((old) =>
-            old == PIECE_COLOR.WHITE ? PIECE_COLOR.BLACK : PIECE_COLOR.WHITE,
-          );
+          // const newFen = fen.movePiece(currentFen, selectedSquare, [
+          //   rank,
+          //   file,
+          // ]);
+          // setCurrentFen(newFen);
+          // setCurrentPlayer((old) =>
+          //   old == PIECE_COLOR.WHITE ? PIECE_COLOR.BLACK : PIECE_COLOR.WHITE,
+          // );
           setSelectedSquare([]);
         }
       }
@@ -76,6 +97,7 @@ const Board = ({ playerColor = PIECE_COLOR.WHITE }) => {
     <div className="flex flex-col">
       {rows.map((row) => (
         <Row
+          possibleMoves={possibleMoves}
           selectedSquare={selectedSquare}
           handleSquareClick={handleSquareClick}
           rowFenString={fen.getRow(currentFen, row)}

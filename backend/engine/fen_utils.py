@@ -1,14 +1,9 @@
-from constants import *
-from piece import Piece
-from pieces import *
+from engine.constants import *
+from engine.piece import Piece
+from engine.pieces import *
 
 def build_board_from_fen(fen):
     board = [[None for _ in range(MAX_COLS)] for _ in range(MAX_ROWS)]
-
-    placements, active_color, castling, en_passant, halfmove, fullmove = fen.split(' ')
-
-    rows = placements.split('/')
-
     complete_fen = make_complete(fen)
     for rank in range(MAX_ROWS):
         for file in range(MAX_COLS):
@@ -82,3 +77,27 @@ def algebraic_to_coords(algebraic_notation):
     file_number = file_to_num[file_letter]
 
     return (rank_number, file_number)
+
+def coords_to_algebraic(rank, file):
+    num2letter = {
+        1: "a",
+        2: "b",
+        3: "c",
+        4: "d",
+        5: "e",
+        6: "f",
+        7: "g",
+        8: "h",
+    }
+    new_file = num2letter[file]
+    return f"{new_file}{8 + 1 - rank}"
+
+
+def convert_coords_to_chess_notation(possible_moves):
+    converted_moves = []
+
+    for move in possible_moves:
+        rank, file = move
+        converted_moves.append(coords_to_algebraic(rank, file))
+
+    return converted_moves

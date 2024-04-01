@@ -1,7 +1,7 @@
 from abc import ABC
-from constants import *
-import fen_utils
-from piece import Piece
+from engine.constants import *
+import engine.fen_utils as fen_utils
+from engine.piece import Piece
 
 class Board(ABC):
     def __init__(self, fen=START_FEN) -> None:
@@ -29,6 +29,10 @@ class Board(ABC):
         all_fen = [placements, active, castling, en_passant, halfmove, full_move]
         return ' '.join(all_fen)
 
+    def get_piece(self, piece_coords):
+        rank, file = fen_utils.algebraic_to_coords(piece_coords)
+        return self.board[rank - 1][file - 1]
+    
     def get_possible_moves(self, piece_coords):
         rank, file = fen_utils.algebraic_to_coords(piece_coords)
         piece = self.board[rank - 1][file - 1]
@@ -37,6 +41,8 @@ class Board(ABC):
             return None
 
         all_paths = piece.get_possible_paths()
+        print(all_paths)
+        print("All paths: ", [[fen_utils.coords_to_algebraic(r, f) for r, f in path] for path in all_paths], " for: ", piece_coords)
 
         valid_moves = []
         for path in all_paths:

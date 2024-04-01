@@ -4,7 +4,7 @@ export const getRow = (fen, row) => {
   const splitString = fen.split(" ");
   const rows = splitString[0].split("/");
 
-  return rows[row - 1];
+  return rows[8 - row];
 };
 
 export const makeComplete = (fenRow) => {

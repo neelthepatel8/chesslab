@@ -1,5 +1,5 @@
-from piece import Piece
-from constants import *
+from engine.piece import Piece
+from engine.constants import *
 
 class Pawn(Piece):
     def __init__(self, rank, file, color):
@@ -30,19 +30,21 @@ class Pawn(Piece):
     def can_kill(self, to_pos):
         return self.can_move(to_pos, is_capture=True)
 
-    def get_possible_paths(self):
+    def get_possible_paths(self, capture_moves=False):
         paths = []
-        direction = 1 if self.color == COLOR["WHITE"] else -1
-        start_rank = 2 if self.color == COLOR["WHITE"] else 7
+        direction = -1 if self.color == COLOR["WHITE"] else 1
+        start_rank = PAWN_START["WHITE"] if self.color == COLOR["WHITE"] else PAWN_START["BLACK"]
 
+        forward_path = [(self.rank + direction, self.file)]
         if self.rank == start_rank:
-            paths.append([(self.rank + direction, self.file), (self.rank + 2 * direction, self.file)])
-        else:
-            paths.append([(self.rank + direction, self.file)])
+            forward_path.append((self.rank + 2 * direction, self.file))
+        paths.append(forward_path)
 
-        for d_file in [-1, 1]:
-            new_file = self.file + d_file
-            if 1 <= new_file <= MAX_FILE:
-                paths.append([(self.rank + direction, new_file)])
+        if capture_moves:
+            for d_file in [-1, 1]:
+                new_file = self.file + d_file
+                if 1 <= new_file <= MAX_FILE:
+                    capture_path = [(self.rank + direction, new_file)]
+                    paths.append(capture_path)
 
         return paths

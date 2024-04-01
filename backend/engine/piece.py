@@ -1,4 +1,4 @@
-from constants import *
+from engine.constants import *
 
 class Piece():
     def __init__(self, rank, file, color) -> None:
