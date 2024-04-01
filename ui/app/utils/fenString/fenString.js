@@ -48,6 +48,7 @@ export const getPieceColor = (piece) =>
     : PIECE_COLOR.WHITE;
 
 export const getCurrentPlayer = (fen) => {
+  if (fen == "") return PIECE_COLOR.WHITE;
   const [placement, turn, ...a] = fen.split(" ");
   if (turn === "w") return PIECE_COLOR.WHITE;
   else return PIECE_COLOR.BLACK;

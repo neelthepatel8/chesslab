@@ -34,7 +34,6 @@ const Board = ({ playerColor = PIECE_COLOR.WHITE }) => {
     const latestMessage = messages[messages.length - 1];
     if (latestMessage) {
       if (
-        latestMessage.type === WEBSOCKET.TYPES.UPDATE ||
         latestMessage.type === WEBSOCKET.TYPES.INIT ||
         latestMessage.type === WEBSOCKET.TYPES.MAKE_MOVE
       ) {
@@ -78,15 +77,11 @@ const Board = ({ playerColor = PIECE_COLOR.WHITE }) => {
 
   const handleSquareClick = (rank, file, hasPiece, pieceColor) => {
     if (hasPiece) {
-      if (selectedSquare.length > 0)
-        console.log(
-          fen.getSquarePieceColor(
-            currentFen,
-            selectedSquare[0],
-            selectedSquare[1],
-          ),
-        );
-      if (selectedSquare[0] === rank && selectedSquare[1] === file) {
+      if (
+        selectedSquare[0] === rank &&
+        selectedSquare[1] === file &&
+        pieceColor == currentPlayer
+      ) {
         setSelectedSquare([]);
         setPossibleMoves([]);
       } else if (
@@ -99,8 +94,10 @@ const Board = ({ playerColor = PIECE_COLOR.WHITE }) => {
       ) {
         wsMovePiece(selectedSquare, [rank, file]);
       } else {
-        setSelectedSquare([rank, file]);
-        wsShowPossibleMoves(rank, file);
+        if (pieceColor == currentPlayer) {
+          setSelectedSquare([rank, file]);
+          wsShowPossibleMoves(rank, file);
+        }
       }
     } else {
       if (selectedSquare.length > 0) wsMovePiece(selectedSquare, [rank, file]);

@@ -14,13 +14,15 @@ class Board(ABC):
             'black': [],
             'white': []
         }
+        self.current_player = fen_utils.get_current_player(fen)
+        self.halfmoves = fen_utils.get_halfmoves(fen)
+        self.fullmoves = fen_utils.get_fullmoves(fen)
+        self.castling_avalability = fen_utils.get_castling_avalability(fen)
 
     def make_fen(self):
-        active = 'b'
-        castling = '-'
+        active = "w" if self.current_player == COLOR["WHITE"] else "b"
+        castling = ''.join(self.castling_avalability)
         en_passant = '-'
-        halfmove = '0'
-        full_move = '0'
 
         rows = []
         for row in self.board:
@@ -32,9 +34,10 @@ class Board(ABC):
         fen = '/'.join(rows)
 
         placements = fen_utils.make_compact(fen)
-        all_fen = [placements, active, castling, en_passant, halfmove, full_move]
+        all_fen = [placements, active, castling, en_passant, str(self.halfmoves), str(self.fullmoves)]
         self.fen = ' '.join(all_fen)
 
+        print("New fen: ", self.fen)
         return self.fen
 
     def get_piece(self, piece_coords):
@@ -109,11 +112,15 @@ class Board(ABC):
         if to_pos not in possible_moves: return ERROR_MOVE_NOT_POSSIBLE
 
         piece_at_pos = self.board[to_rank - 1][to_file - 1]
+        
+        if piece.get_color() == COLOR["BLACK"]:
+            self.fullmoves += 1
 
         if not piece_at_pos:
             self.board[from_rank - 1][from_file - 1] = None
             self.board[to_rank - 1][to_file - 1] = piece
             piece.update_position(to_rank, to_file)
+            self.current_player = COLOR["WHITE"] if self.current_player == COLOR["BLACK"] else COLOR["BLACK"]
             self.fen = self.make_fen()
             print("Updated board: ", self.fen)
             return SUCCESS_MOVE_MADE_NO_KILL
@@ -122,6 +129,8 @@ class Board(ABC):
         self.board[from_rank - 1][from_file - 1] = None
         self.board[to_rank - 1][to_file - 1] = piece
         piece.update_position(to_rank, to_file)
+        self.current_player = COLOR["WHITE"] if self.current_player == COLOR["BLACK"] else COLOR["BLACK"]
+        self.halfmoves += 1
         self.fen = self.make_fen()
         print("Updated board: ", self.fen)
 

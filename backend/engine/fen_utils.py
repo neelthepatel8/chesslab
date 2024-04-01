@@ -102,3 +102,27 @@ def convert_coords_to_chess_notation(possible_moves):
         converted_moves.append(coords_to_algebraic(rank, file))
 
     return converted_moves
+
+def get_current_player(fen):
+    if not fen: return COLOR["WHITE"]
+
+    _, turn, _, _, _, _ = fen.split(" ")
+    return COLOR["WHITE"] if turn == "w" else COLOR["BLACK"]
+
+def get_halfmoves(fen):
+    if not fen: return COLOR["WHITE"]
+
+    _, _, _, _, halfmoves, _ = fen.split(" ")
+    return int(halfmoves)
+
+def get_fullmoves(fen):
+    if not fen: return COLOR["WHITE"]
+
+    _, _, _, _, _, fullmoves = fen.split(" ")
+    return int(fullmoves)
+
+def get_castling_avalability(fen):
+    if not fen: return COLOR["WHITE"]
+
+    _, _, castling_avalability, _, _, _ = fen.split(" ")
+    return [letter for letter in castling_avalability]
