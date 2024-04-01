@@ -9,13 +9,8 @@ import coordsToAlgebraic from "@/app/utils/coordsToAlgebraic";
 
 const rows = [1, 2, 3, 4, 5, 6, 7, 8].reverse();
 
-const currentFen =
-  "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2";
-
 const Board = ({ playerColor = PIECE_COLOR.WHITE }) => {
-  const [currentFen, setCurrentFen] = useState(
-    "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-  );
+  const [currentFen, setCurrentFen] = useState("");
   const [selectedSquare, setSelectedSquare] = useState([]);
 
   const { sendMessage, messages, isConnected } = useWebSocket();
@@ -66,17 +61,13 @@ const Board = ({ playerColor = PIECE_COLOR.WHITE }) => {
   };
 
   const handleSquareClick = (rank, file, hasPiece, pieceColor) => {
-    // if (currentPlayer !== playerColor) return;
-
-    if (selectedSquare.length === 0) {
-      // && pieceColor == currentPlayer
-      if (hasPiece) {
-        setSelectedSquare([rank, file]);
-        wsShowPossibleMoves(rank, file);
-      }
+    if (hasPiece) {
+      setSelectedSquare([rank, file]);
+      wsShowPossibleMoves(rank, file);
     } else {
       if (selectedSquare[0] === rank && selectedSquare[1] === file) {
         setSelectedSquare([]);
+        setPossibleMoves([]);
       } else {
         if (!hasPiece) {
           // const newFen = fen.movePiece(currentFen, selectedSquare, [

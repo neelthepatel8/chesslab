@@ -13,7 +13,7 @@ class Pawn(Piece):
         if not super().can_move(to_pos):
             return False
 
-        rank_difference = self.rank - to_rank if self.color == COLOR["WHITE"] else to_rank - self.rank
+        rank_difference = abs(self.rank - to_rank)
         file_difference = abs(self.file - to_file)
 
         if not is_capture:
@@ -30,7 +30,7 @@ class Pawn(Piece):
     def can_kill(self, to_pos):
         return self.can_move(to_pos, is_capture=True)
 
-    def get_possible_paths(self, capture_moves=False):
+    def get_possible_paths(self,):
         paths = []
         direction = -1 if self.color == COLOR["WHITE"] else 1
         start_rank = PAWN_START["WHITE"] if self.color == COLOR["WHITE"] else PAWN_START["BLACK"]
@@ -40,11 +40,10 @@ class Pawn(Piece):
             forward_path.append((self.rank + 2 * direction, self.file))
         paths.append(forward_path)
 
-        if capture_moves:
-            for d_file in [-1, 1]:
-                new_file = self.file + d_file
-                if 1 <= new_file <= MAX_FILE:
-                    capture_path = [(self.rank + direction, new_file)]
-                    paths.append(capture_path)
+        for d_file in [-1, 1]:
+            new_file = self.file + d_file
+            if 1 <= new_file <= MAX_FILE:
+                capture_path = [(self.rank + direction, new_file)]
+                paths.append(capture_path)
 
         return paths

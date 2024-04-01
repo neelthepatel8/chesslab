@@ -33,7 +33,6 @@ async def possible_moves(websocket, message):
 
     position = message['data']['position']
     possible_moves = board.get_possible_moves(position)
-    print("Possible moves from board: ", possible_moves)
     chess_notation_moves = fen_utils.convert_coords_to_chess_notation(possible_moves)
     response = {
         'type': 'poss_moves',

@@ -96,6 +96,7 @@ def coords_to_algebraic(rank, file):
 def convert_coords_to_chess_notation(possible_moves):
     converted_moves = []
 
+    if not possible_moves: return []
     for move in possible_moves:
         rank, file = move
         converted_moves.append(coords_to_algebraic(rank, file))

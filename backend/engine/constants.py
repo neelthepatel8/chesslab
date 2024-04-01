@@ -1,5 +1,5 @@
-START_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-
+# START_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+START_FEN = "1rbqk1nr/2pn1pp1/1p1bp3/p6p/QPP3P1/4pN1B/P2PKP1P/RNB4R w k - 0 11"
 MAX_ROWS  = 8
 MAX_COLS = 8
 

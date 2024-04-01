@@ -8,13 +8,13 @@ export const getRow = (fen, row) => {
 };
 
 export const makeComplete = (fenRow) => {
+  if (!fenRow) return "";
   const possibleNumbers = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
-  for (let num in possibleNumbers) {
-    if (fenRow.includes(num)) {
-      fenRow = fenRow.replace(num, "X".repeat(num));
-    }
-  }
+  possibleNumbers.forEach((num) => {
+    const regex = new RegExp(num, "g");
+    fenRow = fenRow.replace(regex, "X".repeat(num));
+  });
 
   return fenRow;
 };
@@ -34,7 +34,9 @@ export const getPieceType = (piece) => {
 };
 
 export const getPieceColor = (piece) =>
-  piece.toLowerCase() === piece ? PIECE_COLOR.BLACK : PIECE_COLOR.WHITE;
+  piece && piece.toLowerCase() === piece
+    ? PIECE_COLOR.BLACK
+    : PIECE_COLOR.WHITE;
 
 export const getCurrentPlayer = (fen) => {
   const [placement, turn, ...a] = fen.split(" ");

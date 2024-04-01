@@ -7,6 +7,7 @@ module.exports = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   safelist: [
+    "bg-secondary",
     "bg-squareblack",
     "bg-squarewhite",
     "text-squareblack",
@@ -22,7 +23,7 @@ module.exports = {
         squarewhite: "#eeeed2",
         "squarewhite-selected": "#FFFF8A",
         primary: "#ffffff",
-        secondary: "#000000",
+        secondary: "#302e2b",
       },
       fontFamily: {
         primary: ["Montserrat", "sans-serif"],

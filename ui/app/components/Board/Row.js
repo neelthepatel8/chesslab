@@ -24,16 +24,16 @@ const Row = ({
           showRank={square == FILE.MIN}
           showFile={index == RANK.MIN}
           position={coordsToAlgebraic(index, square)}
-          isSelected={
-            (selectedSquare[0] == index && selectedSquare[1] == square) ||
-            (possibleMoves.includes([coordsToAlgebraic(index, square)]) &&
-              console.log([coordsToAlgebraic(index, square)]))
-          }
+          isSelected={selectedSquare[0] == index && selectedSquare[1] == square}
+          isPossibleMove={possibleMoves.includes(
+            coordsToAlgebraic(index, square),
+          )}
           handleSquareClick={handleSquareClick}
           pieceColor={fen.getPieceColor(completeRowFen[square - 1])}
         >
           {completeRowFen[square - 1] !== "X" &&
-            fen.getPieceType(completeRowFen[square - 1]) && (
+            fen.getPieceType(completeRowFen[square - 1]) &&
+            fen.getPieceColor(completeRowFen[square - 1]) && (
               <Piece
                 type={fen.getPieceType(completeRowFen[square - 1])}
                 color={fen.getPieceColor(completeRowFen[square - 1])}
