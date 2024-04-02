@@ -14,6 +14,8 @@ module.exports = {
     "text-squarewhite",
     "bg-squarewhite-selected",
     "bg-squareblack-selected",
+    "bg-squareblack-check",
+    "bg-squarewhite-check",
   ],
   theme: {
     extend: {
@@ -24,6 +26,8 @@ module.exports = {
         "squarewhite-selected": "#FFFF8A",
         primary: "#ffffff",
         secondary: "#302e2b",
+        "squareblack-check": "#E2553E",
+        "squarewhite-check": "#EB896F",
       },
       fontFamily: {
         primary: ["Montserrat", "sans-serif"],

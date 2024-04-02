@@ -3,6 +3,7 @@ import json
 from engine import *
 from constants import *
 from engine import fen_utils
+from engine.constants import *
 
 app = FastAPI()
 board = None
@@ -24,6 +25,33 @@ async def init_board(websocket, message):
         'error': None,
     }
     await websocket.send_text(json.dumps(response))
+    
+async def configuration(websocket, message):
+    response = {
+        'type': 'configuration',
+        'data': {
+            'constants': {
+                "NO_MOVE_MADE": NO_MOVE_MADE,
+                "MOVE_MADE": MOVE_MADE,
+                "NO_KILL": NO_KILL,
+                "KILL": KILL,
+                "CHECK": CHECK,
+                "NO_CHECK": NO_CHECK,
+                "ERR_NO_POSITIONS": ERR_NO_POSITIONS,
+                "ERR_NO_PIECE": ERR_NO_PIECE,
+                "ERR_ILLEGAL_MOVE": ERR_ILLEGAL_MOVE,
+                'ERROR_NO_POSITIONS_PROVIDED':ERROR_NO_POSITIONS_PROVIDED, 
+                'ERROR_NO_PIECE_TO_MOVE': ERROR_NO_PIECE_TO_MOVE,
+                'ERROR_MOVE_NOT_POSSIBLE': ERROR_MOVE_NOT_POSSIBLE,
+                'SUCCESS_MOVE_MADE_NO_KILL_NO_CHECK': SUCCESS_MOVE_MADE_NO_KILL_NO_CHECK,
+                'SUCCESS_MOVE_MADE_NO_KILL_CHECK': SUCCESS_MOVE_MADE_NO_KILL_CHECK,
+                'SUCCESS_MOVE_MADE_WITH_KILL_NO_CHECK': SUCCESS_MOVE_MADE_WITH_KILL_NO_CHECK,
+                'SUCCESS_MOVE_MADE_WITH_KILL_CHECK': SUCCESS_MOVE_MADE_WITH_KILL_CHECK   
+            }
+        },
+    }
+    await websocket.send_text(json.dumps(response))
+    
 
 async def possible_moves(websocket, message):
     global board
@@ -54,7 +82,8 @@ async def make_move(websocket, message):
     from_pos = message['data']['from_position']
     to_pos = message['data']['to_position']
 
-    move_success, is_kill, error = board.move_piece(from_pos, to_pos)
+    move_success, is_kill, special = board.move_piece(from_pos, to_pos)
+    print(move_success, is_kill, special)
 
     response = {
         'type': 'move_piece',
@@ -62,9 +91,10 @@ async def make_move(websocket, message):
             'fen': board.make_fen(),
             'move_success': move_success,
             'is_kill': is_kill,
+            'special': special
         },
 
-        'error': error,
+        'error': special,
     }
 
     await websocket.send_text(json.dumps(response))
@@ -74,6 +104,7 @@ async def make_move(websocket, message):
 
 message_handlers = {
     'init': init_board,
+    'configuration': configuration,
     'poss_moves': possible_moves,
     'move_piece': make_move,
 }

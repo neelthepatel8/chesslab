@@ -130,3 +130,7 @@ def get_castling_avalability(fen):
 
 def get_opposite_player(player):
     return COLOR["BLACK"] if player == COLOR["WHITE"] else COLOR["WHITE"]
+
+
+def algebraic_list(arr):
+    return [coords_to_algebraic(r, f) for r, f in arr]

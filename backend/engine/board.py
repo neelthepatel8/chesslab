@@ -118,13 +118,14 @@ class Board(ABC):
 
         board_copy.move_piece(from_pos, to_pos)
 
-        if board_copy.is_king_in_check():
+        if board_copy.is_king_in_check(fen_utils.get_opposite_player(board_copy.current_player)):
             return False
         return True
 
     def get_legal_moves(self, piece_coords):
         legal_moves = []
         pseudo_legal_moves = self.get_pseudo_legal_moves(piece_coords)
+        print(f"pseudolegal moves for piece at {piece_coords} are {fen_utils.algebraic_list(pseudo_legal_moves)}")
         for rank, file in pseudo_legal_moves:
             to_algebraic = fen_utils.coords_to_algebraic(rank, file)
             if self.is_move_legal(piece_coords, to_algebraic):
@@ -140,15 +141,16 @@ class Board(ABC):
                 moves.append(self.get_legal_moves(piece.get_algebraic_pos()))
         return moves 
 
-    def is_king_in_check(self):
-        king = self.get_king_location(fen_utils.get_opposite_player(self.current_player))
-        all_possible_moves = self.get_all_pseudo_legal_moves(self.current_player)
+    def is_king_in_check(self, player):
+        king = self.get_king_location(player)
+        print("Checking if king in check for player ", player)
+        all_possible_moves = self.get_all_pseudo_legal_moves(fen_utils.get_opposite_player(player))
         for move in all_possible_moves:
-            print(move, king)
-            
             if move == king:
+                print("king in check")
                 return True
 
+        print("king not in check. king at: ", fen_utils.coords_to_algebraic(king[0], king[1]), " all moves: ", [fen_utils.algebraic_list(all_possible_moves)])
         return False
 
     def get_king_location(self, player):
@@ -176,6 +178,7 @@ class Board(ABC):
         if not piece: return ERROR_NO_PIECE_TO_MOVE
 
         possible_moves = self.get_pseudo_legal_moves(fen_utils.coords_to_algebraic(from_rank, from_file))
+        print(f"Move to possible moves for piece at {fen_utils.coords_to_algebraic(from_pos[0], from_pos[1])} are: {fen_utils.algebraic_list(possible_moves)} and trying to move to {fen_utils.coords_to_algebraic(to_pos[0], to_pos[1])}")
         if to_pos not in possible_moves: return ERROR_MOVE_NOT_POSSIBLE
 
         piece_at_pos = self.board[to_rank - 1][to_file - 1]
@@ -189,8 +192,9 @@ class Board(ABC):
             piece.update_position(to_rank, to_file)
             self.current_player = COLOR["WHITE"] if self.current_player == COLOR["BLACK"] else COLOR["BLACK"]
             self.fen = self.make_fen()
-            print("Updated board: ", self.fen)
-            return SUCCESS_MOVE_MADE_NO_KILL
+            
+            if self.is_king_in_check(self.current_player): return SUCCESS_MOVE_MADE_NO_KILL_CHECK
+            return SUCCESS_MOVE_MADE_NO_KILL_NO_CHECK
 
         self.dead_pieces[piece_at_pos.get_color()].append(piece_at_pos)
         self.board[from_rank - 1][from_file - 1] = None
@@ -199,5 +203,7 @@ class Board(ABC):
         self.current_player = COLOR["WHITE"] if self.current_player == COLOR["BLACK"] else COLOR["BLACK"]
         self.halfmoves += 1
         self.fen = self.make_fen()
+        
+        if self.is_king_in_check(self.current_player): return SUCCESS_MOVE_MADE_WITH_KILL_CHECK
 
-        return SUCCESS_MOVE_MADE_WITH_KILL
+        return SUCCESS_MOVE_MADE_WITH_KILL_NO_CHECK

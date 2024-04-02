@@ -11,7 +11,8 @@ import useSound from "use-sound";
 
 const rows = [1, 2, 3, 4, 5, 6, 7, 8].reverse();
 
-const Board = ({ playerColor = PIECE_COLOR.WHITE }) => {
+const Board = () => {
+  const [config, setConfig] = useState({});
   const [currentFen, setCurrentFen] = useState("");
   const [selectedSquare, setSelectedSquare] = useState([]);
 
@@ -27,14 +28,23 @@ const Board = ({ playerColor = PIECE_COLOR.WHITE }) => {
 
   // Sound Effects:
   const [playMove] = useSound("sfx/move.mp3");
+  const [playMoveCheck] = useSound("sfx/move.mp3", { volume: 5 });
   const [playCapture] = useSound("sfx/capture.mp3");
+  const [playCaptureCheck] = useSound("sfx/capture.mp3", { volume: 5 });
+  const [playCheck] = useSound("sfx/check.mp3", { volume: 1 });
 
   useEffect(() => {
     if (isConnected) {
-      const init_message = {
+      const initMessage = {
         type: WEBSOCKET.TYPES.INIT,
       };
-      sendMessage(init_message);
+      sendMessage(initMessage);
+
+      const configurationMessage = {
+        type: WEBSOCKET.TYPES.CONFIG,
+      };
+
+      sendMessage(configurationMessage);
     }
   }, [isConnected]);
 
@@ -42,8 +52,7 @@ const Board = ({ playerColor = PIECE_COLOR.WHITE }) => {
     const handleWebSockMessaging = async () => {
       const latestMessage = messages[messages.length - 1];
       if (latestMessage) {
-        console.log("received message: ", latestMessage);
-        if (latestMessage.error) {
+        if (latestMessage.error < 0) {
           console.error("Recieved error from backend: ", latestMessage);
           return;
         }
@@ -55,11 +64,14 @@ const Board = ({ playerColor = PIECE_COLOR.WHITE }) => {
             setCurrentPlayer(fen.getCurrentPlayer(newFen));
             setPossibleMoves([]);
             setSelectedSquare([]);
+          case WEBSOCKET.TYPES.CONFIG:
+            setConfig(latestMessage.data?.constants);
           case WEBSOCKET.TYPES.MAKE_MOVE:
             if (latestMessage.data?.move_success == true) {
               const pieceMoved = await animateMove(
                 latestMessage.data?.fen,
                 latestMessage.data?.is_kill,
+                latestMessage.data?.special == config.CHECK,
               );
               if (!pieceMoved) {
                 console.error("Couldnt move piece due to error!");
@@ -85,7 +97,7 @@ const Board = ({ playerColor = PIECE_COLOR.WHITE }) => {
     handleWebSockMessaging();
   }, [messages]);
 
-  const animateMove = async (newFen, isKill = false) => {
+  const animateMove = async (newFen, isKill = false, isCheck = False) => {
     const [from_rank, from_file] = currentMoving[0];
     const [to_rank, to_file] = currentMoving[1];
 
@@ -103,13 +115,34 @@ const Board = ({ playerColor = PIECE_COLOR.WHITE }) => {
       const transformX = toRect.left - fromRect.left;
       const transformY = toRect.top - fromRect.top;
 
+      const king = document.querySelector(
+        `.king-${fen.getCurrentPlayer(currentFen) == "b" ? "white" : "black"}`,
+      );
+
       piece.style.position = "relative";
       piece.style.zIndex = 1000;
       piece.style.transform = `translate3d(${transformX}px, ${transformY}px, 0)`;
 
       setTimeout(() => {
-        if (isKill) playCapture();
-        else playMove();
+        if (isKill) {
+          if (isCheck) playCaptureCheck();
+          else playCapture();
+        } else if (isCheck) {
+          playMoveCheck();
+        } else playMove();
+
+        if (isCheck && king) {
+          setTimeout(() => {
+            playCheck();
+          }, 200);
+          const kingSquare = king.parentElement;
+          flickerSquare(
+            kingSquare,
+            2,
+            300,
+            kingSquare.classList.contains("bg-squarewhite"),
+          );
+        }
       }, 200);
 
       setTimeout(() => {
@@ -125,6 +158,29 @@ const Board = ({ playerColor = PIECE_COLOR.WHITE }) => {
     return false;
   };
 
+  const flickerSquare = (element, times, interval, white = true) => {
+    const classOn = white ? "#EB896F" : "#E2553E";
+    const classOff = white ? "#eeeed2" : "#769656";
+
+    element.style.background = classOff;
+    let isOn = false;
+
+    const flicker = () => {
+      isOn = !isOn;
+      element.style.background = isOn ? classOn : classOff;
+
+      if (times <= 0) {
+        element.style.background = classOff;
+        return;
+      }
+
+      times -= 1;
+      setTimeout(flicker, interval);
+    };
+
+    flicker();
+  };
+
   const wsShowPossibleMoves = (rank, file) => {
     const message = {
       type: WEBSOCKET.TYPES.POSSIBLE_MOVES,
@@ -132,7 +188,6 @@ const Board = ({ playerColor = PIECE_COLOR.WHITE }) => {
         position: coordsToAlgebraic(rank, file),
       },
     };
-    console.log("Sending message", message);
     sendMessage(message);
   };
 
@@ -146,7 +201,6 @@ const Board = ({ playerColor = PIECE_COLOR.WHITE }) => {
         to_position: coordsToAlgebraic(to_pos[0], to_pos[1]),
       },
     };
-    console.log("Sending message", message);
     sendMessage(message);
   };
 

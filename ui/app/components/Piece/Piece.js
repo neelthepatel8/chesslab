@@ -4,9 +4,11 @@ import Image from "next/image";
 import pieceImages from "./pieceImages";
 const Piece = ({ type, color, position }) => {
   const pieceImage = pieceImages[`${color}_${type}`];
-
+  const kingClass = `${type}-${color}`;
   return (
-    <div className="chess-piece z-50 transition-transform duration-500 ease-in-out">
+    <div
+      className={`chess-piece z-50 transition-transform duration-500 ease-in-out ${kingClass}`}
+    >
       {pieceImage && (
         <Image
           priority
