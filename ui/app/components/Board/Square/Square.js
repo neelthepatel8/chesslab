@@ -4,6 +4,7 @@ import getTextColor from "@/app/utils/getTextColor";
 import numToLetter from "@/app/utils/numToletter";
 import PossibleMoveDot from "../../Dot/PossibleMoveDot";
 import PossibleKillRing from "../../Dot/PossibleKillRing";
+import coordsToAlgebraic from "@/app/utils/coordsToAlgebraic";
 
 const Square = ({
   children,
@@ -23,6 +24,7 @@ const Square = ({
 
   return (
     <div
+      id={`square-${coordsToAlgebraic(rank, file)}`}
       onClick={() => handleSquareClick(rank, file, children, pieceColor)}
       className={`relative h-[6.5rem] w-[6.5rem]  pt-1 text-lg font-bold ${pointerStyle} ${squareColor}`}
     >

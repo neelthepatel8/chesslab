@@ -7,6 +7,8 @@ import { useWebSocket } from "@/app/services/WebSocketContext";
 import { WEBSOCKET } from "@/app/services/constants";
 import coordsToAlgebraic from "@/app/utils/coordsToAlgebraic";
 
+import useSound from "use-sound";
+
 const rows = [1, 2, 3, 4, 5, 6, 7, 8].reverse();
 
 const Board = ({ playerColor = PIECE_COLOR.WHITE }) => {
@@ -21,6 +23,12 @@ const Board = ({ playerColor = PIECE_COLOR.WHITE }) => {
 
   const [possibleMoves, setPossibleMoves] = useState([]);
 
+  const [currentMoving, setCurrentMoving] = useState([[], []]);
+
+  // Sound Effects:
+  const [playMove] = useSound("sfx/move.mp3");
+  const [playCapture] = useSound("sfx/capture.mp3");
+
   useEffect(() => {
     if (isConnected) {
       const init_message = {
@@ -31,26 +39,91 @@ const Board = ({ playerColor = PIECE_COLOR.WHITE }) => {
   }, [isConnected]);
 
   useEffect(() => {
-    const latestMessage = messages[messages.length - 1];
-    if (latestMessage) {
-      if (
-        latestMessage.type === WEBSOCKET.TYPES.INIT ||
-        latestMessage.type === WEBSOCKET.TYPES.MAKE_MOVE
-      ) {
-        console.log("recieved message: ", latestMessage);
-        if (latestMessage.error) return;
-        const newFen = latestMessage.data?.fen;
+    const handleWebSockMessaging = async () => {
+      const latestMessage = messages[messages.length - 1];
+      if (latestMessage) {
+        console.log("received message: ", latestMessage);
+        if (latestMessage.error) {
+          console.error("Recieved error from backend: ", latestMessage);
+          return;
+        }
+
+        switch (latestMessage.type) {
+          case WEBSOCKET.TYPES.INIT:
+            const newFen = latestMessage.data?.fen;
+            setCurrentFen(newFen);
+            setCurrentPlayer(fen.getCurrentPlayer(newFen));
+            setPossibleMoves([]);
+            setSelectedSquare([]);
+          case WEBSOCKET.TYPES.MAKE_MOVE:
+            if (latestMessage.data?.move_success == true) {
+              const pieceMoved = await animateMove(
+                latestMessage.data?.fen,
+                latestMessage.data?.is_kill,
+              );
+              if (!pieceMoved) {
+                console.error("Couldnt move piece due to error!");
+                return;
+              }
+            } else {
+            }
+            setPossibleMoves([]);
+            setSelectedSquare([]);
+            break;
+
+          case WEBSOCKET.TYPES.POSSIBLE_MOVES:
+            const possibleMoves = latestMessage.data?.possible_moves;
+            setPossibleMoves(possibleMoves);
+            break;
+
+          default:
+            break;
+        }
+      }
+    };
+
+    handleWebSockMessaging();
+  }, [messages]);
+
+  const animateMove = async (newFen, isKill = false) => {
+    const [from_rank, from_file] = currentMoving[0];
+    const [to_rank, to_file] = currentMoving[1];
+
+    const fromSquare = document.getElementById(
+      `square-${coordsToAlgebraic(from_rank, from_file)}`,
+    );
+    const toSquare = document.getElementById(
+      `square-${coordsToAlgebraic(to_rank, to_file)}`,
+    );
+    const piece = fromSquare?.querySelector(".chess-piece");
+
+    if (piece && fromSquare && toSquare) {
+      const fromRect = fromSquare.getBoundingClientRect();
+      const toRect = toSquare.getBoundingClientRect();
+      const transformX = toRect.left - fromRect.left;
+      const transformY = toRect.top - fromRect.top;
+
+      piece.style.position = "relative";
+      piece.style.zIndex = 1000;
+      piece.style.transform = `translate3d(${transformX}px, ${transformY}px, 0)`;
+
+      setTimeout(() => {
+        if (isKill) playCapture();
+        else playMove();
+      }, 200);
+
+      setTimeout(() => {
         setCurrentFen(newFen);
         setCurrentPlayer(fen.getCurrentPlayer(newFen));
-        setPossibleMoves([]);
-        setSelectedSquare([]);
-      } else if (latestMessage.type === WEBSOCKET.TYPES.POSSIBLE_MOVES) {
-        const possibleMoves = latestMessage.data?.possible_moves;
-        setPossibleMoves(possibleMoves);
-        console.log("Recieved Possible Moves: ", possibleMoves);
-      }
+        piece.style.transform = "";
+        piece.style.zIndex = "";
+      }, 400);
+
+      return true;
     }
-  }, [messages]);
+
+    return false;
+  };
 
   const wsShowPossibleMoves = (rank, file) => {
     const message = {
@@ -64,6 +137,8 @@ const Board = ({ playerColor = PIECE_COLOR.WHITE }) => {
   };
 
   const wsMovePiece = (from_pos, to_pos) => {
+    setCurrentMoving([from_pos, to_pos]);
+
     const message = {
       type: WEBSOCKET.TYPES.MAKE_MOVE,
       data: {

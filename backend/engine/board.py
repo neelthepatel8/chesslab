@@ -4,6 +4,7 @@ import engine.fen_utils as fen_utils
 from engine.piece import Piece
 from pprint import pprint
 from engine.pieces import Pawn
+import copy
 
 class Board(ABC):
     def __init__(self, fen=START_FEN) -> None:
@@ -37,14 +38,13 @@ class Board(ABC):
         all_fen = [placements, active, castling, en_passant, str(self.halfmoves), str(self.fullmoves)]
         self.fen = ' '.join(all_fen)
 
-        print("New fen: ", self.fen)
         return self.fen
 
     def get_piece(self, piece_coords):
         rank, file = fen_utils.algebraic_to_coords(piece_coords)
         return self.board[rank - 1][file - 1]
 
-    def get_possible_moves(self, piece_coords):
+    def get_pseudo_legal_moves(self, piece_coords):
         rank, file = fen_utils.algebraic_to_coords(piece_coords)
         if not (1 <= rank <= 8 and 1 <= file <= 8):
             return None
@@ -55,6 +55,7 @@ class Board(ABC):
 
         all_paths = piece.get_possible_paths()
         valid_moves = []
+        
 
         for path in all_paths:
             valid_path = []
@@ -93,8 +94,74 @@ class Board(ABC):
 
         return valid_moves
 
+    def get_all_pseudo_legal_moves(self, player):
+        moves = []
+        for row in self.board:
+            for piece in row:
+                if not piece: continue 
+                if piece.get_color() != player: continue
+                moves.extend(self.get_pseudo_legal_moves(piece.get_algebraic_pos()))
+        return moves 
+    
+    def deep_copy(self):
+        copy_board = Board(self.fen)
+        copy_board.board = copy.deepcopy(self.board)
+        copy_board.current_player = self.current_player
+        copy_board.halfmoves = self.halfmoves
+        copy_board.fullmoves = self.fullmoves
+        copy_board.castling_avalability = self.castling_avalability
+        copy_board.dead_pieces = copy.deepcopy(self.dead_pieces)
+        return copy_board
 
+    def is_move_legal(self, from_pos, to_pos):
+        board_copy = self.deep_copy()
 
+        board_copy.move_piece(from_pos, to_pos)
+
+        if board_copy.is_king_in_check():
+            return False
+        return True
+
+    def get_legal_moves(self, piece_coords):
+        legal_moves = []
+        pseudo_legal_moves = self.get_pseudo_legal_moves(piece_coords)
+        for rank, file in pseudo_legal_moves:
+            to_algebraic = fen_utils.coords_to_algebraic(rank, file)
+            if self.is_move_legal(piece_coords, to_algebraic):
+                legal_moves.append((rank, file))
+        return legal_moves
+    
+    def get_all_legal_moves(self, player):
+        moves = []
+        for row in self.board:
+            for piece in row:
+                if not piece: continue 
+                if piece.get_color() != player: continue
+                moves.append(self.get_legal_moves(piece.get_algebraic_pos()))
+        return moves 
+
+    def is_king_in_check(self):
+        king = self.get_king_location(fen_utils.get_opposite_player(self.current_player))
+        all_possible_moves = self.get_all_pseudo_legal_moves(self.current_player)
+        for move in all_possible_moves:
+            print(move, king)
+            
+            if move == king:
+                return True
+
+        return False
+
+    def get_king_location(self, player):
+        for row in self.board:
+            for piece in row:
+                if not piece: continue 
+                if piece.get_color() != player: continue 
+                if piece.get_name().lower() == 'k':
+                    return piece.rank, piece.file
+        
+        return -1, -1
+    
+    
     def move_piece(self, from_pos, to_pos):
         if not from_pos or not to_pos: return ERROR_NO_POSITIONS_PROVIDED
 
@@ -108,11 +175,11 @@ class Board(ABC):
 
         if not piece: return ERROR_NO_PIECE_TO_MOVE
 
-        possible_moves = self.get_possible_moves(fen_utils.coords_to_algebraic(from_rank, from_file))
+        possible_moves = self.get_pseudo_legal_moves(fen_utils.coords_to_algebraic(from_rank, from_file))
         if to_pos not in possible_moves: return ERROR_MOVE_NOT_POSSIBLE
 
         piece_at_pos = self.board[to_rank - 1][to_file - 1]
-        
+
         if piece.get_color() == COLOR["BLACK"]:
             self.fullmoves += 1
 
@@ -132,6 +199,5 @@ class Board(ABC):
         self.current_player = COLOR["WHITE"] if self.current_player == COLOR["BLACK"] else COLOR["BLACK"]
         self.halfmoves += 1
         self.fen = self.make_fen()
-        print("Updated board: ", self.fen)
 
         return SUCCESS_MOVE_MADE_WITH_KILL

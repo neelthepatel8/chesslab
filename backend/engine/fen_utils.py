@@ -126,3 +126,7 @@ def get_castling_avalability(fen):
 
     _, _, castling_avalability, _, _, _ = fen.split(" ")
     return [letter for letter in castling_avalability]
+
+
+def get_opposite_player(player):
+    return COLOR["BLACK"] if player == COLOR["WHITE"] else COLOR["WHITE"]

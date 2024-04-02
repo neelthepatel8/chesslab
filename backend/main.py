@@ -32,7 +32,7 @@ async def possible_moves(websocket, message):
     if "position" not in message["data"]: await websocket.send_text(json.dumps(RESPONSE_ERROR_POSITION))
 
     position = message['data']['position']
-    possible_moves = board.get_possible_moves(position)
+    possible_moves = board.get_legal_moves(position)
     chess_notation_moves = fen_utils.convert_coords_to_chess_notation(possible_moves)
     response = {
         'type': 'poss_moves',
@@ -54,25 +54,19 @@ async def make_move(websocket, message):
     from_pos = message['data']['from_position']
     to_pos = message['data']['to_position']
 
-    result = board.move_piece(from_pos, to_pos)
+    move_success, is_kill, error = board.move_piece(from_pos, to_pos)
 
-    if result < 0:
-        response = {
-            'type': 'move_piece',
-            'data': None,
-            'error': result,
-        }
+    response = {
+        'type': 'move_piece',
+        'data': {
+            'fen': board.make_fen(),
+            'move_success': move_success,
+            'is_kill': is_kill,
+        },
 
-    else:
-        response = {
-            'type': 'move_piece',
-            'data': {
-                'fen': board.make_fen()
-            },
-            'error': None,
-        }
+        'error': error,
+    }
 
-    print("sending over: ", response)
     await websocket.send_text(json.dumps(response))
 
 

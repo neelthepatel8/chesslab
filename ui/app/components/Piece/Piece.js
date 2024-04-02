@@ -6,7 +6,7 @@ const Piece = ({ type, color, position }) => {
   const pieceImage = pieceImages[`${color}_${type}`];
 
   return (
-    <>
+    <div className="chess-piece z-50 transition-transform duration-500 ease-in-out">
       {pieceImage && (
         <Image
           priority
@@ -16,7 +16,7 @@ const Piece = ({ type, color, position }) => {
           alt={`${color}-${type}`}
         />
       )}
-    </>
+    </div>
   );
 };
 

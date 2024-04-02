@@ -1,6 +1,7 @@
 import { PIECE_COLOR } from "@/app/constants/constants";
 
 export const getRow = (fen, row) => {
+  if (!fen) return "8";
   const splitString = fen.split(" ");
   const rows = splitString[0].split("/");
 

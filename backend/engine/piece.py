@@ -1,5 +1,5 @@
 from engine.constants import *
-
+from engine import fen_utils
 class Piece():
     def __init__(self, rank, file, color) -> None:
 
@@ -44,3 +44,7 @@ class Piece():
     def update_position(self, rank, file):
         self.rank = rank
         self.file = file
+        
+        
+    def get_algebraic_pos(self):
+        return fen_utils.coords_to_algebraic(self.rank, self.file)
