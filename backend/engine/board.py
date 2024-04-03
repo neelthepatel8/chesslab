@@ -176,9 +176,15 @@ class Board(ABC):
         piece = self.board[from_rank - 1][from_file - 1]
 
         if not piece: return ERROR_NO_PIECE_TO_MOVE
-
-        possible_moves = self.get_pseudo_legal_moves(fen_utils.coords_to_algebraic(from_rank, from_file))
-        if to_pos not in possible_moves: return ERROR_MOVE_NOT_POSSIBLE
+        
+        if simulate:
+            pseudo_legal_moves = self.get_pseudo_legal_moves(fen_utils.coords_to_algebraic(from_rank, from_file))
+            if to_pos not in pseudo_legal_moves:
+                return ERROR_MOVE_NOT_POSSIBLE
+        else:
+            possible_moves = self.get_legal_moves(fen_utils.coords_to_algebraic(from_rank, from_file))
+            if to_pos not in possible_moves:
+                return ERROR_MOVE_NOT_POSSIBLE
 
         piece_at_pos = self.board[to_rank - 1][to_file - 1]
 
@@ -227,7 +233,7 @@ class Board(ABC):
     
     def is_game_over(self):
         all_legal_moves = self.get_all_legal_moves(self.current_player)
-        if len(all_legal_moves) == 0:
+        if len(all_legal_moves) == 0 or self.are_only_kings_on_board():
             king_check = self.is_king_in_check(self.current_player)
             if king_check:
                 self.is_checkmate = True 
@@ -236,6 +242,18 @@ class Board(ABC):
                 
         return self.is_stalemate or self.is_checkmate
     
+    def are_only_kings_on_board(self):
+        pieces = []
+        for row in self.board:
+            for piece in row:
+                if piece: pieces.append(piece)
+                
+        are_kings_only = True
+        for piece in pieces:
+            if piece.get_name().lower() != "k":
+                are_kings_only = False
+
+        return are_kings_only    
     
     def try_pawn_promote(self, piece_coords, promote_to="queen", do_it=False):
         print("Testing if pawn at ", piece_coords, " can be promoted to ", promote_to)
