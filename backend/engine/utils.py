@@ -11,3 +11,5 @@ def visualize_possible_moves(possible_moves, piece_position, piece_name):
             else:
                 print(" . ", end="")
         print()
+        
+        

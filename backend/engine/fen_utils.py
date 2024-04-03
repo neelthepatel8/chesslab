@@ -121,11 +121,11 @@ def get_fullmoves(fen):
     _, _, _, _, _, fullmoves = fen.split(" ")
     return int(fullmoves)
 
-def get_castling_avalability(fen):
+def get_castling_availability(fen):
     if not fen: return COLOR["WHITE"]
 
-    _, _, castling_avalability, _, _, _ = fen.split(" ")
-    return [letter for letter in castling_avalability]
+    _, _, castling_availability, _, _, _ = fen.split(" ")
+    return set([letter for letter in castling_availability])
 
 
 def get_opposite_player(player):

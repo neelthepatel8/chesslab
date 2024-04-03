@@ -9,6 +9,7 @@ class Piece():
         self.rank = rank
         self.file = file
         self.color = color
+        self.has_moved = False
 
     def can_move(self, to_pos):
 
@@ -44,6 +45,8 @@ class Piece():
     def update_position(self, rank, file):
         self.rank = rank
         self.file = file
+        
+        self.has_moved = True
         
         
     def get_algebraic_pos(self):

@@ -18,14 +18,14 @@ class Board(ABC):
         self.current_player = fen_utils.get_current_player(fen)
         self.halfmoves = fen_utils.get_halfmoves(fen)
         self.fullmoves = fen_utils.get_fullmoves(fen)
-        self.castling_avalability = fen_utils.get_castling_avalability(fen)
+        self.castling_availability = fen_utils.get_castling_availability(fen)
         
         self.is_stalemate = False
         self.is_checkmate = False 
 
     def make_fen(self):
         active = "w" if self.current_player == COLOR["WHITE"] else "b"
-        castling = ''.join(self.castling_avalability)
+        castling = ''.join(self.castling_availability) if len(self.castling_availability) > 0 else '-'
         en_passant = '-'
 
         rows = []
@@ -80,6 +80,7 @@ class Board(ABC):
                                 valid_path.append((r, f))
                                 break
                 else:
+                    valid_moves.extend(self.get_castlable_moves(piece))
                     if not isinstance(piece, Pawn) or (isinstance(piece, Pawn) and piece.file == f):
                         valid_path.append((r, f))
 
@@ -113,7 +114,7 @@ class Board(ABC):
         copy_board.current_player = self.current_player
         copy_board.halfmoves = self.halfmoves
         copy_board.fullmoves = self.fullmoves
-        copy_board.castling_avalability = self.castling_avalability
+        copy_board.castling_availability = self.castling_availability
         copy_board.dead_pieces = copy.deepcopy(self.dead_pieces)
         return copy_board
 
@@ -192,11 +193,21 @@ class Board(ABC):
             self.fullmoves += 1
 
         if not piece_at_pos:
+            
+            has_castled = False
+            if isinstance(piece, King) and abs(to_pos[1] - from_pos[1]) > 1 and not simulate:
+                
+                has_castled = self.castle(piece, from_pos, to_pos)
+                if not has_castled: 
+                    return ERROR_MOVE_ILLEGAL_CASTLE
+                
             self.board[from_rank - 1][from_file - 1] = None
             self.board[to_rank - 1][to_file - 1] = piece
             piece.update_position(to_rank, to_file)
             self.current_player = COLOR["WHITE"] if self.current_player == COLOR["BLACK"] else COLOR["BLACK"]
+            self.update_castling_availability()
             self.fen = self.make_fen()
+            
             
             if not simulate:
                 if isinstance(piece, Pawn):
@@ -206,9 +217,10 @@ class Board(ABC):
                 if self.is_game_over():
                     return SUCCESS_MOVE_MADE_NO_KILL_CHECKMATE if self.is_checkmate else SUCCESS_MOVE_MADE_NO_KILL_STALEMATE
                 
-                if self.is_king_in_check(self.current_player): return SUCCESS_MOVE_MADE_NO_KILL_CHECK
+                if self.is_king_in_check(self.current_player): 
+                    return SUCCESS_MOVE_MADE_NO_KILL_CHECK if not has_castled else SUCCESS_MOVE_MADE_NO_KILL_CHECK_CASTLED
                 
-            return SUCCESS_MOVE_MADE_NO_KILL_NO_CHECK
+            return SUCCESS_MOVE_MADE_NO_KILL_NO_CHECK if not has_castled else SUCCESS_MOVE_MADE_NO_KILL_NO_CHECK_CASTLED
 
         self.dead_pieces[piece_at_pos.get_color()].append(piece_at_pos)
         self.board[from_rank - 1][from_file - 1] = None
@@ -216,10 +228,12 @@ class Board(ABC):
         piece.update_position(to_rank, to_file)
         self.current_player = COLOR["WHITE"] if self.current_player == COLOR["BLACK"] else COLOR["BLACK"]
         self.halfmoves += 1
+        self.update_castling_availability()
         self.fen = self.make_fen()
         
         
         if not simulate:
+            
             if isinstance(piece, Pawn):
                 if self.try_pawn_promote(fen_utils.coords_to_algebraic(to_pos[0], to_pos[1]), do_it=False) == PAWN_CAN_PROMOTE:
                     return SUCCESS_MOVE_MADE_WTIH_KILL_PROMOTE_POSSIBLE
@@ -231,6 +245,79 @@ class Board(ABC):
             
         return SUCCESS_MOVE_MADE_WITH_KILL_NO_CHECK
     
+    def get_castlable_moves(self, piece):
+        moves = []
+        if isinstance(piece, King):
+            if piece.get_color() == COLOR["WHITE"]:
+                if 'K' in self.castling_availability:
+                    moves.append(fen_utils.algebraic_to_coords("g1"))
+                if 'Q' in self.castling_availability:
+                    moves.append(fen_utils.algebraic_to_coords("c1"))
+            elif piece.get_color() == COLOR["BLACK"]:
+                if 'k' in self.castling_availability:
+                    moves.append(fen_utils.algebraic_to_coords("g8"))
+                if 'q' in self.castling_availability:
+                    moves.append(fen_utils.algebraic_to_coords("c8"))
+        return moves
+    
+    def castle(self, piece, from_pos, to_pos):
+        print("Castling king ", fen_utils.algebraic_list([from_pos, to_pos]))
+        self.update_castling_availability()
+        if not self.castling_availability:
+            print("NOT CASTLED")
+            
+            return False
+        
+        if to_pos[1] > from_pos[1]:
+            castling = 'k' if piece.get_color() == COLOR["BLACK"] else "K"
+        elif from_pos[1] > to_pos[1]:
+            castling = 'q' if piece.get_color() == COLOR["BLACK"] else 'Q'
+            
+        if castling not in self.castling_availability:
+            print("NOT CASTLED")
+            
+            return False 
+    
+        if castling in 'kK':
+            r, f = fen_utils.algebraic_to_coords('h8' if castling == 'k' else 'h1')
+            r_, f_ = fen_utils.algebraic_to_coords('f8' if castling == 'k' else "f1")
+        else:
+            r, f = fen_utils.algebraic_to_coords('a8' if castling == 'q' else 'a1')
+            r_, f_ = fen_utils.algebraic_to_coords('d8' if castling == 'q' else "d1")
+        
+        if r and f and r_ and f_:
+            rook = self.board[r - 1][f - 1]
+            rook.update_position(r_, f_)
+            self.board[r_ - 1][f_ - 1] = rook
+            self.board[r - 1][f - 1] = None
+        
+            print("CASTLED!")
+            return True
+        print("NOT CASTLED")
+        return False 
+    
+    def update_castling_availability(self):
+        self.castling_availability = ''
+        
+        def is_rook_ready_for_castling(piece, expected_name):
+            return piece is not None and piece.get_name() == expected_name and not piece.has_moved
+
+        def is_king_ready_for_castling(piece, expected_name):
+            return piece is not None and piece.get_name() == expected_name and not piece.has_moved
+        
+        if is_king_ready_for_castling(self.board[7][4], 'K'):
+            if is_rook_ready_for_castling(self.board[7][0], 'R'):
+                self.castling_availability += 'Q'
+            if is_rook_ready_for_castling(self.board[7][7], 'R'):
+                self.castling_availability += 'K'
+        
+        if is_king_ready_for_castling(self.board[0][4], 'k'):
+            if is_rook_ready_for_castling(self.board[0][0], 'r'):
+                self.castling_availability += 'q'
+            if is_rook_ready_for_castling(self.board[0][7], 'r'):
+                self.castling_availability += 'k'
+
+
     def is_game_over(self):
         all_legal_moves = self.get_all_legal_moves(self.current_player)
         if len(all_legal_moves) == 0 or self.are_only_kings_on_board():
