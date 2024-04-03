@@ -39,9 +39,12 @@ async def configuration(websocket, message):
                 "NO_CHECK": NO_CHECK,
                 "CHECKMATE": CHECKMATE,
                 "STALEMATE": STALEMATE,
+                "PROMOTE_POSSIBLE": PROMOTE_POSSIBLE,
                 "ERR_NO_POSITIONS": ERR_NO_POSITIONS,
                 "ERR_NO_PIECE": ERR_NO_PIECE,
                 "ERR_ILLEGAL_MOVE": ERR_ILLEGAL_MOVE,
+                "PROMOTED": PROMOTED,
+                "NOT_PROMOTED": NOT_PROMOTED,
                 'ERROR_NO_POSITIONS_PROVIDED':ERROR_NO_POSITIONS_PROVIDED, 
                 'ERROR_NO_PIECE_TO_MOVE': ERROR_NO_PIECE_TO_MOVE,
                 'ERROR_MOVE_NOT_POSSIBLE': ERROR_MOVE_NOT_POSSIBLE,
@@ -52,7 +55,12 @@ async def configuration(websocket, message):
                 "SUCCESS_MOVE_MADE_NO_KILL_CHECKMATE": SUCCESS_MOVE_MADE_NO_KILL_CHECKMATE,
                 "SUCCESS_MOVE_MADE_NO_KILL_STALEMATE": SUCCESS_MOVE_MADE_NO_KILL_STALEMATE,
                 "SUCCESS_MOVE_MADE_WITH_KILL_CHECKMATE": SUCCESS_MOVE_MADE_WITH_KILL_CHECKMATE,
-                "SUCCESS_MOVE_MADE_WITH_KILL_STALEMATE": SUCCESS_MOVE_MADE_WITH_KILL_STALEMATE
+                "SUCCESS_MOVE_MADE_WITH_KILL_STALEMATE": SUCCESS_MOVE_MADE_WITH_KILL_STALEMATE,
+                "SUCCESS_MOVE_MADE_WTIH_KILL_PROMOTE_POSSIBLE": SUCCESS_MOVE_MADE_WTIH_KILL_PROMOTE_POSSIBLE,
+                "SUCCESS_MOVE_MADE_NO_KILL_PROMOTE_POSSIBLE": SUCCESS_MOVE_MADE_NO_KILL_PROMOTE_POSSIBLE,
+                "SUCCESS_PAWN_PROMOTED_CHECKMATE": SUCCESS_PAWN_PROMOTED_CHECKMATE,
+                "SUCCESS_PAWN_PROMOTED_STALEMATE": SUCCESS_PAWN_PROMOTED_STALEMATE,
+                "SUCCESS_PAWN_PROMOTED_CHECK": SUCCESS_PAWN_PROMOTED_CHECK,
             }
         },
     }
@@ -104,12 +112,35 @@ async def make_move(websocket, message):
 
     await websocket.send_text(json.dumps(response))
 
+async def promote_pawn(websocket, message):
+    global board
+
+    if "data" not in message: await websocket.send_text(json.dumps(RESPONSE_ERROR_DATA))
+    if "position" not in message["data"]: await websocket.send_text(json.dumps(RESPONSE_ERROR_POSITION))
+    if "promote_to" not in message["data"]: await websocket.send_text(json.dumps(RESPONSE_ERROR_PROMOTE_TYPE))
+
+    position = message['data']['position']
+    promote_to = message['data']['promote_to']
+
+    promoted, special = board.try_pawn_promote(position, promote_to=promote_to, do_it=True)
+
+    response = {
+        'type': 'promote_pawn',
+        'data': {
+            'fen': board.make_fen(),
+            'promoted': promoted,
+            'special': special
+        },
+    }
+
+    await websocket.send_text(json.dumps(response))
 
 message_handlers = {
     'init': init_board,
     'configuration': configuration,
     'poss_moves': possible_moves,
     'move_piece': make_move,
+    'promote_pawn': promote_pawn,
 }
 
 @app.websocket("/ws")

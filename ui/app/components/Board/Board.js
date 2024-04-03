@@ -26,6 +26,12 @@ const Board = () => {
 
   const [currentMoving, setCurrentMoving] = useState([[], []]);
 
+  const [showPromotionOptions, setShowPromotionOptions] = useState([
+    [],
+    PIECE_COLOR.BLACK,
+  ]);
+  const [selectedPromotion, setSelectedPromotion] = useState({});
+
   // Sound Effects:
   const [playMove] = useSound("sfx/move.mp3");
   const [playMoveCheck] = useSound("sfx/move.mp3", { volume: 5 });
@@ -57,7 +63,7 @@ const Board = () => {
         console.log("Recieved message: ", latestMessage);
 
         if (latestMessage.error < 0) {
-          console.error("Recieved error from backend: ", latestMessage);
+          console.log("Recieved error from backend: ", latestMessage);
           return;
         }
 
@@ -78,9 +84,10 @@ const Board = () => {
                 latestMessage.data?.fen,
                 latestMessage.data?.is_kill,
                 latestMessage.data?.special == config.CHECK,
+                latestMessage.data?.special == config.PROMOTE_POSSIBLE,
               );
               if (!pieceMoved) {
-                console.error("Couldnt move piece due to error!");
+                console.log("Couldnt move piece due to error!");
                 return;
               }
 
@@ -100,6 +107,26 @@ const Board = () => {
             setPossibleMoves(possibleMoves);
             break;
 
+          case WEBSOCKET.TYPES.PROMOTE_PAWN:
+            const updatedFen = latestMessage.data?.fen;
+            const isCheckmate =
+              latestMessage.data?.special === config.CHECKMATE;
+            const isStalemate =
+              latestMessage.data?.special === config.STALEMATE;
+            const isCheck = latestMessage.data?.special === config.CHECK;
+
+            if (isCheckmate) handleCheckmate();
+            else if (isStalemate) handleCheckmate();
+            else if (isCheck) handleCheck();
+
+            setCurrentFen(updatedFen);
+            setCurrentPlayer(fen.getCurrentPlayer(updatedFen));
+            setPossibleMoves([]);
+            setSelectedSquare([]);
+            setShowPromotionOptions([[], PIECE_COLOR.BLACK]);
+            setSelectedPromotion([]);
+            setCurrentMoving([[], []]);
+
           default:
             break;
         }
@@ -108,6 +135,12 @@ const Board = () => {
 
     handleWebSockMessaging();
   }, [messages]);
+
+  useEffect(() => {
+    if (selectedPromotion?.type) {
+      wsPromotePawn(showPromotionOptions[0]);
+    }
+  }, [selectedPromotion]);
 
   const handleCheckmate = async () => {
     const king = document.querySelector(
@@ -143,7 +176,29 @@ const Board = () => {
     }, 200);
   };
 
-  const animateMove = async (newFen, isKill = false, isCheck = false) => {
+  const handleCheck = () => {
+    const king = document.querySelector(
+      `.king-${fen.getCurrentPlayer(currentFen) == PIECE_COLOR.WHITE ? "white" : "black"}`,
+    );
+    setTimeout(() => {
+      playCheck();
+      const kingSquare = king.parentElement;
+
+      flickerSquare(
+        kingSquare,
+        2,
+        300,
+        kingSquare.classList.contains("bg-squarewhite"),
+      );
+    }, 200);
+  };
+
+  const animateMove = async (
+    newFen,
+    isKill = false,
+    isCheck = false,
+    isPromote = false,
+  ) => {
     const [from_rank, from_file] = currentMoving[0];
     const [to_rank, to_file] = currentMoving[1];
 
@@ -177,7 +232,9 @@ const Board = () => {
           playMoveCheck();
         } else playMove();
 
-        if (isCheck && king) {
+        if (isPromote) {
+          setShowPromotionOptions([currentMoving[1], currentPlayer]);
+        } else if (isCheck && king) {
           setTimeout(() => {
             playCheck();
           }, 200);
@@ -194,6 +251,7 @@ const Board = () => {
       setTimeout(() => {
         setCurrentFen(newFen);
         setCurrentPlayer(fen.getCurrentPlayer(newFen));
+        setCurrentMoving([[], []]);
         piece.style.transform = "";
         piece.style.zIndex = "";
       }, 500);
@@ -256,6 +314,16 @@ const Board = () => {
     sendMessage(message);
   };
 
+  const wsPromotePawn = (at_pos) => {
+    const message = {
+      type: WEBSOCKET.TYPES.PROMOTE_PAWN,
+      data: {
+        position: coordsToAlgebraic(at_pos[0], at_pos[1]),
+        promote_to: selectedPromotion?.type,
+      },
+    };
+    sendMessage(message);
+  };
   const handleSquareClick = (rank, file, hasPiece, pieceColor) => {
     if (hasPiece) {
       if (
@@ -285,6 +353,18 @@ const Board = () => {
     }
   };
 
+  const generatePromotionOptions = () => {
+    const options = [];
+    const allowedPieceNames = ["queen", "rook", "knight", "bishop"];
+    allowedPieceNames.forEach((piece) => {
+      options.push({
+        type: piece,
+        color: showPromotionOptions[1],
+      });
+    });
+    return options;
+  };
+
   return (
     <div className="flex flex-col overflow-hidden rounded-md drop-shadow-2xl">
       {rows.map((row) => (
@@ -295,6 +375,9 @@ const Board = () => {
           rowFenString={fen.getRow(currentFen, row)}
           key={`row${row}`}
           index={row}
+          showPromotionOptions={showPromotionOptions}
+          promotionOptions={generatePromotionOptions()}
+          setSelectedPromotion={setSelectedPromotion}
         />
       ))}
     </div>

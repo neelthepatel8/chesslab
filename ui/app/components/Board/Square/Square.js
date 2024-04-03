@@ -5,6 +5,7 @@ import numToLetter from "@/app/utils/numToletter";
 import PossibleMoveDot from "../../Dot/PossibleMoveDot";
 import PossibleKillRing from "../../Dot/PossibleKillRing";
 import coordsToAlgebraic from "@/app/utils/coordsToAlgebraic";
+import PromotionOptions from "../PromotionOptions";
 
 const Square = ({
   children,
@@ -17,6 +18,9 @@ const Square = ({
   isPossibleMove,
   handleSquareClick,
   pieceColor,
+  showPromotionOptions,
+  promotionOptions,
+  setSelectedPromotion,
 }) => {
   const squareColor = `bg-${getSquareColor(rank, file, isSelected)}`;
   const textColor = `text-${getTextColor(squareColor)}`;
@@ -28,6 +32,15 @@ const Square = ({
       onClick={() => handleSquareClick(rank, file, children, pieceColor)}
       className={`relative h-[6.2rem] w-[6.2rem]  pt-1 text-lg font-bold ${pointerStyle} ${squareColor}`}
     >
+      {showPromotionOptions &&
+        showPromotionOptions[0][0] == rank &&
+        showPromotionOptions[0][1] == file && (
+          <PromotionOptions
+            key={`${rank}-${file}`}
+            allowedOptions={promotionOptions}
+            setSelectedPromotion={setSelectedPromotion}
+          />
+        )}
       {isPossibleMove && !children && (
         <div className="flex h-full w-full items-center justify-center">
           <PossibleMoveDot

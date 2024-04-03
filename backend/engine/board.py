@@ -194,7 +194,8 @@ class Board(ABC):
             
             if not simulate:
                 if isinstance(piece, Pawn):
-                    self.try_pawn_promote(fen_utils.coords_to_algebraic(to_pos[0], to_pos[1]))
+                    if self.try_pawn_promote(fen_utils.coords_to_algebraic(to_pos[0], to_pos[1]), do_it=False) == PAWN_CAN_PROMOTE:
+                        return SUCCESS_MOVE_MADE_NO_KILL_PROMOTE_POSSIBLE
                     
                 if self.is_game_over():
                     return SUCCESS_MOVE_MADE_NO_KILL_CHECKMATE if self.is_checkmate else SUCCESS_MOVE_MADE_NO_KILL_STALEMATE
@@ -214,7 +215,8 @@ class Board(ABC):
         
         if not simulate:
             if isinstance(piece, Pawn):
-                self.try_pawn_promote(fen_utils.coords_to_algebraic(to_pos[0], to_pos[1]))
+                if self.try_pawn_promote(fen_utils.coords_to_algebraic(to_pos[0], to_pos[1]), do_it=False) == PAWN_CAN_PROMOTE:
+                    return SUCCESS_MOVE_MADE_WTIH_KILL_PROMOTE_POSSIBLE
         
             if self.is_game_over():
                 return SUCCESS_MOVE_MADE_WITH_KILL_CHECKMATE if self.is_checkmate else SUCCESS_MOVE_MADE_WITH_KILL_STALEMATE
@@ -235,17 +237,40 @@ class Board(ABC):
         return self.is_stalemate or self.is_checkmate
     
     
-    def try_pawn_promote(self, piece_coords):
-        print("Testing if pawn at ", piece_coords, " can be promoted.")
+    def try_pawn_promote(self, piece_coords, promote_to="queen", do_it=False):
+        print("Testing if pawn at ", piece_coords, " can be promoted to ", promote_to)
         rank, file = fen_utils.algebraic_to_coords(piece_coords)
         piece = self.get_piece(piece_coords)
         final_rank = MAX_RANK if piece.get_color() == COLOR["BLACK"] else MIN_RANK 
+
+        can_promote = rank == final_rank
+        if not do_it: 
+            if can_promote: return PAWN_CAN_PROMOTE
+            else: return PAWN_CANNOT_PROMOTE  
+       
+        if can_promote:
+            promoted_piece = self.make_promotion_piece(promote_to, rank, file, piece.get_color())
+            self.board[rank - 1][file - 1] = promoted_piece  
+            self.fen = self.make_fen()   
+            if self.is_game_over():
+                print(self.is_checkmate, self.is_stalemate)
+                return SUCCESS_PAWN_PROMOTED_CHECKMATE if self.is_checkmate else SUCCESS_PAWN_PROMOTED_STALEMATE
+            
+            if self.is_king_in_check(self.current_player):
+                print("checkl")
+                
+                return SUCCESS_PAWN_PROMOTED_CHECK
+        return SUCCESS_PAWN_PROMOTED
         
-        if rank == final_rank:
-            print("It can!")
-            promoted_piece =  Queen(rank, file, piece.get_color())
-            self.board[rank - 1][file - 1] = promoted_piece     
-            return 
+    def make_promotion_piece(self, piece_type, rank, file, color):
+        if piece_type == "queen":
+            return Queen(rank, file, color)
         
-        print("It cant!")
+        if piece_type == "rook":
+            return Rook(rank, file, color)
+
+        if piece_type == "knight":
+            return Knight(rank, file, color)
         
+        if piece_type == "bishop":
+            return Bishop(rank, file, color)
