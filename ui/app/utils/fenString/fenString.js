@@ -55,6 +55,13 @@ export const getCurrentPlayer = (fen) => {
   else return PIECE_COLOR.BLACK;
 };
 
+export const getOppositePlayer = (fen) => {
+  if (fen == "") return PIECE_COLOR.WHITE;
+  const [placement, turn, ...a] = fen.split(" ");
+  if (turn === "b") return PIECE_COLOR.WHITE;
+  else return PIECE_COLOR.BLACK;
+};
+
 export const movePiece = (fen, from, to) => {
   const [placement, turn, castling, enPassant, halfMove, fullMove] =
     fen.split(" ");

@@ -48,6 +48,7 @@ class Board(ABC):
         return self.board[rank - 1][file - 1]
 
     def get_pseudo_legal_moves(self, piece_coords):
+        if self.is_stalemate or self.is_checkmate: return []
         rank, file = fen_utils.algebraic_to_coords(piece_coords)
         if not (1 <= rank <= 8 and 1 <= file <= 8):
             return None
@@ -119,7 +120,7 @@ class Board(ABC):
     def is_move_legal(self, from_pos, to_pos):
         board_copy = self.deep_copy()
 
-        board_copy.move_piece(from_pos, to_pos)
+        board_copy.move_piece(from_pos, to_pos, simulate=True)
 
         if board_copy.is_king_in_check(fen_utils.get_opposite_player(board_copy.current_player)):
             return False
@@ -128,7 +129,6 @@ class Board(ABC):
     def get_legal_moves(self, piece_coords):
         legal_moves = []
         pseudo_legal_moves = self.get_pseudo_legal_moves(piece_coords)
-        print(f"pseudolegal moves for piece at {piece_coords} are {fen_utils.algebraic_list(pseudo_legal_moves)}")
         for rank, file in pseudo_legal_moves:
             to_algebraic = fen_utils.coords_to_algebraic(rank, file)
             if self.is_move_legal(piece_coords, to_algebraic):
@@ -141,18 +141,16 @@ class Board(ABC):
             for piece in row:
                 if not piece: continue 
                 if piece.get_color() != player: continue
-                moves.append(self.get_legal_moves(piece.get_algebraic_pos()))
+                moves.extend(self.get_legal_moves(piece.get_algebraic_pos()))
         return moves 
 
     def is_king_in_check(self, player):
         king = self.get_king_location(player)
-        print("Checking if king in check for player ", player)
         all_possible_moves = self.get_all_pseudo_legal_moves(fen_utils.get_opposite_player(player))
         for move in all_possible_moves:
             if move == king:
                 return True
 
-        print("king not in check. king at: ", fen_utils.coords_to_algebraic(king[0], king[1]), " all moves: ", [fen_utils.algebraic_list(all_possible_moves)])
         return False
 
     def get_king_location(self, player):
@@ -166,7 +164,7 @@ class Board(ABC):
         return -1, -1
     
     
-    def move_piece(self, from_pos, to_pos):
+    def move_piece(self, from_pos, to_pos, simulate=False):
         if not from_pos or not to_pos: return ERROR_NO_POSITIONS_PROVIDED
 
         from_pos = fen_utils.algebraic_to_coords(from_pos)
@@ -194,9 +192,11 @@ class Board(ABC):
             self.current_player = COLOR["WHITE"] if self.current_player == COLOR["BLACK"] else COLOR["BLACK"]
             self.fen = self.make_fen()
             
-            if self.is_king_in_check(self.current_player): return SUCCESS_MOVE_MADE_NO_KILL_CHECK
-            if self.is_game_over():
-                return SUCCESS_MOVE_MADE_NO_KILL_CHECKMATE if self.is_checkmate else SUCCESS_MOVE_MADE_NO_KILL_STALEMATE
+            if not simulate:
+                if self.is_game_over():
+                    return SUCCESS_MOVE_MADE_NO_KILL_CHECKMATE if self.is_checkmate else SUCCESS_MOVE_MADE_NO_KILL_STALEMATE
+                
+                if self.is_king_in_check(self.current_player): return SUCCESS_MOVE_MADE_NO_KILL_CHECK
                 
             return SUCCESS_MOVE_MADE_NO_KILL_NO_CHECK
 
@@ -208,16 +208,22 @@ class Board(ABC):
         self.halfmoves += 1
         self.fen = self.make_fen()
         
-        if self.is_king_in_check(self.current_player): return SUCCESS_MOVE_MADE_WITH_KILL_CHECK
-        if self.check_game_over():
-            return SUCCESS_MOVE_MADE_WITH_KILL_CHECKMATE if self.is_checkmate else SUCCESS_MOVE_MADE_WITH_KILL_STALEMATE
+        if not simulate:
+            if self.is_game_over():
+                return SUCCESS_MOVE_MADE_WITH_KILL_CHECKMATE if self.is_checkmate else SUCCESS_MOVE_MADE_WITH_KILL_STALEMATE
+            
+            if self.is_king_in_check(self.current_player): return SUCCESS_MOVE_MADE_WITH_KILL_CHECK
             
         return SUCCESS_MOVE_MADE_WITH_KILL_NO_CHECK
     
     def is_game_over(self):
         all_legal_moves = self.get_all_legal_moves(self.current_player)
-        if len(all_legal_moves) > 0:
-            if self.is_king_in_check(self.player):
+        print("Checking game over: ")
+        print(fen_utils.algebraic_list(all_legal_moves))
+        if len(all_legal_moves) == 0:
+            king_check = self.is_king_in_check(self.current_player)
+            print("Check? : ", king_check)
+            if king_check:
                 self.is_checkmate = True 
             else:
                 self.is_stalemate = True

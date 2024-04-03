@@ -32,6 +32,8 @@ const Board = () => {
   const [playCapture] = useSound("sfx/capture.mp3");
   const [playCaptureCheck] = useSound("sfx/capture.mp3", { volume: 5 });
   const [playCheck] = useSound("sfx/check.mp3", { volume: 1 });
+  const [playCheckmate] = useSound("sfx/checkmate.mp3", { volume: 1 });
+  const [playStalemate] = useSound("sfx/stalemate.mp3", { volume: 1 });
 
   useEffect(() => {
     if (isConnected) {
@@ -64,8 +66,10 @@ const Board = () => {
             setCurrentPlayer(fen.getCurrentPlayer(newFen));
             setPossibleMoves([]);
             setSelectedSquare([]);
+
           case WEBSOCKET.TYPES.CONFIG:
             setConfig(latestMessage.data?.constants);
+
           case WEBSOCKET.TYPES.MAKE_MOVE:
             if (latestMessage.data?.move_success == true) {
               const pieceMoved = await animateMove(
@@ -76,6 +80,12 @@ const Board = () => {
               if (!pieceMoved) {
                 console.error("Couldnt move piece due to error!");
                 return;
+              }
+
+              if (latestMessage.data?.special == config.CHECKMATE) {
+                await handleCheckmate();
+              } else if (latestMessage.data?.special == config.STALEMATE) {
+                await handleStalemate();
               }
             } else {
             }
@@ -96,6 +106,40 @@ const Board = () => {
 
     handleWebSockMessaging();
   }, [messages]);
+
+  const handleCheckmate = async () => {
+    const king = document.querySelector(
+      `.king-${fen.getCurrentPlayer(currentFen) == "b" ? "white" : "black"}`,
+    );
+
+    setTimeout(() => {
+      playCheckmate();
+      const kingSquare = king.parentElement;
+      flickerSquare(
+        kingSquare,
+        8,
+        300,
+        kingSquare.classList.contains("bg-squarewhite"),
+      );
+    }, 200);
+  };
+  const handleStalemate = async () => {
+    const king = document.querySelector(
+      `.king-${fen.getCurrentPlayer(currentFen) == "b" ? "white" : "black"}`,
+    );
+
+    setTimeout(() => {
+      playStalemate();
+      const kingSquare = king.parentElement;
+      flickerSquare(
+        kingSquare,
+        8,
+        300,
+        kingSquare.classList.contains("bg-squarewhite"),
+        true,
+      );
+    }, 200);
+  };
 
   const animateMove = async (newFen, isKill = false, isCheck = False) => {
     const [from_rank, from_file] = currentMoving[0];
@@ -158,9 +202,15 @@ const Board = () => {
     return false;
   };
 
-  const flickerSquare = (element, times, interval, white = true) => {
-    const classOn = white ? "#EB896F" : "#E2553E";
-    const classOff = white ? "#eeeed2" : "#769656";
+  const flickerSquare = (
+    element,
+    times,
+    interval,
+    white = true,
+    stalemate = false,
+  ) => {
+    const classOn = stalemate ? "#89CFF0" : white ? "#EB896F" : "#E2553E";
+    const classOff = stalemate ? "#D3D3D3" : white ? "#eeeed2" : "#769656";
 
     element.style.background = classOff;
     let isOn = false;
