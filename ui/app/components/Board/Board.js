@@ -40,6 +40,7 @@ const Board = () => {
   const [playCheck] = useSound("sfx/check.mp3", { volume: 1 });
   const [playCheckmate] = useSound("sfx/checkmate.mp3", { volume: 1 });
   const [playStalemate] = useSound("sfx/stalemate.mp3", { volume: 1 });
+  const [playPromotion] = useSound("sfx/promotion.mp3", { volume: 1 });
 
   useEffect(() => {
     if (isConnected) {
@@ -120,6 +121,7 @@ const Board = () => {
             else if (isCheck) handleCheck();
 
             setCurrentFen(updatedFen);
+
             setCurrentPlayer(fen.getCurrentPlayer(updatedFen));
             setPossibleMoves([]);
             setSelectedSquare([]);
@@ -135,6 +137,10 @@ const Board = () => {
 
     handleWebSockMessaging();
   }, [messages]);
+
+  useEffect(() => {
+    if (showPromotionOptions[0].length > 0) playPromotion();
+  }, [showPromotionOptions]);
 
   useEffect(() => {
     if (selectedPromotion?.type) {
@@ -322,6 +328,7 @@ const Board = () => {
         promote_to: selectedPromotion?.type,
       },
     };
+
     sendMessage(message);
   };
   const handleSquareClick = (rank, file, hasPiece, pieceColor) => {
