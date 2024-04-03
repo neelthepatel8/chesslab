@@ -81,22 +81,18 @@ const Board = () => {
 
           case WEBSOCKET.TYPES.MAKE_MOVE:
             if (latestMessage.data?.move_success == true) {
-              const pieceMoved = await animateMove(
+              await animateMove(
                 latestMessage.data?.fen,
                 latestMessage.data?.is_kill,
                 latestMessage.data?.special == config.CHECK,
                 latestMessage.data?.special == config.PROMOTE_POSSIBLE,
-              );
-              if (!pieceMoved) {
-                console.log("Couldnt move piece due to error!");
-                return;
-              }
-
-              if (latestMessage.data?.special == config.CHECKMATE) {
-                await handleCheckmate();
-              } else if (latestMessage.data?.special == config.STALEMATE) {
-                await handleStalemate();
-              }
+              ).then(() => {
+                if (latestMessage.data?.special == config.CHECKMATE) {
+                  handleCheckmate();
+                } else if (latestMessage.data?.special == config.STALEMATE) {
+                  handleStalemate(latestMessage.data?.fen);
+                }
+              });
             } else {
             }
             setPossibleMoves([]);
@@ -164,22 +160,40 @@ const Board = () => {
       );
     }, 200);
   };
-  const handleStalemate = async () => {
-    const king = document.querySelector(
-      `.king-${fen.getCurrentPlayer(currentFen) == PIECE_COLOR.BLACK ? "white" : "black"}`,
+  const handleStalemate = async (fenStr = currentFen) => {
+    const blackKingLocation = fen.getKingLocationFromFen(
+      fenStr,
+      PIECE_COLOR.BLACK,
+    );
+    const whiteKingLocation = fen.getKingLocationFromFen(
+      fenStr,
+      PIECE_COLOR.WHITE,
+    );
+    const blackKingSquare = document.getElementById(
+      `square-${blackKingLocation}`,
+    );
+    const whiteKingSquare = document.getElementById(
+      `square-${whiteKingLocation}`,
     );
 
+    console.log(blackKingSquare, whiteKingSquare);
     setTimeout(() => {
       playStalemate();
-      const kingSquare = king.parentElement;
       flickerSquare(
-        kingSquare,
+        blackKingSquare,
         8,
         300,
-        kingSquare.classList.contains("bg-squarewhite"),
+        blackKingSquare.classList.contains("bg-squarewhite"),
         true,
       );
-    }, 200);
+      flickerSquare(
+        whiteKingSquare,
+        8,
+        300,
+        whiteKingSquare.classList.contains("bg-squarewhite"),
+        true,
+      );
+    }, 300);
   };
 
   const handleCheck = () => {

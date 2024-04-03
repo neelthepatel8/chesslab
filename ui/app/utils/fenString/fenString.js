@@ -115,3 +115,36 @@ export const movePiece = (fen, from, to) => {
 
   return `${newPlacement} ${newTurn} ${castling} ${enPassant} ${halfMove} ${newFullMove}`;
 };
+
+export const getKingLocationFromFen = (fen, color) => {
+  const piecePlacement = fen.split(" ")[0];
+  const king = color === PIECE_COLOR.BLACK ? "k" : "K";
+
+  const ranks = piecePlacement.split("/");
+
+  let rankIndex = 8;
+  let fileIndex,
+    foundKing = false,
+    algebraicPosition = "";
+
+  for (const rank of ranks) {
+    fileIndex = 0;
+    for (const char of rank) {
+      if (isNaN(char)) {
+        if (char === king) {
+          algebraicPosition =
+            String.fromCharCode(97 + fileIndex) + rankIndex.toString();
+          foundKing = true;
+          break;
+        }
+        fileIndex++;
+      } else {
+        fileIndex += parseInt(char);
+      }
+    }
+    if (foundKing) break;
+    rankIndex--;
+  }
+
+  return algebraicPosition;
+};
