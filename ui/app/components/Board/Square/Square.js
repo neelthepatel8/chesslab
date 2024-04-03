@@ -26,7 +26,7 @@ const Square = ({
     <div
       id={`square-${coordsToAlgebraic(rank, file)}`}
       onClick={() => handleSquareClick(rank, file, children, pieceColor)}
-      className={`relative h-[6.5rem] w-[6.5rem]  pt-1 text-lg font-bold ${pointerStyle} ${squareColor}`}
+      className={`relative h-[6.2rem] w-[6.2rem]  pt-1 text-lg font-bold ${pointerStyle} ${squareColor}`}
     >
       {isPossibleMove && !children && (
         <div className="flex h-full w-full items-center justify-center">

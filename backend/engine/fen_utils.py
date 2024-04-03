@@ -133,5 +133,4 @@ def get_opposite_player(player):
 
 
 def algebraic_list(arr):
-    print(arr)
     return [coords_to_algebraic(r, f) for r, f in arr]

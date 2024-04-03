@@ -89,7 +89,6 @@ async def make_move(websocket, message):
     to_pos = message['data']['to_position']
 
     move_success, is_kill, special = board.move_piece(from_pos, to_pos)
-    print(move_success, is_kill, special)
 
     response = {
         'type': 'move_piece',

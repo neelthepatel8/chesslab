@@ -218,11 +218,8 @@ class Board(ABC):
     
     def is_game_over(self):
         all_legal_moves = self.get_all_legal_moves(self.current_player)
-        print("Checking game over: ")
-        print(fen_utils.algebraic_list(all_legal_moves))
         if len(all_legal_moves) == 0:
             king_check = self.is_king_in_check(self.current_player)
-            print("Check? : ", king_check)
             if king_check:
                 self.is_checkmate = True 
             else:
