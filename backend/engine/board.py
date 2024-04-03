@@ -19,6 +19,9 @@ class Board(ABC):
         self.halfmoves = fen_utils.get_halfmoves(fen)
         self.fullmoves = fen_utils.get_fullmoves(fen)
         self.castling_avalability = fen_utils.get_castling_avalability(fen)
+        
+        self.is_stalemate = False
+        self.is_checkmate = False 
 
     def make_fen(self):
         active = "w" if self.current_player == COLOR["WHITE"] else "b"
@@ -147,7 +150,6 @@ class Board(ABC):
         all_possible_moves = self.get_all_pseudo_legal_moves(fen_utils.get_opposite_player(player))
         for move in all_possible_moves:
             if move == king:
-                print("king in check")
                 return True
 
         print("king not in check. king at: ", fen_utils.coords_to_algebraic(king[0], king[1]), " all moves: ", [fen_utils.algebraic_list(all_possible_moves)])
@@ -178,7 +180,6 @@ class Board(ABC):
         if not piece: return ERROR_NO_PIECE_TO_MOVE
 
         possible_moves = self.get_pseudo_legal_moves(fen_utils.coords_to_algebraic(from_rank, from_file))
-        print(f"Move to possible moves for piece at {fen_utils.coords_to_algebraic(from_pos[0], from_pos[1])} are: {fen_utils.algebraic_list(possible_moves)} and trying to move to {fen_utils.coords_to_algebraic(to_pos[0], to_pos[1])}")
         if to_pos not in possible_moves: return ERROR_MOVE_NOT_POSSIBLE
 
         piece_at_pos = self.board[to_rank - 1][to_file - 1]
@@ -194,6 +195,9 @@ class Board(ABC):
             self.fen = self.make_fen()
             
             if self.is_king_in_check(self.current_player): return SUCCESS_MOVE_MADE_NO_KILL_CHECK
+            if self.is_game_over():
+                return SUCCESS_MOVE_MADE_NO_KILL_CHECKMATE if self.is_checkmate else SUCCESS_MOVE_MADE_NO_KILL_STALEMATE
+                
             return SUCCESS_MOVE_MADE_NO_KILL_NO_CHECK
 
         self.dead_pieces[piece_at_pos.get_color()].append(piece_at_pos)
@@ -205,5 +209,20 @@ class Board(ABC):
         self.fen = self.make_fen()
         
         if self.is_king_in_check(self.current_player): return SUCCESS_MOVE_MADE_WITH_KILL_CHECK
-
+        if self.check_game_over():
+            return SUCCESS_MOVE_MADE_WITH_KILL_CHECKMATE if self.is_checkmate else SUCCESS_MOVE_MADE_WITH_KILL_STALEMATE
+            
         return SUCCESS_MOVE_MADE_WITH_KILL_NO_CHECK
+    
+    def is_game_over(self):
+        all_legal_moves = self.get_all_legal_moves(self.current_player)
+        if len(all_legal_moves) > 0:
+            if self.is_king_in_check(self.player):
+                self.is_checkmate = True 
+            else:
+                self.is_stalemate = True
+                
+        return self.is_stalemate or self.is_checkmate
+            
+            
+        
