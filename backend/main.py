@@ -105,8 +105,6 @@ async def make_move(websocket, message):
     await websocket.send_text(json.dumps(response))
 
 
-
-
 message_handlers = {
     'init': init_board,
     'configuration': configuration,

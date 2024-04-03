@@ -3,7 +3,7 @@ from engine.constants import *
 import engine.fen_utils as fen_utils
 from engine.piece import Piece
 from pprint import pprint
-from engine.pieces import Pawn
+from engine.pieces import *
 import copy
 
 class Board(ABC):
@@ -97,7 +97,7 @@ class Board(ABC):
             valid_moves = final_valid_moves
 
         return valid_moves
-
+    
     def get_all_pseudo_legal_moves(self, player):
         moves = []
         for row in self.board:
@@ -193,6 +193,9 @@ class Board(ABC):
             self.fen = self.make_fen()
             
             if not simulate:
+                if isinstance(piece, Pawn):
+                    self.try_pawn_promote(fen_utils.coords_to_algebraic(to_pos[0], to_pos[1]))
+                    
                 if self.is_game_over():
                     return SUCCESS_MOVE_MADE_NO_KILL_CHECKMATE if self.is_checkmate else SUCCESS_MOVE_MADE_NO_KILL_STALEMATE
                 
@@ -208,7 +211,11 @@ class Board(ABC):
         self.halfmoves += 1
         self.fen = self.make_fen()
         
+        
         if not simulate:
+            if isinstance(piece, Pawn):
+                self.try_pawn_promote(fen_utils.coords_to_algebraic(to_pos[0], to_pos[1]))
+        
             if self.is_game_over():
                 return SUCCESS_MOVE_MADE_WITH_KILL_CHECKMATE if self.is_checkmate else SUCCESS_MOVE_MADE_WITH_KILL_STALEMATE
             
@@ -226,6 +233,19 @@ class Board(ABC):
                 self.is_stalemate = True
                 
         return self.is_stalemate or self.is_checkmate
-            
-            
+    
+    
+    def try_pawn_promote(self, piece_coords):
+        print("Testing if pawn at ", piece_coords, " can be promoted.")
+        rank, file = fen_utils.algebraic_to_coords(piece_coords)
+        piece = self.get_piece(piece_coords)
+        final_rank = MAX_RANK if piece.get_color() == COLOR["BLACK"] else MIN_RANK 
+        
+        if rank == final_rank:
+            print("It can!")
+            promoted_piece =  Queen(rank, file, piece.get_color())
+            self.board[rank - 1][file - 1] = promoted_piece     
+            return 
+        
+        print("It cant!")
         

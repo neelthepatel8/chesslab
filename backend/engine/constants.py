@@ -1,6 +1,7 @@
 # START_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 # START_FEN = "1rbqk1nr/2pn1pp1/1p1bp3/p6p/QPP3P1/4pN1B/P2PKP1P/RNB4R w k - 0 11"
 START_FEN = "8/k7/2K5/1P6/8/8/8/8 b - - 0 40" # STALEMATE
+START_FEN = "8/2P5/8/8/5k2/8/6p1/2K5 w - - 0 0" # PAWN PROMOTION
 MAX_ROWS  = 8
 MAX_COLS = 8
 
@@ -23,6 +24,7 @@ PAWN_START = {
 
 NO_MOVE_MADE = 0
 MOVE_MADE = 1
+
 NO_KILL = 2
 KILL = 3
 

@@ -54,6 +54,8 @@ const Board = () => {
     const handleWebSockMessaging = async () => {
       const latestMessage = messages[messages.length - 1];
       if (latestMessage) {
+        console.log("Recieved message: ", latestMessage);
+
         if (latestMessage.error < 0) {
           console.error("Recieved error from backend: ", latestMessage);
           return;
@@ -109,7 +111,7 @@ const Board = () => {
 
   const handleCheckmate = async () => {
     const king = document.querySelector(
-      `.king-${fen.getCurrentPlayer(currentFen) == "b" ? "white" : "black"}`,
+      `.king-${fen.getCurrentPlayer(currentFen) == PIECE_COLOR.BLACK ? "white" : "black"}`,
     );
 
     setTimeout(() => {
@@ -125,7 +127,7 @@ const Board = () => {
   };
   const handleStalemate = async () => {
     const king = document.querySelector(
-      `.king-${fen.getCurrentPlayer(currentFen) == "b" ? "white" : "black"}`,
+      `.king-${fen.getCurrentPlayer(currentFen) == PIECE_COLOR.BLACK ? "white" : "black"}`,
     );
 
     setTimeout(() => {
@@ -141,7 +143,7 @@ const Board = () => {
     }, 200);
   };
 
-  const animateMove = async (newFen, isKill = false, isCheck = False) => {
+  const animateMove = async (newFen, isKill = false, isCheck = false) => {
     const [from_rank, from_file] = currentMoving[0];
     const [to_rank, to_file] = currentMoving[1];
 
@@ -160,7 +162,7 @@ const Board = () => {
       const transformY = toRect.top - fromRect.top;
 
       const king = document.querySelector(
-        `.king-${fen.getCurrentPlayer(currentFen) == "b" ? "white" : "black"}`,
+        `.king-${fen.getCurrentPlayer(currentFen) == PIECE_COLOR.BLACK ? "white" : "black"}`,
       );
 
       piece.style.position = "relative";
@@ -194,7 +196,7 @@ const Board = () => {
         setCurrentPlayer(fen.getCurrentPlayer(newFen));
         piece.style.transform = "";
         piece.style.zIndex = "";
-      }, 400);
+      }, 500);
 
       return true;
     }
