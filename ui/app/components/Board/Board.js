@@ -8,6 +8,7 @@ import { WEBSOCKET } from "@/app/services/constants";
 import coordsToAlgebraic from "@/app/utils/coordsToAlgebraic";
 
 import useSound from "use-sound";
+import { algebraicToCoords } from "@/app/utils/algebraicToCoords";
 
 const rows = [1, 2, 3, 4, 5, 6, 7, 8].reverse();
 
@@ -25,6 +26,7 @@ const Board = () => {
   const [possibleMoves, setPossibleMoves] = useState([]);
 
   const [currentMoving, setCurrentMoving] = useState([[], []]);
+  const [rookMoving, setRookMoving] = useState([]);
 
   const [showPromotionOptions, setShowPromotionOptions] = useState([
     [],
@@ -33,9 +35,9 @@ const Board = () => {
   const [selectedPromotion, setSelectedPromotion] = useState({});
 
   // Sound Effects:
-  const [playMove] = useSound("sfx/move.mp3");
+  const [playMove] = useSound("sfx/move.mp3", { volume: 1 });
   const [playMoveCheck] = useSound("sfx/move.mp3", { volume: 5 });
-  const [playCapture] = useSound("sfx/capture.mp3");
+  const [playCapture] = useSound("sfx/capture.mp3", { volume: 1 });
   const [playCaptureCheck] = useSound("sfx/capture.mp3", { volume: 5 });
   const [playCheck] = useSound("sfx/check.mp3", { volume: 1 });
   const [playCheckmate] = useSound("sfx/checkmate.mp3", { volume: 1 });
@@ -81,15 +83,18 @@ const Board = () => {
 
           case WEBSOCKET.TYPES.MAKE_MOVE:
             if (latestMessage.data?.move_success == true) {
+              const special = latestMessage.data?.special;
               await animateMove(
                 latestMessage.data?.fen,
                 latestMessage.data?.is_kill,
-                latestMessage.data?.special == config.CHECK,
-                latestMessage.data?.special == config.PROMOTE_POSSIBLE,
+                special == config.CHECK || special == config.CASTLED_CHECK,
+                special == config.PROMOTE_POSSIBLE,
+                special == config.CASTLED_CHECK ||
+                  special == config.CASTLED_NO_CHECK,
               ).then(() => {
-                if (latestMessage.data?.special == config.CHECKMATE) {
+                if (special == config.CHECKMATE) {
                   handleCheckmate();
-                } else if (latestMessage.data?.special == config.STALEMATE) {
+                } else if (special == config.STALEMATE) {
                   handleStalemate(latestMessage.data?.fen);
                 }
               });
@@ -218,9 +223,14 @@ const Board = () => {
     isKill = false,
     isCheck = false,
     isPromote = false,
+    isCastle = false,
+    movingRook = false,
   ) => {
-    const [from_rank, from_file] = currentMoving[0];
-    const [to_rank, to_file] = currentMoving[1];
+    console.log("rook moving: ", rookMoving);
+    const [from_rank, from_file] = movingRook
+      ? rookMoving[0]
+      : currentMoving[0];
+    const [to_rank, to_file] = movingRook ? rookMoving[1] : currentMoving[1];
 
     const fromSquare = document.getElementById(
       `square-${coordsToAlgebraic(from_rank, from_file)}`,
@@ -229,6 +239,10 @@ const Board = () => {
       `square-${coordsToAlgebraic(to_rank, to_file)}`,
     );
     const piece = fromSquare?.querySelector(".chess-piece");
+
+    console.log("Square from: ", coordsToAlgebraic(from_rank, from_file));
+    console.log("Square to: ", coordsToAlgebraic(to_rank, to_file));
+    console.log("Piece ", piece);
 
     if (piece && fromSquare && toSquare) {
       const fromRect = fromSquare.getBoundingClientRect();
@@ -244,36 +258,49 @@ const Board = () => {
       piece.style.zIndex = 1000;
       piece.style.transform = `translate3d(${transformX}px, ${transformY}px, 0)`;
 
-      setTimeout(() => {
-        if (isKill) {
-          if (isCheck) playCaptureCheck();
-          else playCapture();
-        } else if (isCheck) {
-          playMoveCheck();
-        } else playMove();
+      if (!movingRook) {
+        setTimeout(() => {
+          if (isKill) {
+            if (isCheck) playCaptureCheck();
+            else playCapture();
+          } else if (isCheck) {
+            playMoveCheck();
+          } else playMove();
 
-        if (isPromote) {
-          setShowPromotionOptions([currentMoving[1], currentPlayer]);
-        } else if (isCheck && king) {
-          setTimeout(() => {
-            playCheck();
-          }, 200);
-          const kingSquare = king.parentElement;
-          flickerSquare(
-            kingSquare,
-            2,
-            300,
-            kingSquare.classList.contains("bg-squarewhite"),
-          );
+          if (isPromote) {
+            setShowPromotionOptions([currentMoving[1], currentPlayer]);
+          } else if (isCheck && king) {
+            setTimeout(() => {
+              playCheck();
+            }, 200);
+            const kingSquare = king.parentElement;
+            flickerSquare(
+              kingSquare,
+              2,
+              300,
+              kingSquare.classList.contains("bg-squarewhite"),
+            );
+          }
+        }, 200);
+      }
+
+      if (movingRook) {
+        setTimeout(() => {
+          playMove();
+        }, 500);
+      }
+
+      setTimeout(async () => {
+        if (isCastle) {
+          await animateMove(newFen, false, false, false, false, true);
+        } else {
+          setCurrentFen(newFen);
+          setCurrentPlayer(fen.getCurrentPlayer(newFen));
+          setCurrentMoving([[], []]);
+          setRookMoving([[], []]);
+          piece.style.transform = "";
+          piece.style.zIndex = "";
         }
-      }, 200);
-
-      setTimeout(() => {
-        setCurrentFen(newFen);
-        setCurrentPlayer(fen.getCurrentPlayer(newFen));
-        setCurrentMoving([[], []]);
-        piece.style.transform = "";
-        piece.style.zIndex = "";
       }, 500);
 
       return true;
@@ -370,7 +397,31 @@ const Board = () => {
         }
       }
     } else {
-      if (selectedSquare.length > 0) wsMovePiece(selectedSquare, [rank, file]);
+      if (selectedSquare.length > 0) {
+        const moving_from = coordsToAlgebraic(
+          selectedSquare[0],
+          selectedSquare[1],
+        );
+
+        const piece_name = fen.getPieceAt(currentFen, moving_from);
+        console.log("Piece king? ", piece_name, currentFen, moving_from);
+        if (piece_name?.toLowerCase() === "k") {
+          if (Math.abs(file - selectedSquare[1]) > 1) {
+            if (moving_from == "e1") {
+              setRookMoving([
+                algebraicToCoords(file > selectedSquare[1] ? "h1" : "a1"),
+                algebraicToCoords(file > selectedSquare[1] ? "f1" : "d1"),
+              ]);
+            } else if (moving_from == "e8") {
+              setRookMoving([
+                algebraicToCoords(file > selectedSquare[1] ? "h8" : "a8"),
+                algebraicToCoords(file > selectedSquare[1] ? "f8" : "d8"),
+              ]);
+            }
+          }
+        }
+        wsMovePiece(selectedSquare, [rank, file]);
+      }
     }
   };
 

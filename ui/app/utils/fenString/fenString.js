@@ -1,5 +1,6 @@
 import { PIECE_COLOR } from "@/app/constants/constants";
-
+import { algebraicToCoords } from "../algebraicToCoords";
+import coordsToAlgebraic from "../coordsToAlgebraic";
 export const getRow = (fen, row) => {
   if (!fen) return "8";
   const splitString = fen.split(" ");
@@ -147,4 +148,20 @@ export const getKingLocationFromFen = (fen, color) => {
   }
 
   return algebraicPosition;
+};
+
+export const getPieceAt = (currentFen, piece_coords) => {
+  const boardLayout = currentFen.split(" ")[0];
+
+  const coords = algebraicToCoords(piece_coords);
+  const file = coords[1];
+  const rank = 9 - coords[0];
+
+  const ranks = boardLayout.split("/");
+
+  const fenRow = ranks[rank - 1];
+  console.log(fenRow);
+
+  const expandedRow = fenRow.replace(/\d/g, (match) => ".".repeat(match));
+  return expandedRow[file - 1] === "." ? null : expandedRow[file - 1];
 };
