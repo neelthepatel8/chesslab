@@ -22,6 +22,12 @@ class Board(ABC):
         
         self.is_stalemate = False
         self.is_checkmate = False 
+        self.king_in_check = None
+        
+        self.all_legal_moves = {
+            COLOR["BLACK"]: [],
+            COLOR["WHITE"]: []
+        }
 
     def make_fen(self):
         active = "w" if self.current_player == COLOR["WHITE"] else "b"
@@ -80,7 +86,8 @@ class Board(ABC):
                                 valid_path.append((r, f))
                                 break
                 else:
-                    valid_moves.extend(self.get_castlable_moves(piece))
+                    if not self.king_in_check:
+                        valid_moves.extend(self.get_castlable_moves(piece))
                     if not isinstance(piece, Pawn) or (isinstance(piece, Pawn) and piece.file == f):
                         valid_path.append((r, f))
 
@@ -97,7 +104,7 @@ class Board(ABC):
                     final_valid_moves.append(move)
             valid_moves = final_valid_moves
 
-        return valid_moves
+        return list(set(valid_moves))
     
     def get_all_pseudo_legal_moves(self, player):
         moves = []
@@ -106,7 +113,7 @@ class Board(ABC):
                 if not piece: continue 
                 if piece.get_color() != player: continue
                 moves.extend(self.get_pseudo_legal_moves(piece.get_algebraic_pos()))
-        return moves 
+        return list(set(moves)) 
     
     def deep_copy(self):
         copy_board = Board(self.fen)
@@ -134,7 +141,7 @@ class Board(ABC):
             to_algebraic = fen_utils.coords_to_algebraic(rank, file)
             if self.is_move_legal(piece_coords, to_algebraic):
                 legal_moves.append((rank, file))
-        return legal_moves
+        return list(set(legal_moves))
     
     def get_all_legal_moves(self, player):
         moves = []
@@ -143,15 +150,18 @@ class Board(ABC):
                 if not piece: continue 
                 if piece.get_color() != player: continue
                 moves.extend(self.get_legal_moves(piece.get_algebraic_pos()))
-        return moves 
+        self.all_legal_moves[player] = moves
+        return list(set(moves)) 
 
     def is_king_in_check(self, player):
         king = self.get_king_location(player)
         all_possible_moves = self.get_all_pseudo_legal_moves(fen_utils.get_opposite_player(player))
         for move in all_possible_moves:
             if move == king:
+                self.king_in_check = player
                 return True
 
+        self.king_in_check = None
         return False
 
     def get_king_location(self, player):
@@ -247,21 +257,75 @@ class Board(ABC):
     
     def get_castlable_moves(self, piece):
         moves = []
+            
         if isinstance(piece, King):
             if piece.get_color() == COLOR["WHITE"]:
                 if 'K' in self.castling_availability:
-                    moves.append(fen_utils.algebraic_to_coords("g1"))
+                    to_append = True
+                    pieces_in_middle = ['f1', 'g1']
+                    for p in pieces_in_middle:
+                        r, f = fen_utils.algebraic_to_coords(p)
+                        if self.board[r - 1][f - 1]:
+                            to_append = False
+                            break
+                        if self.is_targeted_square(p):
+                            to_append = False
+                            break
+                    if to_append: 
+                            moves.append(fen_utils.algebraic_to_coords("g1"))
                 if 'Q' in self.castling_availability:
-                    moves.append(fen_utils.algebraic_to_coords("c1"))
+                    to_append = True
+                    pieces_in_middle = ['b1', 'c1', 'd1']
+                    for p in pieces_in_middle:
+                        r, f = fen_utils.algebraic_to_coords(p)
+                        if self.board[r - 1][f - 1]:
+                            to_append = False
+                            break
+                        if self.is_targeted_square(p):
+                            to_append = False
+                            break
+                    if to_append: 
+                        moves.append(fen_utils.algebraic_to_coords("c1"))
             elif piece.get_color() == COLOR["BLACK"]:
                 if 'k' in self.castling_availability:
-                    moves.append(fen_utils.algebraic_to_coords("g8"))
+                    to_append = True
+                    pieces_in_middle = ['f8', 'g8']
+                    for p in pieces_in_middle:
+                        r, f = fen_utils.algebraic_to_coords(p)
+                        if self.board[r - 1][f - 1]:
+                            to_append = False
+                            break
+                        if self.is_targeted_square(p):
+                            to_append = False
+                            break
+                    if to_append: 
+                        moves.append(fen_utils.algebraic_to_coords("g8"))
                 if 'q' in self.castling_availability:
-                    moves.append(fen_utils.algebraic_to_coords("c8"))
+                    to_append = True
+                    pieces_in_middle = ['b8', 'c8', 'd8']
+                    for p in pieces_in_middle:
+                        r, f = fen_utils.algebraic_to_coords(p)
+                        if self.board[r - 1][f - 1]:
+                            to_append = False
+                            break
+                        if self.is_targeted_square(p):
+                            to_append = False
+                            break
+                    if to_append: 
+                            moves.append(fen_utils.algebraic_to_coords("c8"))
         return moves
     
+    def is_targeted_square(self, coords):
+        player = fen_utils.get_opposite_player(self.current_player)
+        legal_moves = self.all_legal_moves[player]
+        is_targeted = fen_utils.algebraic_to_coords(coords) in legal_moves
+        return is_targeted
+    
     def castle(self, piece, from_pos, to_pos):
-        print("Castling king ", fen_utils.algebraic_list([from_pos, to_pos]))
+        
+        if self.is_king_in_check(self.current_player):
+            return False
+        
         self.update_castling_availability()
         if not self.castling_availability:
             print("NOT CASTLED")

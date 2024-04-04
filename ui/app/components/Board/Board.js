@@ -86,7 +86,7 @@ const Board = () => {
               const special = latestMessage.data?.special;
               await animateMove(
                 latestMessage.data?.fen,
-                latestMessage.data?.is_kill,
+                latestMessage.data?.is_kill == config.KILL,
                 special == config.CHECK || special == config.CASTLED_CHECK,
                 special == config.PROMOTE_POSSIBLE,
                 special == config.CASTLED_CHECK ||
@@ -258,36 +258,43 @@ const Board = () => {
       piece.style.zIndex = 1000;
       piece.style.transform = `translate3d(${transformX}px, ${transformY}px, 0)`;
 
-      if (!movingRook) {
-        setTimeout(() => {
-          if (isKill) {
-            if (isCheck) playCaptureCheck();
-            else playCapture();
-          } else if (isCheck) {
-            playMoveCheck();
-          } else playMove();
-
+      function handleMoveOutcome() {
+        const executeMoveLogic = () => {
           if (isPromote) {
             setShowPromotionOptions([currentMoving[1], currentPlayer]);
-          } else if (isCheck && king) {
-            setTimeout(() => {
-              playCheck();
-            }, 200);
-            const kingSquare = king.parentElement;
-            flickerSquare(
-              kingSquare,
-              2,
-              300,
-              kingSquare.classList.contains("bg-squarewhite"),
-            );
+            return;
           }
-        }, 200);
+
+          if (isKill) {
+            isCheck ? playCaptureCheck() : playCapture();
+          } else if (isCheck) {
+            playMoveCheck();
+            if (king) {
+              setTimeout(playCheck, 200);
+              const kingSquare = king.parentElement;
+              flickerSquare(
+                kingSquare,
+                2,
+                300,
+                kingSquare.classList.contains("bg-squarewhite"),
+              );
+            }
+          } else {
+            playMove();
+          }
+        };
+
+        if (!movingRook) {
+          setTimeout(executeMoveLogic, 200);
+        }
       }
+
+      handleMoveOutcome();
 
       if (movingRook) {
         setTimeout(() => {
           playMove();
-        }, 500);
+        }, 400);
       }
 
       setTimeout(async () => {
