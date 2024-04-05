@@ -1,7 +1,8 @@
-from engine.constants import *
+from engine.constants import MAX_RANK, MAX_FILE
 
 def visualize_possible_moves(possible_moves, piece_position, piece_name):
-    if possible_moves == None: return
+    if possible_moves is None: 
+        return
     for rank in range(1, MAX_RANK + 1):
         for file in range(1, MAX_FILE + 1):
             if (rank, file) == piece_position:

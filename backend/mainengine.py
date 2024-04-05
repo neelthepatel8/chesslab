@@ -1,6 +1,4 @@
 from engine.board import Board
-from engine.pieces import *
-from engine.constants import *
 from engine.utils import visualize_possible_moves
 from engine.fen_utils import algebraic_to_coords
 def main():

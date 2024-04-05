@@ -1,5 +1,5 @@
 from engine.piece import Piece
-from engine.constants import *
+from engine.constants import COLOR, MAX_FILE, PAWN_START
 
 class Pawn(Piece):
     def __init__(self, rank, file, color):

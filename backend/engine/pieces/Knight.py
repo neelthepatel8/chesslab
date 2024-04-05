@@ -1,5 +1,5 @@
 from engine.piece import Piece
-from engine.constants import *
+from engine.constants import COLOR, MAX_RANK, MAX_FILE
 
 
 class Knight(Piece):

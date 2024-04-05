@@ -1,4 +1,4 @@
-from engine.constants import *
+from engine.constants import MAX_RANK, MAX_FILE, MIN_RANK, MIN_FILE
 from engine import fen_utils
 class Piece():
     def __init__(self, rank, file, color) -> None:
@@ -13,7 +13,8 @@ class Piece():
 
     def can_move(self, to_pos):
 
-        if (self.rank, self.file) == to_pos: return False
+        if (self.rank, self.file) == to_pos: 
+            return False
 
         to_rank, to_file = to_pos
 

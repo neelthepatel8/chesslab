@@ -1,5 +1,5 @@
 from engine.piece import Piece
-from engine.constants import *
+from engine.constants import COLOR, MAX_RANK, MAX_FILE
 
 
 class Rook(Piece):
@@ -10,7 +10,8 @@ class Rook(Piece):
     def can_move(self, to_pos):
         to_rank, to_file = to_pos
 
-        if not super().can_move(to_pos): return False
+        if not super().can_move(to_pos): 
+            return False
 
         same_rank = self.rank == to_rank
         same_file = self.file == to_file

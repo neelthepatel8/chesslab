@@ -1,9 +1,9 @@
 from fastapi import FastAPI, WebSocket
 import json
-from engine import *
-from constants import *
+from engine import Board
+import backend.error_responses as error_responses
 from engine import fen_utils
-from engine.constants import *
+import engine.constants
 
 app = FastAPI()
 board = None
@@ -31,42 +31,41 @@ async def configuration(websocket, message):
         'type': 'configuration',
         'data': {
             'constants': {
-                "NO_MOVE_MADE": NO_MOVE_MADE,
-                "MOVE_MADE": MOVE_MADE,
-                "NO_KILL": NO_KILL,
-                "KILL": KILL,
-                "CHECK": CHECK,
-                "NO_CHECK": NO_CHECK,
-                "CHECKMATE": CHECKMATE,
-                "STALEMATE": STALEMATE,
-                "PROMOTE_POSSIBLE": PROMOTE_POSSIBLE,
-                "ERR_NO_POSITIONS": ERR_NO_POSITIONS,
-                "ERR_NO_PIECE": ERR_NO_PIECE,
-                "ERR_ILLEGAL_MOVE": ERR_ILLEGAL_MOVE,
-                "PROMOTED": PROMOTED,
-                "NOT_PROMOTED": NOT_PROMOTED,
-                "CASTLED": CASTLED,
-                "CASTLED_CHECK": CASTLED_CHECK,
-                "CASTLED_NO_CHECK": CASTLED_NO_CHECK,
-                'ERROR_NO_POSITIONS_PROVIDED':ERROR_NO_POSITIONS_PROVIDED, 
-                'ERROR_NO_PIECE_TO_MOVE': ERROR_NO_PIECE_TO_MOVE,
-                'ERROR_MOVE_NOT_POSSIBLE': ERROR_MOVE_NOT_POSSIBLE,
-                'SUCCESS_MOVE_MADE_NO_KILL_NO_CHECK': SUCCESS_MOVE_MADE_NO_KILL_NO_CHECK,
-                'SUCCESS_MOVE_MADE_NO_KILL_CHECK': SUCCESS_MOVE_MADE_NO_KILL_CHECK,
-                'SUCCESS_MOVE_MADE_WITH_KILL_NO_CHECK': SUCCESS_MOVE_MADE_WITH_KILL_NO_CHECK,
-                'SUCCESS_MOVE_MADE_WITH_KILL_NO_CHECK': SUCCESS_MOVE_MADE_WITH_KILL_NO_CHECK,
-                'SUCCESS_MOVE_MADE_WITH_KILL_CHECK': SUCCESS_MOVE_MADE_WITH_KILL_CHECK,
-                "SUCCESS_MOVE_MADE_NO_KILL_CHECKMATE": SUCCESS_MOVE_MADE_NO_KILL_CHECKMATE,
-                "SUCCESS_MOVE_MADE_NO_KILL_STALEMATE": SUCCESS_MOVE_MADE_NO_KILL_STALEMATE,
-                "SUCCESS_MOVE_MADE_WITH_KILL_CHECKMATE": SUCCESS_MOVE_MADE_WITH_KILL_CHECKMATE,
-                "SUCCESS_MOVE_MADE_WITH_KILL_STALEMATE": SUCCESS_MOVE_MADE_WITH_KILL_STALEMATE,
-                "SUCCESS_MOVE_MADE_WTIH_KILL_PROMOTE_POSSIBLE": SUCCESS_MOVE_MADE_WTIH_KILL_PROMOTE_POSSIBLE,
-                "SUCCESS_MOVE_MADE_NO_KILL_PROMOTE_POSSIBLE": SUCCESS_MOVE_MADE_NO_KILL_PROMOTE_POSSIBLE,
-                "SUCCESS_PAWN_PROMOTED_CHECKMATE": SUCCESS_PAWN_PROMOTED_CHECKMATE,
-                "SUCCESS_PAWN_PROMOTED_STALEMATE": SUCCESS_PAWN_PROMOTED_STALEMATE,
-                "SUCCESS_PAWN_PROMOTED_CHECK": SUCCESS_PAWN_PROMOTED_CHECK,
-                "SUCCESS_MOVE_MADE_NO_KILL_NO_CHECK_CASTLED": SUCCESS_MOVE_MADE_NO_KILL_NO_CHECK_CASTLED,
-                "SUCCESS_MOVE_MADE_NO_KILL_CHECK_CASTLED": SUCCESS_MOVE_MADE_NO_KILL_CHECK_CASTLED,
+                "NO_MOVE_MADE": engine.constants.NO_MOVE_MADE,
+                "MOVE_MADE": engine.constants.MOVE_MADE,
+                "NO_KILL": engine.constants.NO_KILL,
+                "KILL": engine.constants.KILL,
+                "CHECK": engine.constants.CHECK,
+                "NO_CHECK": engine.constants.NO_CHECK,
+                "CHECKMATE": engine.constants.CHECKMATE,
+                "STALEMATE": engine.constants.STALEMATE,
+                "PROMOTE_POSSIBLE": engine.constants.PROMOTE_POSSIBLE,
+                "ERR_NO_POSITIONS": engine.constants.ERR_NO_POSITIONS,
+                "ERR_NO_PIECE": engine.constants.ERR_NO_PIECE,
+                "ERR_ILLEGAL_MOVE": engine.constants.ERR_ILLEGAL_MOVE,
+                "PROMOTED": engine.constants.PROMOTED,
+                "NOT_PROMOTED": engine.constants.NOT_PROMOTED,
+                "CASTLED": engine.constants.CASTLED,
+                "CASTLED_CHECK": engine.constants.CASTLED_CHECK,
+                "CASTLED_NO_CHECK": engine.constants.CASTLED_NO_CHECK,
+                'ERROR_NO_POSITIONS_PROVIDED': engine.constants.ERROR_NO_POSITIONS_PROVIDED, 
+                'ERROR_NO_PIECE_TO_MOVE': engine.constants.ERROR_NO_PIECE_TO_MOVE,
+                'ERROR_MOVE_NOT_POSSIBLE': engine.constants.ERROR_MOVE_NOT_POSSIBLE,
+                'SUCCESS_MOVE_MADE_NO_KILL_NO_CHECK': engine.constants.SUCCESS_MOVE_MADE_NO_KILL_NO_CHECK,
+                'SUCCESS_MOVE_MADE_NO_KILL_CHECK': engine.constants.SUCCESS_MOVE_MADE_NO_KILL_CHECK,
+                'SUCCESS_MOVE_MADE_WITH_KILL_NO_CHECK': engine.constants.SUCCESS_MOVE_MADE_WITH_KILL_NO_CHECK,
+                'SUCCESS_MOVE_MADE_WITH_KILL_CHECK': engine.constants.SUCCESS_MOVE_MADE_WITH_KILL_CHECK,
+                "SUCCESS_MOVE_MADE_NO_KILL_CHECKMATE": engine.constants.SUCCESS_MOVE_MADE_NO_KILL_CHECKMATE,
+                "SUCCESS_MOVE_MADE_NO_KILL_STALEMATE": engine.constants.SUCCESS_MOVE_MADE_NO_KILL_STALEMATE,
+                "SUCCESS_MOVE_MADE_WITH_KILL_CHECKMATE": engine.constants.SUCCESS_MOVE_MADE_WITH_KILL_CHECKMATE,
+                "SUCCESS_MOVE_MADE_WITH_KILL_STALEMATE": engine.constants.SUCCESS_MOVE_MADE_WITH_KILL_STALEMATE,
+                "SUCCESS_MOVE_MADE_WTIH_KILL_PROMOTE_POSSIBLE": engine.constants.SUCCESS_MOVE_MADE_WTIH_KILL_PROMOTE_POSSIBLE,
+                "SUCCESS_MOVE_MADE_NO_KILL_PROMOTE_POSSIBLE": engine.constants.SUCCESS_MOVE_MADE_NO_KILL_PROMOTE_POSSIBLE,
+                "SUCCESS_PAWN_PROMOTED_CHECKMATE": engine.constants.SUCCESS_PAWN_PROMOTED_CHECKMATE,
+                "SUCCESS_PAWN_PROMOTED_STALEMATE": engine.constants.SUCCESS_PAWN_PROMOTED_STALEMATE,
+                "SUCCESS_PAWN_PROMOTED_CHECK": engine.constants.SUCCESS_PAWN_PROMOTED_CHECK,
+                "SUCCESS_MOVE_MADE_NO_KILL_NO_CHECK_CASTLED": engine.constants.SUCCESS_MOVE_MADE_NO_KILL_NO_CHECK_CASTLED,
+                "SUCCESS_MOVE_MADE_NO_KILL_CHECK_CASTLED": engine.constants.SUCCESS_MOVE_MADE_NO_KILL_CHECK_CASTLED,
             }
         },
     }
@@ -76,8 +75,10 @@ async def configuration(websocket, message):
 async def possible_moves(websocket, message):
     global board
 
-    if "data" not in message: await websocket.send_text(json.dumps(RESPONSE_ERROR_DATA))
-    if "position" not in message["data"]: await websocket.send_text(json.dumps(RESPONSE_ERROR_POSITION))
+    if "data" not in message: 
+        await websocket.send_text(json.dumps(error_responses.RESPONSE_ERROR_DATA))
+    if "position" not in message["data"]: 
+        await websocket.send_text(json.dumps(error_responses.RESPONSE_ERROR_POSITION))
 
     position = message['data']['position']
     possible_moves = board.get_legal_moves(position, log=True)
@@ -95,9 +96,12 @@ async def possible_moves(websocket, message):
 async def make_move(websocket, message):
     global board
 
-    if "data" not in message: await websocket.send_text(json.dumps(RESPONSE_ERROR_DATA))
-    if "from_position" not in message["data"]: await websocket.send_text(json.dumps(RESPONSE_ERROR_POSITION))
-    if "to_position" not in message["data"]: await websocket.send_text(json.dumps(RESPONSE_ERROR_POSITION))
+    if "data" not in message: 
+        await websocket.send_text(json.dumps(error_responses.RESPONSE_ERROR_DATA))
+    if "from_position" not in message["data"]: 
+        await websocket.send_text(json.dumps(error_responses.RESPONSE_ERROR_POSITION))
+    if "to_position" not in message["data"]: 
+        await websocket.send_text(json.dumps(error_responses.RESPONSE_ERROR_POSITION))
 
     from_pos = message['data']['from_position']
     to_pos = message['data']['to_position']
@@ -121,9 +125,12 @@ async def make_move(websocket, message):
 async def promote_pawn(websocket, message):
     global board
 
-    if "data" not in message: await websocket.send_text(json.dumps(RESPONSE_ERROR_DATA))
-    if "position" not in message["data"]: await websocket.send_text(json.dumps(RESPONSE_ERROR_POSITION))
-    if "promote_to" not in message["data"]: await websocket.send_text(json.dumps(RESPONSE_ERROR_PROMOTE_TYPE))
+    if "data" not in message: 
+        await websocket.send_text(json.dumps(error_responses.RESPONSE_ERROR_DATA))
+    if "position" not in message["data"]: 
+        await websocket.send_text(json.dumps(error_responses.RESPONSE_ERROR_POSITION))
+    if "promote_to" not in message["data"]: 
+        await websocket.send_text(json.dumps(error_responses.RESPONSE_ERROR_PROMOTE_TYPE))
 
     position = message['data']['position']
     promote_to = message['data']['promote_to']

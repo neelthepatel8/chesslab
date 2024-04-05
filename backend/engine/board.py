@@ -1,14 +1,13 @@
 from abc import ABC
-from engine.constants import *
+import engine.constants as constants
 import engine.fen_utils as fen_utils
 from engine.piece import Piece
-from pprint import pprint
-from engine.pieces import *
+import engine.pieces as pieces
 import copy
 from engine.enpassant.EnPassantStatus import EnPassantStatus
 
 class Board(ABC):
-    def __init__(self, fen=START_FEN) -> None:
+    def __init__(self, fen=constants.START_FEN) -> None:
         super().__init__()
         self.fen = fen
         self.board = fen_utils.build_board_from_fen(fen)
@@ -26,14 +25,14 @@ class Board(ABC):
         self.king_in_check = None
         
         self.all_legal_moves = {
-            COLOR["BLACK"]: [],
-            COLOR["WHITE"]: []
+            constants.COLOR["BLACK"]: [],
+            constants.COLOR["WHITE"]: []
         }
         
         self.en_passant = EnPassantStatus()
 
     def make_fen(self):
-        active = "w" if self.current_player == COLOR["WHITE"] else "b"
+        active = "w" if self.current_player == constants.COLOR["WHITE"] else "b"
         castling = ''.join(self.castling_availability) if len(self.castling_availability) > 0 else '-'
         en_passant = self.en_passant.eligible_square if self.en_passant.available else '-'
 
@@ -57,7 +56,8 @@ class Board(ABC):
         return self.board[rank - 1][file - 1]
 
     def get_pseudo_legal_moves(self, piece_coords, simulate=False, log=False):
-        if self.is_stalemate or self.is_checkmate: return []
+        if self.is_stalemate or self.is_checkmate: 
+            return []
         rank, file = fen_utils.algebraic_to_coords(piece_coords)
         if not (1 <= rank <= 8 and 1 <= file <= 8):
             return None
@@ -83,35 +83,39 @@ class Board(ABC):
                     if piece_at_pos.get_color() == piece.get_color():
                         break
                     else:
-                        if isinstance(piece, Pawn) and abs(piece.file - f) == 1:
+                        if isinstance(piece, pieces.Pawn) and abs(piece.file - f) == 1:
                             if piece.can_move((r, f), is_capture=True):
                                 valid_path.append((r, f))
-                        elif not isinstance(piece, Pawn) or (isinstance(piece, Pawn) and abs(piece.file - f) == 1):
+                        elif not isinstance(piece, pieces.Pawn) or (isinstance(piece, pieces.Pawn) and abs(piece.file - f) == 1):
                             if piece.can_kill((r, f)):
                                 valid_path.append((r, f))
                                 break
                 else:
                     if not self.king_in_check:
                         valid_moves.extend(self.get_castlable_moves(piece))
-                    if not isinstance(piece, Pawn) or (isinstance(piece, Pawn) and piece.file == f):
+                    if not isinstance(piece, pieces.Pawn) or (isinstance(piece, pieces.Pawn) and piece.file == f):
                         valid_path.append((r, f))
                     
                     if not simulate:
-                        if isinstance(piece, Pawn):
+                        if isinstance(piece, pieces.Pawn):
                             if self.en_passant.available and self.en_passant.pawn_color != piece.get_color():
-                                if log: print("En passant available ", self.en_passant.eligible_square, self.en_passant.pawn_color)
+                                if log: 
+                                    print("En passant available ", self.en_passant.eligible_square, self.en_passant.pawn_color)
                                 possible = self.check_en_passant_possible_for_piece(piece)                                
                                 if possible:
                                     move = fen_utils.algebraic_to_coords(self.en_passant.eligible_square)
-                                    if log: print("En passant Possible adding move: ", self.en_passant.eligible_square) 
+                                    if log: 
+                                        print("En passant Possible adding move: ", self.en_passant.eligible_square) 
                                     valid_moves.append(move)
                                     en_passant_added = move
                             else:
-                                if log: print("En passant not available")
+                                if log: 
+                                    print("En passant not available")
 
             valid_moves.extend(valid_path)
-        if log: print(fen_utils.algebraic_list(valid_moves))
-        if isinstance(piece, Pawn):
+        if log: 
+            print(fen_utils.algebraic_list(valid_moves))
+        if isinstance(piece, pieces.Pawn):
             final_valid_moves = []
             for move in valid_moves:
                 r, f = move
@@ -122,15 +126,18 @@ class Board(ABC):
                     final_valid_moves.append(move)
             valid_moves = final_valid_moves
 
-        if en_passant_added: valid_moves.append(en_passant_added)
+        if en_passant_added: 
+            valid_moves.append(en_passant_added)
         return list(set(valid_moves))
     
     def get_all_pseudo_legal_moves(self, player, simulate=False):
         moves = []
         for row in self.board:
             for piece in row:
-                if not piece: continue 
-                if piece.get_color() != player: continue
+                if not piece: 
+                    continue 
+                if piece.get_color() != player: 
+                    continue
                 moves.extend(self.get_pseudo_legal_moves(piece.get_algebraic_pos(), simulate))
         return list(set(moves)) 
     
@@ -166,8 +173,10 @@ class Board(ABC):
         moves = []
         for row in self.board:
             for piece in row:
-                if not piece: continue 
-                if piece.get_color() != player: continue
+                if not piece: 
+                    continue 
+                if piece.get_color() != player: 
+                    continue
                 moves.extend(self.get_legal_moves(piece.get_algebraic_pos(), simulate, log))
         self.all_legal_moves[player] = moves
         return list(set(moves)) 
@@ -186,8 +195,10 @@ class Board(ABC):
     def get_king_location(self, player):
         for row in self.board:
             for piece in row:
-                if not piece: continue 
-                if piece.get_color() != player: continue 
+                if not piece: 
+                    continue 
+                if piece.get_color() != player: 
+                    continue 
                 if piece.get_name().lower() == 'k':
                     return piece.rank, piece.file
         
@@ -200,8 +211,8 @@ class Board(ABC):
         moved_piece = self.board[to_rank - 1][to_file - 1]
         
         print("Moving piece: ", to_rank, to_file)
-        if isinstance(moved_piece, Pawn) and abs(to_rank - from_rank) == 2:
-            eligible_square_rank = to_rank  + 1 if moved_piece.get_color() == COLOR["WHITE"] else to_rank - 1
+        if isinstance(moved_piece, pieces.Pawn) and abs(to_rank - from_rank) == 2:
+            eligible_square_rank = to_rank  + 1 if moved_piece.get_color() == constants.COLOR["WHITE"] else to_rank - 1
             print(eligible_square_rank, to_file)
             eligible_square = fen_utils.coords_to_algebraic(eligible_square_rank, to_file)
             print("Eligible! ", eligible_square)
@@ -214,7 +225,7 @@ class Board(ABC):
         en_pas_rank, en_pas_file = fen_utils.algebraic_to_coords(self.en_passant.eligible_square)
         
         if abs(rank - en_pas_rank) == 1 and abs(file - en_pas_file) == 1:
-            if piece.get_color() == COLOR["BLACK"]:
+            if piece.get_color() == constants.COLOR["BLACK"]:
                 return en_pas_rank > rank
             else:
                 return rank > en_pas_rank
@@ -222,7 +233,8 @@ class Board(ABC):
             return False
     
     def move_piece(self, from_pos, to_pos, simulate=False):
-        if not from_pos or not to_pos: return ERROR_NO_POSITIONS_PROVIDED
+        if not from_pos or not to_pos: 
+            return constants.ERROR_NO_POSITIONS_PROVIDED
 
         alg_from_pos = from_pos
         alg_to_pos = to_pos 
@@ -235,33 +247,34 @@ class Board(ABC):
 
         piece = self.board[from_rank - 1][from_file - 1]
 
-        if not piece: return ERROR_NO_PIECE_TO_MOVE
+        if not piece: 
+            return constants.ERROR_NO_PIECE_TO_MOVE
         
         if simulate:
             pseudo_legal_moves = self.get_pseudo_legal_moves(alg_from_pos, simulate)
             if to_pos not in pseudo_legal_moves:
-                return ERROR_MOVE_NOT_POSSIBLE
+                return constants.ERROR_MOVE_NOT_POSSIBLE
         else:
             possible_moves = self.get_legal_moves(alg_from_pos, simulate)
             if to_pos not in possible_moves:
-                return ERROR_MOVE_NOT_POSSIBLE
+                return constants.ERROR_MOVE_NOT_POSSIBLE
 
         piece_at_pos = self.board[to_rank - 1][to_file - 1]
 
-        if piece.get_color() == COLOR["BLACK"]:
+        if piece.get_color() == constants.COLOR["BLACK"]:
             self.fullmoves += 1
 
         if not piece_at_pos:
             
             has_castled = False
-            if isinstance(piece, King) and abs(to_pos[1] - from_pos[1]) > 1 and not simulate:
+            if isinstance(piece, pieces.King) and abs(to_pos[1] - from_pos[1]) > 1 and not simulate:
                 
                 has_castled = self.castle(piece, from_pos, to_pos)
                 if not has_castled: 
-                    return ERROR_MOVE_ILLEGAL_CASTLE
+                    return constants.ERROR_MOVE_ILLEGAL_CASTLE
             
             has_en_passant = False
-            if isinstance(piece, Pawn):
+            if isinstance(piece, pieces.Pawn):
                 if self.en_passant.available:
                     if self.check_en_passant_possible_for_piece(piece):
                         if fen_utils.coords_to_algebraic(to_rank, to_file) == self.en_passant.eligible_square:
@@ -274,62 +287,65 @@ class Board(ABC):
             self.board[from_rank - 1][from_file - 1] = None
             self.board[to_rank - 1][to_file - 1] = piece
             piece.update_position(to_rank, to_file)
-            self.current_player = COLOR["WHITE"] if self.current_player == COLOR["BLACK"] else COLOR["BLACK"]
+            self.current_player = constants.COLOR["WHITE"] if self.current_player == constants.COLOR["BLACK"] else constants.COLOR["BLACK"]
             self.update_castling_availability()
-            if not simulate: self.update_en_passant_status(alg_from_pos, alg_to_pos)
+            if not simulate: 
+                self.update_en_passant_status(alg_from_pos, alg_to_pos)
             self.fen = self.make_fen()
             
             
             if not simulate:
                 
-                if isinstance(piece, Pawn):
+                if isinstance(piece, pieces.Pawn):
                     
-                    if self.try_pawn_promote(alg_to_pos, do_it=False) == PAWN_CAN_PROMOTE:
-                        return SUCCESS_MOVE_MADE_NO_KILL_PROMOTE_POSSIBLE
+                    if self.try_pawn_promote(alg_to_pos, do_it=False) == constants.PAWN_CAN_PROMOTE:
+                        return constants.SUCCESS_MOVE_MADE_NO_KILL_PROMOTE_POSSIBLE
                     
                 if self.is_game_over(simulate):
-                    return SUCCESS_MOVE_MADE_NO_KILL_CHECKMATE if self.is_checkmate else SUCCESS_MOVE_MADE_NO_KILL_STALEMATE
+                    return constants.SUCCESS_MOVE_MADE_NO_KILL_CHECKMATE if self.is_checkmate else constants.SUCCESS_MOVE_MADE_NO_KILL_STALEMATE
                 
                 if self.is_king_in_check(self.current_player): 
-                    return SUCCESS_MOVE_MADE_NO_KILL_CHECK if not has_castled else SUCCESS_MOVE_MADE_NO_KILL_CHECK_CASTLED
+                    return constants.SUCCESS_MOVE_MADE_NO_KILL_CHECK if not has_castled else constants.SUCCESS_MOVE_MADE_NO_KILL_CHECK_CASTLED
             
             if has_castled:
-                return SUCCESS_MOVE_MADE_NO_KILL_NO_CHECK_CASTLED
+                return constants.SUCCESS_MOVE_MADE_NO_KILL_NO_CHECK_CASTLED
 
             if has_en_passant:
-                return SUCCESS_MOVE_MADE_WITH_KILL_NO_CHECK 
+                return constants.SUCCESS_MOVE_MADE_WITH_KILL_NO_CHECK 
             
-            return SUCCESS_MOVE_MADE_NO_KILL_NO_CHECK
+            return constants.SUCCESS_MOVE_MADE_NO_KILL_NO_CHECK
 
         self.dead_pieces[piece_at_pos.get_color()].append(piece_at_pos)
         self.board[from_rank - 1][from_file - 1] = None
         self.board[to_rank - 1][to_file - 1] = piece
         piece.update_position(to_rank, to_file)
-        self.current_player = COLOR["WHITE"] if self.current_player == COLOR["BLACK"] else COLOR["BLACK"]
+        self.current_player = constants.COLOR["WHITE"] if self.current_player == constants.COLOR["BLACK"] else constants.COLOR["BLACK"]
         self.halfmoves += 1
         self.update_castling_availability()
-        if not simulate: self.update_en_passant_status(alg_from_pos, alg_to_pos)
+        if not simulate: 
+            self.update_en_passant_status(alg_from_pos, alg_to_pos)
         self.fen = self.make_fen()
         
         
         if not simulate:
             
-            if isinstance(piece, Pawn):
-                if self.try_pawn_promote(alg_to_pos, do_it=False) == PAWN_CAN_PROMOTE:
-                    return SUCCESS_MOVE_MADE_WTIH_KILL_PROMOTE_POSSIBLE
+            if isinstance(piece, pieces.Pawn):
+                if self.try_pawn_promote(alg_to_pos, do_it=False) == constants.PAWN_CAN_PROMOTE:
+                    return constants.SUCCESS_MOVE_MADE_WTIH_KILL_PROMOTE_POSSIBLE
         
             if self.is_game_over(simulate):
-                return SUCCESS_MOVE_MADE_WITH_KILL_CHECKMATE if self.is_checkmate else SUCCESS_MOVE_MADE_WITH_KILL_STALEMATE
+                return constants.SUCCESS_MOVE_MADE_WITH_KILL_CHECKMATE if self.is_checkmate else constants.SUCCESS_MOVE_MADE_WITH_KILL_STALEMATE
             
-            if self.is_king_in_check(self.current_player): return SUCCESS_MOVE_MADE_WITH_KILL_CHECK
+            if self.is_king_in_check(self.current_player): 
+                return constants.SUCCESS_MOVE_MADE_WITH_KILL_CHECK
             
-        return SUCCESS_MOVE_MADE_WITH_KILL_NO_CHECK
+        return constants.SUCCESS_MOVE_MADE_WITH_KILL_NO_CHECK
     
     def get_castlable_moves(self, piece):
         moves = []
             
-        if isinstance(piece, King):
-            if piece.get_color() == COLOR["WHITE"]:
+        if isinstance(piece, pieces.King):
+            if piece.get_color() == constants.COLOR["WHITE"]:
                 if 'K' in self.castling_availability:
                     to_append = True
                     pieces_in_middle = ['f1', 'g1']
@@ -356,7 +372,7 @@ class Board(ABC):
                             break
                     if to_append: 
                         moves.append(fen_utils.algebraic_to_coords("c1"))
-            elif piece.get_color() == COLOR["BLACK"]:
+            elif piece.get_color() == constants.COLOR["BLACK"]:
                 if 'k' in self.castling_availability:
                     to_append = True
                     pieces_in_middle = ['f8', 'g8']
@@ -403,9 +419,9 @@ class Board(ABC):
             return False
         
         if to_pos[1] > from_pos[1]:
-            castling = 'k' if piece.get_color() == COLOR["BLACK"] else "K"
+            castling = 'k' if piece.get_color() == constants.COLOR["BLACK"] else "K"
         elif from_pos[1] > to_pos[1]:
-            castling = 'q' if piece.get_color() == COLOR["BLACK"] else 'Q'
+            castling = 'q' if piece.get_color() == constants.COLOR["BLACK"] else 'Q'
             
         if castling not in self.castling_availability:
             print("NOT CASTLED")
@@ -467,7 +483,8 @@ class Board(ABC):
         pieces = []
         for row in self.board:
             for piece in row:
-                if piece: pieces.append(piece)
+                if piece: 
+                    pieces.append(piece)
                 
         are_kings_only = True
         for piece in pieces:
@@ -480,12 +497,14 @@ class Board(ABC):
         print("Testing if pawn at ", piece_coords, " can be promoted to ", promote_to)
         rank, file = fen_utils.algebraic_to_coords(piece_coords)
         piece = self.get_piece(piece_coords)
-        final_rank = MAX_RANK if piece.get_color() == COLOR["BLACK"] else MIN_RANK 
+        final_rank = constants.MAX_RANK if piece.get_color() == constants.COLOR["BLACK"] else constants.MIN_RANK 
 
         can_promote = rank == final_rank
         if not do_it: 
-            if can_promote: return PAWN_CAN_PROMOTE
-            else: return PAWN_CANNOT_PROMOTE  
+            if can_promote: 
+                return constants.PAWN_CAN_PROMOTE
+            else: 
+                return constants.PAWN_CANNOT_PROMOTE  
        
         if can_promote:
             promoted_piece = self.make_promotion_piece(promote_to, rank, file, piece.get_color())
@@ -493,23 +512,23 @@ class Board(ABC):
             self.fen = self.make_fen()   
             if self.is_game_over():
                 print(self.is_checkmate, self.is_stalemate)
-                return SUCCESS_PAWN_PROMOTED_CHECKMATE if self.is_checkmate else SUCCESS_PAWN_PROMOTED_STALEMATE
+                return constants.SUCCESS_PAWN_PROMOTED_CHECKMATE if self.is_checkmate else constants.SUCCESS_PAWN_PROMOTED_STALEMATE
             
             if self.is_king_in_check(self.current_player):
                 print("checkl")
                 
-                return SUCCESS_PAWN_PROMOTED_CHECK
-        return SUCCESS_PAWN_PROMOTED
+                return constants.SUCCESS_PAWN_PROMOTED_CHECK
+        return constants.SUCCESS_PAWN_PROMOTED
         
     def make_promotion_piece(self, piece_type, rank, file, color):
         if piece_type == "queen":
-            return Queen(rank, file, color)
+            return pieces.Queen(rank, file, color)
         
         if piece_type == "rook":
-            return Rook(rank, file, color)
+            return pieces.Rook(rank, file, color)
 
         if piece_type == "knight":
-            return Knight(rank, file, color)
+            return pieces.Knight(rank, file, color)
         
         if piece_type == "bishop":
-            return Bishop(rank, file, color)
+            return pieces.Bishop(rank, file, color)

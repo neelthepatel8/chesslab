@@ -1,12 +1,11 @@
-from engine.constants import *
-from engine.piece import Piece
-from engine.pieces import *
+from engine.constants import COLOR, MAX_RANK, MAX_FILE
+import engine.pieces as pieces
 
 def build_board_from_fen(fen):
-    board = [[None for _ in range(MAX_COLS)] for _ in range(MAX_ROWS)]
+    board = [[None for _ in range(MAX_FILE)] for _ in range(MAX_RANK)]
     complete_fen = make_complete(fen)
-    for rank in range(MAX_ROWS):
-        for file in range(MAX_COLS):
+    for rank in range(MAX_RANK):
+        for file in range(MAX_FILE):
             piece = get_piece_from_char(complete_fen[rank][file], rank + 1, file + 1)
             board[rank][file] = piece
 
@@ -16,18 +15,18 @@ def get_piece_from_char(name, rank, file):
     black = COLOR["BLACK"]
     white = COLOR["WHITE"]
     piece_map = {
-        'p': Pawn(rank, file, black),
-        'q': Queen(rank, file, black),
-        'r': Rook(rank, file, black),
-        'b': Bishop(rank, file, black),
-        'n': Knight(rank, file, black),
-        'k': King(rank, file, black),
-        'P': Pawn(rank, file, white),
-        'Q': Queen(rank, file, white),
-        'R': Rook(rank, file, white),
-        'B': Bishop(rank, file, white),
-        'N': Knight(rank, file, white),
-        'K': King(rank, file, white),
+        'p': pieces.Pawn(rank, file, black),
+        'q': pieces.Queen(rank, file, black),
+        'r': pieces.Rook(rank, file, black),
+        'b': pieces.Bishop(rank, file, black),
+        'n': pieces.Knight(rank, file, black),
+        'k': pieces.King(rank, file, black),
+        'P': pieces.Pawn(rank, file, white),
+        'Q': pieces.Queen(rank, file, white),
+        'R': pieces.Rook(rank, file, white),
+        'B': pieces.Bishop(rank, file, white),
+        'N': pieces.Knight(rank, file, white),
+        'K': pieces.King(rank, file, white),
         'X': None
     }
 
@@ -96,7 +95,8 @@ def coords_to_algebraic(rank, file):
 def convert_coords_to_chess_notation(possible_moves):
     converted_moves = []
 
-    if not possible_moves: return []
+    if not possible_moves: 
+        return []
     for move in possible_moves:
         rank, file = move
         converted_moves.append(coords_to_algebraic(rank, file))
@@ -104,25 +104,29 @@ def convert_coords_to_chess_notation(possible_moves):
     return converted_moves
 
 def get_current_player(fen):
-    if not fen: return COLOR["WHITE"]
+    if not fen: 
+        return COLOR["WHITE"]
 
     _, turn, _, _, _, _ = fen.split(" ")
     return COLOR["WHITE"] if turn == "w" else COLOR["BLACK"]
 
 def get_halfmoves(fen):
-    if not fen: return COLOR["WHITE"]
+    if not fen: 
+        return COLOR["WHITE"]
 
     _, _, _, _, halfmoves, _ = fen.split(" ")
     return int(halfmoves)
 
 def get_fullmoves(fen):
-    if not fen: return COLOR["WHITE"]
+    if not fen: 
+        return COLOR["WHITE"]
 
     _, _, _, _, _, fullmoves = fen.split(" ")
     return int(fullmoves)
 
 def get_castling_availability(fen):
-    if not fen: return COLOR["WHITE"]
+    if not fen: 
+        return COLOR["WHITE"]
 
     _, _, castling_availability, _, _, _ = fen.split(" ")
     return set([letter for letter in castling_availability])
