@@ -441,7 +441,7 @@ const Board = () => {
   };
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-md drop-shadow-2xl">
+    <div className="flex flex-col overflow-hidden  drop-shadow-2xl">
       {rows.map((row) => (
         <Row
           possibleMoves={possibleMoves}

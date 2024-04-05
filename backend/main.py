@@ -1,12 +1,22 @@
 from fastapi import FastAPI, WebSocket
 import json
 from engine import Board
-import backend.error_responses as error_responses
+import error_responses
 from engine import fen_utils
 import engine.constants
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI()
 board = None
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # This is for development only, specify your frontend origin in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 async def root():
