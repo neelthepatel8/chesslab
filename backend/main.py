@@ -80,7 +80,7 @@ async def possible_moves(websocket, message):
     if "position" not in message["data"]: await websocket.send_text(json.dumps(RESPONSE_ERROR_POSITION))
 
     position = message['data']['position']
-    possible_moves = board.get_legal_moves(position)
+    possible_moves = board.get_legal_moves(position, log=True)
     chess_notation_moves = fen_utils.convert_coords_to_chess_notation(possible_moves)
     response = {
         'type': 'poss_moves',
