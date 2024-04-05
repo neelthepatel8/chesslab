@@ -226,7 +226,6 @@ const Board = () => {
     isCastle = false,
     movingRook = false,
   ) => {
-    console.log("rook moving: ", rookMoving);
     const [from_rank, from_file] = movingRook
       ? rookMoving[0]
       : currentMoving[0];
@@ -239,10 +238,6 @@ const Board = () => {
       `square-${coordsToAlgebraic(to_rank, to_file)}`,
     );
     const piece = fromSquare?.querySelector(".chess-piece");
-
-    console.log("Square from: ", coordsToAlgebraic(from_rank, from_file));
-    console.log("Square to: ", coordsToAlgebraic(to_rank, to_file));
-    console.log("Piece ", piece);
 
     if (piece && fromSquare && toSquare) {
       const fromRect = fromSquare.getBoundingClientRect();
@@ -265,9 +260,7 @@ const Board = () => {
             return;
           }
 
-          if (isKill) {
-            isCheck ? playCaptureCheck() : playCapture();
-          } else if (isCheck) {
+          if (isCheck) {
             playMoveCheck();
             if (king) {
               setTimeout(playCheck, 200);
@@ -279,6 +272,10 @@ const Board = () => {
                 kingSquare.classList.contains("bg-squarewhite"),
               );
             }
+          }
+
+          if (isKill) {
+            isCheck ? playCaptureCheck() : playCapture();
           } else {
             playMove();
           }
@@ -411,7 +408,6 @@ const Board = () => {
         );
 
         const piece_name = fen.getPieceAt(currentFen, moving_from);
-        console.log("Piece king? ", piece_name, currentFen, moving_from);
         if (piece_name?.toLowerCase() === "k") {
           if (Math.abs(file - selectedSquare[1]) > 1) {
             if (moving_from == "e1") {
