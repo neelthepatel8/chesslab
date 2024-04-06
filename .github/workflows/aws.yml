@@ -7,11 +7,11 @@ on:
 env:
   AWS_REGION: "us-east-1"
   ECR_REPOSITORY: "541032831567.dkr.ecr.us-east-1.amazonaws.com/chessgame"
-  ECS_SERVICE: "ChessDevService"            
+  ECS_SERVICE: "ChessContainerService"            
   ECS_CLUSTER: "ChessDevCluster"
   ECS_TASK_DEFINITION: .aws/task-definition.json
   FRONTEND_CONTAINER_NAME: "latest-frontend"  
-  BACKEND_CONTAINER_NAME: "latest-backend" 
+  # BACKEND_CONTAINER_NAME: "latest-backend" 
   IMAGE_TAG: ${{ github.sha }}    
 
 permissions:
@@ -45,12 +45,12 @@ jobs:
         docker push ${{ env.ECR_REPOSITORY }}:frontend-${{ env.IMAGE_TAG }}
         echo "FRONTEND_IMAGE=${{ env.ECR_REPOSITORY }}:frontend-${{ env.IMAGE_TAG }}" >> $GITHUB_ENV
 
-    # BACKEND
-    - name: Build, tag, and push backend image to Amazon ECR
-      run: |
-        docker build -t ${{ env.ECR_REPOSITORY }}:backend-${{ env.IMAGE_TAG }} ./backend
-        docker push ${{ env.ECR_REPOSITORY }}:backend-${{ env.IMAGE_TAG }}
-        echo "BACKEND_IMAGE=${{ env.ECR_REPOSITORY }}:backend-${{ env.IMAGE_TAG }}" >> $GITHUB_ENV
+    # # BACKEND
+    # - name: Build, tag, and push backend image to Amazon ECR
+    #   run: |
+    #     docker build -t ${{ env.ECR_REPOSITORY }}:backend-${{ env.IMAGE_TAG }} ./backend
+    #     docker push ${{ env.ECR_REPOSITORY }}:backend-${{ env.IMAGE_TAG }}
+    #     echo "BACKEND_IMAGE=${{ env.ECR_REPOSITORY }}:backend-${{ env.IMAGE_TAG }}" >> $GITHUB_ENV
 
     # UPDATE ECS TASK DEFINITION FOR FRONTEND
     - name: Fill in the new frontend image ID in the Amazon ECS task definition
@@ -61,14 +61,14 @@ jobs:
         container-name: ${{ env.FRONTEND_CONTAINER_NAME }}
         image: ${{ env.FRONTEND_IMAGE }}
 
-    # UPDATE ECS TASK DEFINITION FOR BACKEND
-    - name: Fill in the new backend image ID in the Amazon ECS task definition
-      id: task-def-backend
-      uses: aws-actions/amazon-ecs-render-task-definition@v1
-      with:
-        task-definition: ${{ steps.task-def-frontend.outputs.task-definition }}
-        container-name: ${{ env.BACKEND_CONTAINER_NAME }}
-        image: ${{ env.BACKEND_IMAGE }}
+    # # UPDATE ECS TASK DEFINITION FOR BACKEND
+    # - name: Fill in the new backend image ID in the Amazon ECS task definition
+    #   id: task-def-backend
+    #   uses: aws-actions/amazon-ecs-render-task-definition@v1
+    #   with:
+    #     task-definition: ${{ steps.task-def-frontend.outputs.task-definition }}
+    #     container-name: ${{ env.BACKEND_CONTAINER_NAME }}
+    #     image: ${{ env.BACKEND_IMAGE }}
 
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
