@@ -181,7 +181,6 @@ const Board = () => {
       `square-${whiteKingLocation}`,
     );
 
-    log(blackKingSquare, whiteKingSquare);
     setTimeout(() => {
       playStalemate();
       flickerSquare(
@@ -226,6 +225,8 @@ const Board = () => {
     isCastle = false,
     movingRook = false,
   ) => {
+    console.log("Moving Piece Now");
+
     const [from_rank, from_file] = movingRook
       ? rookMoving[0]
       : currentMoving[0];
