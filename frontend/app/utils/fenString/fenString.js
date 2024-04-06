@@ -160,7 +160,6 @@ export const getPieceAt = (currentFen, piece_coords) => {
   const ranks = boardLayout.split("/");
 
   const fenRow = ranks[rank - 1];
-  console.log(fenRow);
 
   const expandedRow = fenRow.replace(/\d/g, (match) => ".".repeat(match));
   return expandedRow[file - 1] === "." ? null : expandedRow[file - 1];

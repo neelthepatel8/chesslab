@@ -16,7 +16,7 @@ export const WebSocketProvider = ({ children }) => {
     );
 
     ws.onopen = () => {
-      console.log("Connected to Websocket");
+      log("Connected to Websocket");
       setIsConnected(true);
     };
 
