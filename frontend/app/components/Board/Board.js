@@ -59,7 +59,7 @@ const Board = () => {
 
       sendMessage(configurationMessage);
     }
-  }, [isConnected]);
+  }, [isConnected, sendMessage]);
 
   useEffect(() => {
     if (messages.length > 0) {

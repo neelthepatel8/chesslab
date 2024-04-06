@@ -1,5 +1,11 @@
 "use client";
-import React, { createContext, useState, useEffect, useContext } from "react";
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+} from "react";
 import log from "../utils/log";
 const WebSocketContext = createContext(null);
 
@@ -38,11 +44,14 @@ export const WebSocketProvider = ({ children }) => {
     };
   }, []);
 
-  const sendMessage = (message) => {
-    if (socket) {
-      socket.send(JSON.stringify(message));
-    }
-  };
+  const sendMessage = useCallback(
+    (message) => {
+      if (socket) {
+        socket.send(JSON.stringify(message));
+      }
+    },
+    [socket],
+  );
 
   const contextValue = {
     sendMessage,

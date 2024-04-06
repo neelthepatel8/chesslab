@@ -27,7 +27,6 @@ async def init_board(websocket, message):
     global board
     board = Board()
     
-    print("helloi world")
     response = {
         'type': 'init',
         'data': {
