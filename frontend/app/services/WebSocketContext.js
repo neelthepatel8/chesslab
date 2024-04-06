@@ -36,7 +36,6 @@ export const WebSocketProvider = ({ children }) => {
 
   const sendMessage = (message) => {
     if (socket) {
-      console.log("Sending message: ", message);
       socket.send(JSON.stringify(message));
     }
   };
