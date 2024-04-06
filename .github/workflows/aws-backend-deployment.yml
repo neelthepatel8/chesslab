@@ -5,7 +5,8 @@ on:
     branches: [ "main" ]
     paths:
       - 'backend/**'
-
+      - '.github/workflows/aws-backend-deploy.yml'
+      - '.aws/task-definition-backend.json'
 env:
   AWS_REGION: "us-east-1"
   ECR_REPOSITORY: "541032831567.dkr.ecr.us-east-1.amazonaws.com/chessgame"
@@ -47,6 +48,7 @@ jobs:
 
     # UPDATE ECS TASK DEFINITION FOR BACKEND
     - name: Fill in the new backend image ID in the Amazon ECS task definition
+      id: task-def-backend
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
         task-definition: ${{ env.ECS_TASK_DEFINITION }}
@@ -56,7 +58,7 @@ jobs:
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
-        task-definition: ${{ steps.task-def-frontend.outputs.task-definition }}
+        task-definition: ${{ steps.task-def-backend.outputs.task-definition }}
         service: ${{ env.ECS_SERVICE }}
         cluster: ${{ env.ECS_CLUSTER }}
         wait-for-service-stability: false
