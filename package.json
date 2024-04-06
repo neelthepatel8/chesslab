@@ -11,7 +11,8 @@
         "push-backend": "docker push 541032831567.dkr.ecr.us-east-1.amazonaws.com/chessgame:latest-backend",
         "push-frontend": "docker push 541032831567.dkr.ecr.us-east-1.amazonaws.com/chessgame:latest-frontend",
         "predeploy": "yarn remove-resources",
-        "deploy": "yarn predeploy && yarn build && yarn tag-backend && yarn tag-frontend && yarn push-backend && yarn push-frontend && echo 'Deployment Complete!'"
+        "deploy": "yarn predeploy && yarn build && yarn tag-backend && yarn tag-frontend && yarn push-backend && yarn push-frontend && echo 'Deployment Complete!'",
+        "start": "concurrently \"cd frontend && npm run dev\" \"cd backend && python3 -m uvicorn main:app --reload --host 0.0.0.0 --port 8000\""
     },
     "repository": {
         "type": "git",
@@ -26,5 +27,8 @@
     "bugs": {
         "url": "https://github.com/neelthepatel8/chessgame/issues"
     },
-    "homepage": "https://github.com/neelthepatel8/chessgame#readme"
+    "homepage": "https://github.com/neelthepatel8/chessgame#readme",
+    "devDependencies": {
+        "concurrently": "^8.2.2"
+    }
 }

@@ -6,7 +6,7 @@ import { PIECE_COLOR } from "@/app/constants/constants";
 import { useWebSocket } from "@/app/services/WebSocketContext";
 import { WEBSOCKET } from "@/app/services/constants";
 import coordsToAlgebraic from "@/app/utils/coordsToAlgebraic";
-
+import log from "@/app/utils/log";
 import useSound from "use-sound";
 import { algebraicToCoords } from "@/app/utils/algebraicToCoords";
 
@@ -63,10 +63,10 @@ const Board = () => {
     const handleWebSockMessaging = async () => {
       const latestMessage = messages[messages.length - 1];
       if (latestMessage) {
-        console.log("Recieved message: ", latestMessage);
+        log("Recieved message: ", latestMessage);
 
         if (latestMessage.error < 0) {
-          console.log("Recieved error from backend: ", latestMessage);
+          log("Recieved error from backend: ", latestMessage);
           return;
         }
 
@@ -181,7 +181,7 @@ const Board = () => {
       `square-${whiteKingLocation}`,
     );
 
-    console.log(blackKingSquare, whiteKingSquare);
+    log(blackKingSquare, whiteKingSquare);
     setTimeout(() => {
       playStalemate();
       flickerSquare(
@@ -226,7 +226,6 @@ const Board = () => {
     isCastle = false,
     movingRook = false,
   ) => {
-    console.log("Moving");
     const [from_rank, from_file] = movingRook
       ? rookMoving[0]
       : currentMoving[0];
