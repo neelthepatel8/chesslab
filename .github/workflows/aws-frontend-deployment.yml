@@ -6,7 +6,7 @@ on:
     paths:
       - 'frontend/**'
       - '.github/workflows/aws-frontend-deploy.yml'
-      - '.aws/task-definition-frontend.yml'
+      - '.aws/task-definition-frontend.json'
 
 env:
   AWS_REGION: "us-east-1"
