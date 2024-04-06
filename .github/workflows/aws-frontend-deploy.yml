@@ -10,7 +10,7 @@ env:
   ECS_SERVICE: "ChessContainerService"            
   ECS_CLUSTER: "ChessContainerCluster"
   ECS_TASK_DEFINITION: .aws/task-definition.json
-  FRONTEND_CONTAINER_NAME: "frontend"  
+  FRONTEND_CONTAINER_NAME: "frontend-166f7fa3ac1df0214dd79750e5043868abb5c7da"  
   IMAGE_TAG: ${{ github.sha }}    
 
 permissions:
