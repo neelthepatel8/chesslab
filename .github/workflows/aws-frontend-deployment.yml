@@ -5,6 +5,8 @@ on:
     branches: [ "main" ]
     paths:
       - 'frontend/**'
+      - '.github/workflows/aws-frontend-deploy.yml'
+      - '.aws/task-definition-frontend.yml'
 
 env:
   AWS_REGION: "us-east-1"
