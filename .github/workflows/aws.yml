@@ -5,7 +5,7 @@ on:
     branches: [ "main" ]
 
 env:
-  AWS_REGION: us-east-1
+  AWS_REGION: "us-east-1"
   ECR_REPOSITORY: "541032831567.dkr.ecr.us-east-1.amazonaws.com/chessgame"
   ECS_SERVICE: "ChessDevService"            
   ECS_CLUSTER: "ChessDevCluster"
