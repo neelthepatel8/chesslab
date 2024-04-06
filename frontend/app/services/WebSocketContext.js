@@ -12,7 +12,9 @@ export const WebSocketProvider = ({ children }) => {
 
   useEffect(() => {
     const ws = new WebSocket(
-      "ws://ChessDevLoadBalancer-1437957295.us-east-1.elb.amazonaws.com:8000/ws",
+      process.env.NODE_ENV === "development"
+        ? process.env.NEXT_PUBLIC_WEBSOCKET_URL
+        : "ws://ChessDevLoadBalancer-1437957295.us-east-1.elb.amazonaws.com:8000/ws",
     );
 
     ws.onopen = () => {

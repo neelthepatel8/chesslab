@@ -1,16 +1,30 @@
-version: "3.2"
-
+version: "3.8"
 services:
-    frontend:
-        build: ./frontend
+    app:
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile.dev
+        volumes:
+            - ./frontend:/app:delegated
+            - /app/node_modules
         ports:
-            - 3000:3000
+            - "3000:3000"
+        environment:
+            - NEXT_PUBLIC_WEBSOCKET_URL=ws://localhost:8000/ws
+            - NODE_ENV=development
+            - WATCHPACK_POLLING=true
+        command: yarn dev
         depends_on:
             - backend
 
     backend:
-        build: ./backend
+        build:
+            context: ./backend
+            dockerfile: Dockerfile.dev
         volumes:
             - ./backend:/app
         ports:
-            - 8000:8000
+            - "8000:8000"
+        environment:
+            - PYTHONUNBUFFERED=1
+        command: python3 -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload

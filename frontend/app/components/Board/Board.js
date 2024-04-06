@@ -19,6 +19,8 @@ const Board = () => {
 
   const { sendMessage, messages, isConnected } = useWebSocket();
 
+  const [messageQueue, setMessageQueue] = useState([]);
+
   const [currentPlayer, setCurrentPlayer] = useState(
     fen.getCurrentPlayer(currentFen),
   );
@@ -60,84 +62,117 @@ const Board = () => {
   }, [isConnected]);
 
   useEffect(() => {
-    const handleWebSockMessaging = async () => {
+    if (messages.length > 0) {
       const latestMessage = messages[messages.length - 1];
-      if (latestMessage) {
-        log("Recieved message: ", latestMessage);
-
-        if (latestMessage.error < 0) {
-          log("Recieved error from backend: ", latestMessage);
-          return;
-        }
-
-        switch (latestMessage.type) {
-          case WEBSOCKET.TYPES.INIT:
-            const newFen = latestMessage.data?.fen;
-            setCurrentFen(newFen);
-            setCurrentPlayer(fen.getCurrentPlayer(newFen));
-            setPossibleMoves([]);
-            setSelectedSquare([]);
-
-          case WEBSOCKET.TYPES.CONFIG:
-            setConfig(latestMessage.data?.constants);
-
-          case WEBSOCKET.TYPES.MAKE_MOVE:
-            if (latestMessage.data?.move_success == true) {
-              const special = latestMessage.data?.special;
-              await animateMove(
-                latestMessage.data?.fen,
-                latestMessage.data?.is_kill == config.KILL,
-                special == config.CHECK || special == config.CASTLED_CHECK,
-                special == config.PROMOTE_POSSIBLE,
-                special == config.CASTLED_CHECK ||
-                  special == config.CASTLED_NO_CHECK,
-              ).then(() => {
-                if (special == config.CHECKMATE) {
-                  handleCheckmate();
-                } else if (special == config.STALEMATE) {
-                  handleStalemate(latestMessage.data?.fen);
-                }
-              });
-            } else {
-            }
-            setPossibleMoves([]);
-            setSelectedSquare([]);
-            break;
-
-          case WEBSOCKET.TYPES.POSSIBLE_MOVES:
-            const possibleMoves = latestMessage.data?.possible_moves;
-            setPossibleMoves(possibleMoves);
-            break;
-
-          case WEBSOCKET.TYPES.PROMOTE_PAWN:
-            const updatedFen = latestMessage.data?.fen;
-            const isCheckmate =
-              latestMessage.data?.special === config.CHECKMATE;
-            const isStalemate =
-              latestMessage.data?.special === config.STALEMATE;
-            const isCheck = latestMessage.data?.special === config.CHECK;
-
-            if (isCheckmate) handleCheckmate();
-            else if (isStalemate) handleCheckmate();
-            else if (isCheck) handleCheck();
-
-            setCurrentFen(updatedFen);
-
-            setCurrentPlayer(fen.getCurrentPlayer(updatedFen));
-            setPossibleMoves([]);
-            setSelectedSquare([]);
-            setShowPromotionOptions([[], PIECE_COLOR.BLACK]);
-            setSelectedPromotion([]);
-            setCurrentMoving([[], []]);
-
-          default:
-            break;
-        }
-      }
-    };
-
-    handleWebSockMessaging();
+      setMessageQueue((prevQueue) => [...prevQueue, latestMessage]);
+    }
   }, [messages]);
+
+  useEffect(() => {
+    if (messageQueue.length > 0) {
+      const processMessage = async (message) => {
+        console.log("Processing message: ", message);
+
+        handleWebSockMessaging(message);
+
+        await new Promise((resolve) => setTimeout(resolve, 200));
+
+        setMessageQueue((prevQueue) => prevQueue.slice(1));
+      };
+
+      processMessage(messageQueue[0]);
+    }
+  }, [messageQueue]);
+
+  const handleInitMessage = (message) => {
+    const newFen = message.data?.fen;
+    setCurrentFen(newFen);
+    setCurrentPlayer(fen.getCurrentPlayer(newFen));
+    setPossibleMoves([]);
+    setSelectedSquare([]);
+  };
+
+  const handleConfigMessage = (message) => {
+    setConfig(message.data?.constants);
+  };
+
+  const handleMakeMoveMessage = async (message) => {
+    if (message.data?.move_success) {
+      const special = message.data?.special;
+      await animateMove(
+        message.data?.fen,
+        message.data?.is_kill === config.KILL,
+        special === config.CHECK || special === config.CASTLED_CHECK,
+        special === config.PROMOTE_POSSIBLE,
+        special === config.CASTLED_CHECK || special === config.CASTLED_NO_CHECK,
+      ).then(() => {
+        if (special === config.CHECKMATE) {
+          handleCheckmate();
+        } else if (special === config.STALEMATE) {
+          handleStalemate(message.data?.fen);
+        }
+      });
+    }
+    setPossibleMoves([]);
+    setSelectedSquare([]);
+  };
+
+  const handlePossibleMovesMessage = (message) => {
+    const possibleMoves = message.data?.possible_moves;
+    setPossibleMoves(possibleMoves);
+  };
+
+  const handlePromotePawnMessage = (message) => {
+    const updatedFen = message.data?.fen;
+    setCurrentFen(updatedFen);
+    setCurrentPlayer(fen.getCurrentPlayer(updatedFen));
+    setPossibleMoves([]);
+    setSelectedSquare([]);
+    setShowPromotionOptions([[], PIECE_COLOR.BLACK]);
+    setSelectedPromotion([]);
+    setCurrentMoving([[], []]);
+
+    if (message.data?.special === config.CHECKMATE) {
+      handleCheckmate();
+    } else if (message.data?.special === config.STALEMATE) {
+      handleStalemate(updatedFen);
+    } else if (message.data?.special === config.CHECK) {
+      handleCheck();
+    }
+  };
+
+  const handleWebSockMessaging = async (latestMessage) => {
+    if (!latestMessage) {
+      log("No Message to process..");
+      return;
+    }
+
+    if (latestMessage.error < 0) {
+      log("Received error from backend: ", latestMessage);
+      return;
+    }
+
+    switch (latestMessage.type) {
+      case WEBSOCKET.TYPES.INIT:
+        handleInitMessage(latestMessage);
+        break;
+      case WEBSOCKET.TYPES.CONFIG:
+        handleConfigMessage(latestMessage);
+        break;
+      case WEBSOCKET.TYPES.MAKE_MOVE:
+        await handleMakeMoveMessage(latestMessage);
+        break;
+      case WEBSOCKET.TYPES.POSSIBLE_MOVES:
+        handlePossibleMovesMessage(latestMessage);
+        break;
+      case WEBSOCKET.TYPES.PROMOTE_PAWN:
+        handlePromotePawnMessage(latestMessage);
+        break;
+      default:
+        log("Unhandled message type: ", latestMessage.type);
+        break;
+    }
+  };
 
   useEffect(() => {
     if (showPromotionOptions[0].length > 0) playPromotion();
@@ -225,8 +260,7 @@ const Board = () => {
     isCastle = false,
     movingRook = false,
   ) => {
-    log("Moving Piece Now");
-
+    console.log("Moving");
     const [from_rank, from_file] = movingRook
       ? rookMoving[0]
       : currentMoving[0];
