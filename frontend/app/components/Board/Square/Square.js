@@ -1,7 +1,7 @@
 import React from "react";
 import { getSquareColor } from "@/app/utils/getSquareColor";
 import getTextColor from "@/app/utils/getTextColor";
-import numToLetter from "@/app/utils/numToletter";
+import numToLetter from "@/app/utils/numToLetter";
 import PossibleMoveDot from "../../Dot/PossibleMoveDot";
 import PossibleKillRing from "../../Dot/PossibleKillRing";
 import coordsToAlgebraic from "@/app/utils/coordsToAlgebraic";
@@ -30,7 +30,7 @@ const Square = ({
     <div
       id={`square-${coordsToAlgebraic(rank, file)}`}
       onClick={() => handleSquareClick(rank, file, children, pieceColor)}
-      className={`relative h-[6.2rem] w-[6.2rem]  pt-1 text-lg font-bold ${pointerStyle} ${squareColor}`}
+      className={`relative pt-1 text-lg  font-bold lg:h-20 lg:w-20 xl:h-[6.2rem] xl:w-[6.2rem] ${pointerStyle} ${squareColor}`}
     >
       {showPromotionOptions &&
         showPromotionOptions[0][0] == rank &&

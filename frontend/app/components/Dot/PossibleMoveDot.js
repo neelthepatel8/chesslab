@@ -3,7 +3,7 @@ import React from "react";
 const PossibleMoveDot = ({ color, size, className }) => {
   return (
     <svg
-      className={className}
+      className={`lg:responsive-svg-dot ${className}`}
       stroke={color}
       fill={color}
       strokeWidth="0"

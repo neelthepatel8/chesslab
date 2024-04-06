@@ -7,7 +7,7 @@ COPY Makefile .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-# COPY . .
+COPY . .
 
 RUN apk add --update make
 

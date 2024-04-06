@@ -7,3 +7,13 @@
 main {
   @apply bg-secondary font-primary;
 }
+
+.responsive-svg {
+  width: 100%;
+  height: auto;
+}
+
+.responsive-svg-dot {
+  width: 0.1 rem;
+  height: auto;
+}

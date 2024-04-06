@@ -1,4 +1,4 @@
-export default function numToLetter(num) {
+const numToLetter = (num) => {
   const num2letter = {
     1: "a",
     2: "b",
@@ -12,4 +12,6 @@ export default function numToLetter(num) {
 
   if (num > 8 || num < 1) return "x";
   return num2letter[num];
-}
+};
+
+export default numToLetter;

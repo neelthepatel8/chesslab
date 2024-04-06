@@ -25,8 +25,9 @@ async def root():
 
 async def init_board(websocket, message):
     global board
-
     board = Board()
+    
+    print("helloi world")
     response = {
         'type': 'init',
         'data': {
@@ -169,13 +170,27 @@ message_handlers = {
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
-    while True:
-        data = await websocket.receive_text()
-        message = json.loads(data)
-        handler = message_handlers.get(message["type"])
-        if handler:
-            await handler(websocket, message)
-        else:
-            print(f"Unknown message type: {message['type']}")
+    try:
+        while True:
+            data = await websocket.receive_text()
+            try:
+                message = json.loads(data)
+                if not isinstance(message, dict) or "type" not in message:
+                    print("Invalid message format")
+                    await websocket.send_text(json.dumps({"error": "Invalid message format"}))
+                    continue
 
-
+                handler = message_handlers.get(message["type"])
+                if handler:
+                    await handler(websocket, message)
+                else:
+                    print(f"Unknown message type: {message['type']}")
+                    await websocket.send_text(json.dumps({"error": "Unknown message type"}))
+            except json.JSONDecodeError:
+                print("Error decoding JSON")
+                await websocket.send_text(json.dumps({"error": "Error decoding JSON"}))
+            except KeyError as e:
+                print(f"Missing key in message: {e}")
+                await websocket.send_text(json.dumps({"error": f"Missing key: {e}"}))
+    except Exception as e:
+        print(f"An error occurred: {e}")

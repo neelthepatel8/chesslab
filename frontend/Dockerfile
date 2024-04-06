@@ -8,7 +8,7 @@ RUN npm install
 
 COPY . .
 
-ENV NEXT_PUBLIC_WEBSOCKET_URL "ws://127.0.0.1:8000/ws"
+ENV NEXT_PUBLIC_WEBSOCKET_URL "ws://ec2-3-131-218-211.us-east-2.compute.amazonaws.com:8000/ws"
 
 EXPOSE 3000
 

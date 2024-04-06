@@ -3,7 +3,7 @@ import React from "react";
 const PossibleKillRing = ({ color, size, className }) => {
   return (
     <svg
-      className={className}
+      className={`responsive-svg ${className}`}
       stroke={color}
       fill={color}
       strokeWidth="0"

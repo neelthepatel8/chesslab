@@ -3,21 +3,14 @@ version: "3.2"
 services:
     frontend:
         build: ./frontend
-        environment:
-            CHOKIDAR_USEPOLLING: "true"
-        volumes:
-            - /app/node_modules
-            - ./frontend:/app
         ports:
-            - 80:3000
+            - 3000:3000
         depends_on:
             - backend
 
     backend:
-        build: ./backends/banuka
-        environment:
-            CHOKIDAR_USEPOLLING: "true"
+        build: ./backend
         volumes:
-            - ./backends/banuka:/app
+            - ./backend:/app
         ports:
-            - 8080:8083
+            - 8000:8000

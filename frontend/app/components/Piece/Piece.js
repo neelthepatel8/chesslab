@@ -17,6 +17,7 @@ const Piece = ({ type, color, ...props }) => {
           height={100}
           src={pieceImage}
           alt={`${color}-${type}`}
+          layout="responsive"
         />
       )}
     </div>
