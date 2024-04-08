@@ -6,7 +6,7 @@
     "scripts": {
         "remove-resources": "node predeploy.js",
         "build-container": "docker-compose up -d",
-        "build": "npm install && cd backend && pip install -r requirements.txt && cd .. && cd frontend && yarn build",
+        "build": "npm install && cd backend && pip install -r requirements.txt && cd .. && cd frontend && yarn build-dev",
         "tag-backend": "docker tag game-backend:latest 541032831567.dkr.ecr.us-east-1.amazonaws.com/chessgame:latest-backend",
         "tag-frontend": "docker tag game-frontend:latest 541032831567.dkr.ecr.us-east-1.amazonaws.com/chessgame:latest-frontend",
         "push-backend": "docker push 541032831567.dkr.ecr.us-east-1.amazonaws.com/chessgame:latest-backend",
