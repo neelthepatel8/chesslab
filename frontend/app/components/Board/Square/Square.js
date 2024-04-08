@@ -30,7 +30,7 @@ const Square = ({
     <div
       id={`square-${coordsToAlgebraic(rank, file)}`}
       onClick={() => handleSquareClick(rank, file, children, pieceColor)}
-      className={`relative pt-1 text-lg  font-bold lg:h-20 lg:w-20 xl:h-[6.2rem] xl:w-[6.2rem] ${pointerStyle} ${squareColor}`}
+      className={`relative pt-1 text-lg font-bold lg:h-[10vh] lg:w-[10vh] xl:h-[12vh] xl:w-[12vh] ${pointerStyle} ${squareColor}`}
     >
       {showPromotionOptions &&
         showPromotionOptions[0][0] == rank &&
@@ -74,3 +74,4 @@ const Square = ({
 };
 
 export default Square;
+
