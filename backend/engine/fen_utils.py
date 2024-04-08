@@ -138,3 +138,17 @@ def get_opposite_player(player):
 
 def algebraic_list(arr):
     return [coords_to_algebraic(r, f) for r, f in arr]
+
+def algebraic_list_to_coords(arr):
+    coords_list = []
+    for each in arr:
+        if isinstance(each, list):
+            sublist = []
+            for pos in each:
+                alg = algebraic_to_coords(pos)
+                sublist.append(alg)
+            coords_list.append(sublist)
+        else:
+            alg = algebraic_to_coords(each)
+            coords_list.append(each)
+    return coords_list

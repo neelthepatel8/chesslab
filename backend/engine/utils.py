@@ -12,5 +12,22 @@ def visualize_possible_moves(possible_moves, piece_position, piece_name):
             else:
                 print(" . ", end="")
         print()
-        
+    
+def lists_equal(lst1, lst2):
+    if not lst1 and lst2: return False
+    if not lst2 and lst1: return False
+    if not lst1 and not lst2: return True 
+    if len(lst1) != len(lst2): return False 
+    
+    if (isinstance(lst1[0], list)):
+        equal = False 
+        for a, b in zip(lst1, lst2):
+            if len(a) != len(b): 
+                equal = False 
+                break
+            equal = sorted(a) == sorted(b)
+        equal = sorted(lst1) == sorted(lst2)
+        return equal 
+    
+    return sorted(lst1) == sorted(lst2)
         

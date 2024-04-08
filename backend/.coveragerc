@@ -1,0 +1,7 @@
+[run]
+omit =
+    */.local/*
+    __init*
+    */tests/*
+    test*
+    */__pycache__/*
