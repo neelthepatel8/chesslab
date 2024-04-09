@@ -52,3 +52,6 @@ class Piece():
         
     def get_algebraic_pos(self):
         return fen_utils.coords_to_algebraic(self.rank, self.file)
+    
+    def check_bounds(self, value):
+        return MIN_RANK <= value <= MAX_RANK

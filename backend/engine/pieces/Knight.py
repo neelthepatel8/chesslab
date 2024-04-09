@@ -7,6 +7,17 @@ class Knight(Piece):
         super().__init__(rank, file, color)
         self.name = 'n' if color == COLOR['BLACK'] else 'N'
 
+    def can_move(self, to_pos):
+        move_offsets = [(2, 1), (2, -1), (-2, 1), (-2, -1), (1, 2), (1, -2), (-1, 2), (-1, -2)]
+        paths = set()
+
+        for d_rank, d_file in move_offsets:
+            new_rank = self.rank + d_rank
+            new_file = self.file + d_file
+            if 1 <= new_rank <= MAX_RANK and 1 <= new_file <= MAX_FILE:
+                paths.add((new_rank, new_file))
+
+        return to_pos in paths
 
     def get_possible_paths(self):
         move_offsets = [(2, 1), (2, -1), (-2, 1), (-2, -1), (1, 2), (1, -2), (-1, 2), (-1, -2)]

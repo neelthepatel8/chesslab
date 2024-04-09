@@ -64,8 +64,16 @@ def test_rook_movement_legality(start_pos, end_pos, expected, rook_at_position):
     assert rook.can_move((end_rank, end_file)) == expected
     
 @pytest.mark.parametrize("start_pos, expected", [
+    # Test some basic paths
     ('a1', [['a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'a8'],
-            ['b1', 'c1', 'd1', 'e1', 'f1', 'g1', 'h1']])
+            ['b1', 'c1', 'd1', 'e1', 'f1', 'g1', 'h1']]),
+    ('e4', [['f4', 'g4', 'h4'], 
+            ['e3', 'e2', 'e1'], 
+            ['e5', 'e6', 'e7', 'e8'], 
+            ['d4', 'c4', 'b4', 'a4']]),
+    ('a6', [['a7', 'a8'], 
+            ['a5', 'a4', 'a3', 'a2', 'a1'], 
+            ['b6', 'c6', 'd6', 'e6', 'f6', 'g6', 'h6']]),
 ])
 def test_rook_movement_paths(start_pos, expected, rook_at_position):
     start_rank, start_file = algebraic_to_coords(start_pos)
@@ -77,3 +85,9 @@ def test_rook_movement_paths(start_pos, expected, rook_at_position):
     
 def test_rook_initial_state(rook):
     assert not rook.has_moved
+
+def test_rook_state_after_move(rook_at_position):
+    rook = rook_at_position(1, 4, constants.COLOR["WHITE"])
+    rook.update_position(2, 2)
+    assert rook.has_moved
+

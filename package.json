@@ -6,7 +6,7 @@
     "scripts": {
         "remove-resources": "node predeploy.js",
         "build-container": "docker-compose up -d",
-        "build": "npm install && cd backend && pip install -r requirements.txt && cd .. && cd frontend && yarn build-dev",
+        "build": "npm install && cd backend && pip install -r requirements.txt && cd .. && cd frontend && yarn build",
         "tag-backend": "docker tag game-backend:latest 541032831567.dkr.ecr.us-east-1.amazonaws.com/chessgame:latest-backend",
         "tag-frontend": "docker tag game-frontend:latest 541032831567.dkr.ecr.us-east-1.amazonaws.com/chessgame:latest-frontend",
         "push-backend": "docker push 541032831567.dkr.ecr.us-east-1.amazonaws.com/chessgame:latest-backend",
@@ -16,7 +16,8 @@
         "start": "docker compose up --build",
         "test": "cd backend && python3 -m pytest tests -v",
         "test:coverage": "cd backend && python3 -m coverage run -m pytest tests && coverage report",
-        "test:only": "cd backend && python3 -m pytest tests/${npm_config_file}"
+        "test:only": "cd backend && python3 -m pytest tests/${npm_config_file}",
+        "lint:backend": "ruff check backend/"
     },
     "repository": {
         "type": "git",
