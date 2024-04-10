@@ -20,7 +20,7 @@ export const WebSocketProvider = ({ children }) => {
     const ws = new WebSocket(
       process.env.NODE_ENV === "development"
         ? process.env.NEXT_PUBLIC_WEBSOCKET_URL
-        : "ws://ChessDevLoadBalancer-1437957295.us-east-1.elb.amazonaws.com:8000/ws",
+        : "wss://chesslab.net:8000/ws",
     );
 
     ws.onopen = () => {
@@ -65,3 +65,4 @@ export const WebSocketProvider = ({ children }) => {
     </WebSocketContext.Provider>
   );
 };
+

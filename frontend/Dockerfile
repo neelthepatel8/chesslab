@@ -47,6 +47,6 @@ EXPOSE 3000
 
 ENV PORT 3000
 
-ENV NEXT_PUBLIC_WEBSOCKET_URL ws://ChessDevLoadBalancer-1437957295.us-east-1.elb.amazonaws.com:8000/ws
+ENV NEXT_PUBLIC_WEBSOCKET_URL wss://chesslab.net:8000/ws
 
 CMD HOSTNAME="0.0.0.0" node server.js
