@@ -54,6 +54,10 @@ class Board(ABC):
     def get_piece(self, piece_coords):
         rank, file = fen_utils.algebraic_to_coords(piece_coords)
         return self.board[rank - 1][file - 1]
+    
+    def set_piece(self, piece_coords, piece):
+        rank, file = fen_utils.algebraic_to_coords(piece_coords)
+        self.board[rank - 1][file - 1] = piece
 
     def get_pseudo_legal_moves(self, piece_coords, simulate=False, log=False):
         if self.is_stalemate or self.is_checkmate: 
