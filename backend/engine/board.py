@@ -58,6 +58,7 @@ class Board(ABC):
     def get_pseudo_legal_moves(self, piece_coords, simulate=False, log=False):
         if self.is_stalemate or self.is_checkmate: 
             return []
+        
         rank, file = fen_utils.algebraic_to_coords(piece_coords)
         if not (1 <= rank <= 8 and 1 <= file <= 8):
             return None
@@ -245,7 +246,8 @@ class Board(ABC):
         from_rank, from_file = from_pos
         to_rank, to_file = to_pos
 
-        piece = self.board[from_rank - 1][from_file - 1]
+        piece = self.get_piece(from_pos)
+        piece_at_pos = self.get_piece(to_pos)
 
         if not piece: 
             return constants.ERROR_NO_PIECE_TO_MOVE
@@ -259,7 +261,6 @@ class Board(ABC):
             if to_pos not in possible_moves:
                 return constants.ERROR_MOVE_NOT_POSSIBLE
 
-        piece_at_pos = self.board[to_rank - 1][to_file - 1]
 
         if piece.get_color() == constants.COLOR["BLACK"]:
             self.fullmoves += 1
