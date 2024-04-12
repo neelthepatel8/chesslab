@@ -285,6 +285,7 @@ class Board(ABC):
                         if fen_utils.coords_to_algebraic(to_rank, to_file) == self.en_passant.eligible_square:
                             target_rank, target_file = fen_utils.algebraic_to_coords(self.en_passant.target_pawn_position)
                             removed_pawn = self.board[target_rank - 1][target_file - 1]
+                            self.set_piece(target_rank, target_file, None)
                             self.board[target_rank - 1][target_file - 1] = None 
                             self.dead_pieces[removed_pawn.get_color()].append(removed_pawn)
                             has_en_passant = True 
