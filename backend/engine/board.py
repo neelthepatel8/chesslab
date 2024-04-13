@@ -81,22 +81,21 @@ class Board(ABC):
         self.set_piece(position, None)
 
     def get_pseudo_legal_moves(self, position: Position, simulate=False, log=False) -> list:
+        
         if self.is_stalemate or self.is_checkmate: 
             return []
         
-        rank, file = position.rank, position.file
-        
         piece = self.get_piece(position)
         if not piece:
-            return None
+            return []
 
         all_paths = piece.get_possible_paths()
         valid_moves = []
         
-        en_passant_added = None
-        
         for path in all_paths:
+            
             valid_path = []
+            
             for pos in path:
                 if not pos.is_on_board():
                     break
@@ -104,20 +103,16 @@ class Board(ABC):
                 piece_at_pos = self.get_piece(pos)
 
                 if piece_at_pos:
-                    if piece_at_pos.get_color() == piece.get_color():
-                        break
-                    else:
-                        if isinstance(piece, pieces.Pawn) and abs(piece.position.file - pos.file) == 1:
-                            if piece.can_move(pos, is_capture=True):
-                                valid_path.append(pos)
-                        elif not isinstance(piece, pieces.Pawn) or (isinstance(piece, pieces.Pawn) and abs(piece.position.file - pos.file) == 1):
-                            if piece.can_kill(pos):
-                                valid_path.append(pos)
-                                break
+                    if piece_at_pos.get_color() != piece.get_color():
+                        if piece.can_kill(pos):
+                            valid_path.append(pos)
+                    break
+                        
                 else:
                     if not self.king_in_check:
                         valid_moves.extend(self.get_castlable_moves(piece))
-                    if not isinstance(piece, pieces.Pawn) or (isinstance(piece, pieces.Pawn) and piece.position.file == pos.file):
+                    
+                    if piece.can_move(pos):
                         valid_path.append(pos)
                     
                     if not simulate:
@@ -126,25 +121,12 @@ class Board(ABC):
                                 possible = self.check_en_passant_possible_for_piece(piece)                                
                                 if possible:
                                     valid_moves.append(self.en_passant.eligible_square)
-                                    en_passant_added = self.en_passant.eligible_square
+                                    # en_passant_added = self.en_passant.eligible_square
 
             valid_moves.extend(valid_path)
             
-            
-        if isinstance(piece, pieces.Pawn):
-            final_valid_moves = []
-            for move in valid_moves:
-                piece_at_target = self.get_piece(move)
-                if abs(piece.position.file - move.file) == 1 and piece_at_target and piece_at_target.get_color() != piece.get_color():
-                    final_valid_moves.append(move)
-                elif abs(piece.position.file - move.file) == 0 and not piece_at_target:
-                    final_valid_moves.append(move)
-            valid_moves = final_valid_moves
-
-        if en_passant_added: 
-            valid_moves.append(en_passant_added)
         return list(set(valid_moves))
-    
+
     def get_all_pseudo_legal_moves(self, player: Player, simulate=False) -> list:
         moves = []
         for row in self.board:
@@ -411,15 +393,12 @@ class Board(ABC):
         return position in legal_moves
     
     def castle(self, piece: Piece, from_pos: Position, to_pos: Position):
-        print("CASTLING")
         
         if self.is_king_in_check(self.current_player):
-            print("King in check!")
             return False
         
         self.update_castling_availability()
         if not self.castling_availability:
-            print("Castling not available")
             return False
         
         if to_pos.file > from_pos.file:
@@ -428,7 +407,6 @@ class Board(ABC):
             castling = 'q' if piece.get_color() == constants.COLOR["BLACK"] else 'Q'
             
         if castling not in self.castling_availability:
-            print("Reached here!")
             
             return False 
     
@@ -443,7 +421,6 @@ class Board(ABC):
             else: 
                 pos1, pos2 = Position(algebraic='a1'), Position(algebraic='d1')
 
-        print("Reached here!")
         if pos1.is_on_board() and pos2.is_on_board():
             rook = self.get_piece(pos1)
             self.set_piece(pos2, rook)

@@ -156,6 +156,7 @@ async def promote_pawn(websocket, message):
         await websocket.send_text(json.dumps(error_responses.RESPONSE_ERROR_PROMOTE_TYPE))
 
     position = message['data']['position']
+    position = Position(algebraic=position)
     promote_to = message['data']['promote_to']
 
     promoted, special = board.try_pawn_promote(position, promote_to=promote_to, do_it=True)
@@ -206,10 +207,3 @@ async def websocket_endpoint(websocket: WebSocket):
                 await websocket.send_text(json.dumps({"error": f"Missing key: {e}"}))
     except Exception as e:
         logger.error(f"An error occurred: {e}", exc_info=True)
-
-
-
-if __name__ == "__main__":
-    while True:
-        print('cleaner is up', flush=True)
-        time.sleep(5)
