@@ -13,7 +13,7 @@ class King(Piece):
         if not super().can_move(to_pos):
             return False
         
-        to_rank, to_file = to_pos.rank. to_pos.file
+        to_rank, to_file = to_pos.rank, to_pos.file
 
         rank_difference = abs(self.position.rank - to_rank)
         file_difference = abs(self.position.file - to_file)

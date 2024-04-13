@@ -149,7 +149,6 @@ class Board(ABC):
                     continue 
                 if piece.get_color() != player: 
                     continue
-                
                 moves.extend(self.get_pseudo_legal_moves(piece.position, simulate))
         return list(set(moves)) 
     
