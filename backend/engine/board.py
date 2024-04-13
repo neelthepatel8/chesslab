@@ -8,8 +8,10 @@ import copy
 from engine.enpassant.EnPassantStatus import EnPassantStatus
 
 from engine.Position import Position
-from engine.PGNParser import PGNParser
-from engine.Game import Game
+
+from engine.player.BlackPlayer import BlackPlayer   
+from engine.player.WhitePlayer import WhitePlayer   
+from engine.player.Player import Player   
 
 class Board(ABC):
     def __init__(self, fen=constants.START_FEN) -> None:
@@ -38,7 +40,7 @@ class Board(ABC):
         
 
     def make_fen(self):
-        active = "w" if self.current_player == constants.COLOR["WHITE"] else "b"
+        active = "w" if isinstance(self.current_player, WhitePlayer) else "b"
         castling = ''.join(self.castling_availability) if len(self.castling_availability) > 0 else '-'
 
         en_passant = self.en_passant.eligible_square.algebraic if self.en_passant.available else '-'
@@ -143,13 +145,13 @@ class Board(ABC):
             valid_moves.append(en_passant_added)
         return list(set(valid_moves))
     
-    def get_all_pseudo_legal_moves(self, player: str, simulate=False) -> list:
+    def get_all_pseudo_legal_moves(self, player: Player, simulate=False) -> list:
         moves = []
         for row in self.board:
             for piece in row:
                 if not piece: 
                     continue 
-                if piece.get_color() != player: 
+                if piece.get_color() != player.color: 
                     continue
                 moves.extend(self.get_pseudo_legal_moves(piece.position, simulate))
         return list(set(moves)) 
@@ -170,7 +172,7 @@ class Board(ABC):
 
         board_copy.move_piece(from_pos, to_pos, simulate=True)
 
-        if board_copy.is_king_in_check(fen_utils.get_opposite_player(board_copy.current_player)):
+        if board_copy.is_king_in_check(board_copy.current_player.opponent()):
             return False
         return True
 
@@ -182,21 +184,21 @@ class Board(ABC):
                 legal_moves.append(to_pos)
         return list(set(legal_moves))
     
-    def get_all_legal_moves(self, player: str, simulate: bool, log=False) -> list:
+    def get_all_legal_moves(self, player: Player, simulate: bool, log=False) -> list:
         moves = []
         for row in self.board:
             for piece in row:
                 if not piece: 
                     continue 
-                if piece.get_color() != player: 
+                if piece.get_color() != player.color: 
                     continue
                 moves.extend(self.get_legal_moves(piece.position, simulate, log))
-        self.all_legal_moves[player] = moves
+        self.all_legal_moves[player.color] = moves
         return list(set(moves)) 
 
-    def is_king_in_check(self, player: str) -> bool:
+    def is_king_in_check(self, player: Player) -> bool:
         king = self.get_king_location(player)
-        all_possible_moves = self.get_all_pseudo_legal_moves(fen_utils.get_opposite_player(player), simulate=True)
+        all_possible_moves = self.get_all_pseudo_legal_moves(player.opponent(), simulate=True)
         for move in all_possible_moves:
             if move == king:
                 self.king_in_check = player
@@ -205,12 +207,12 @@ class Board(ABC):
         self.king_in_check = None
         return False
 
-    def get_king_location(self, player: str) -> Position:
+    def get_king_location(self, player: Player) -> Position:
         for row in self.board:
             for piece in row:
                 if not piece: 
                     continue 
-                if piece.get_color() != player: 
+                if piece.get_color() != player.color: 
                     continue 
                 if piece.get_name().lower() == 'k':
                     return piece.position
@@ -245,7 +247,6 @@ class Board(ABC):
             return False
     
     def move_piece(self, from_pos: Position, to_pos: Position, simulate=False, verify=True):
-        print("Trying to move from: ", from_pos, " to: ", to_pos)
         from_rank, from_file = from_pos.rank, from_pos.file
         to_rank, to_file = to_pos.rank, to_pos.file
 
@@ -291,7 +292,7 @@ class Board(ABC):
             self.clear_square(from_pos)
             self.set_piece(to_pos, piece)
             piece.update_position(to_pos)
-            self.current_player = constants.COLOR["WHITE"] if self.current_player == constants.COLOR["BLACK"] else constants.COLOR["BLACK"]
+            self.current_player = self.current_player.opponent()
             self.update_castling_availability()
             if not simulate: 
                 self.update_en_passant_status(from_pos, to_pos)
@@ -322,7 +323,7 @@ class Board(ABC):
         self.clear_square(from_pos)
         self.set_piece(to_pos, piece)
         piece.update_position(to_pos)
-        self.current_player = constants.COLOR["WHITE"] if self.current_player == constants.COLOR["BLACK"] else constants.COLOR["BLACK"]
+        self.current_player = self.current_player.opponent()
         self.halfmoves += 1
         self.update_castling_availability()
         if not simulate: 
@@ -405,8 +406,8 @@ class Board(ABC):
         return moves
     
     def is_targeted_square(self, position: Position):
-        player = fen_utils.get_opposite_player(self.current_player)
-        legal_moves = self.all_legal_moves[player]
+        player = self.current_player.opponent()
+        legal_moves = self.all_legal_moves[player.color]
         return position in legal_moves
     
     def castle(self, piece: Piece, from_pos: Position, to_pos: Position):

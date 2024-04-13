@@ -1,6 +1,8 @@
 from engine.constants import COLOR, MAX_RANK, MAX_FILE
 import engine.pieces as pieces
 from engine.Position import Position
+from engine.player.BlackPlayer import BlackPlayer
+from engine.player.WhitePlayer import WhitePlayer
 
 def build_board_from_fen(fen):
     board = [[None for _ in range(MAX_FILE)] for _ in range(MAX_RANK)]
@@ -96,10 +98,10 @@ def coords_to_algebraic(position: Position):
 
 def get_current_player(fen):
     if not fen: 
-        return COLOR["WHITE"]
+        return WhitePlayer()
 
     _, turn, _, _, _, _ = fen.split(" ")
-    return COLOR["WHITE"] if turn == "w" else COLOR["BLACK"]
+    return WhitePlayer() if turn == "w" else BlackPlayer()
 
 def get_halfmoves(fen):
     if not fen: 
