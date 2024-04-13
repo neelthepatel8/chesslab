@@ -19,7 +19,7 @@ export const WebSocketProvider = ({ children }) => {
   useEffect(() => {
     const ws = new WebSocket(
       process.env.NODE_ENV === "development"
-        ? process.env.NEXT_PUBLIC_WEBSOCKET_URL
+        ? "ws://localhost:8000/ws"
         : "wss://chesslab.net:8000/ws",
     );
 

@@ -1,21 +1,28 @@
 class Position():
     def __init__(self, rank=None, file=None, algebraic=None, coords=None):
-        if algebraic:
-            self.rank = rank 
-            self.file = file
-            self.algebraic = self.coords_to_algebraic(self.rank, self.file)
-            
-        elif rank and file:
-            self.algebraic = algebraic
-            self.rank, self.file = self.algeraic_to_coords(algebraic)
-            
-        elif coords:
-            self.coords = coords
-            self.rank, self.file = coords
-            self.algebraic = self.coords_to_algebraic(self.rank, self.file) 
-            
-        else:
-            raise TypeError("Incorrect values provided to Position class.")
+        
+        self.rank = self.file = -1
+        self.coords = (-1, -1)
+        self.algebraic = ""
+        
+        try:
+            if algebraic:
+                self.rank, self.file = self.algebraic_to_coords(algebraic)
+                self.algebraic = algebraic
+                
+            elif rank and file:
+                if not (1 <= rank <= 8 and 1 <= file <= 8):
+                    raise ValueError("Rank and file must be within 1 to 8.")
+                self.algebraic = self.coords_to_algebraic(rank, file)
+                self.rank, self.file = rank, file
+                
+            elif coords:
+                if len(coords) == 2 and all(1 <= x <= 8 for x in coords):
+                    self.coords = coords
+                    self.rank, self.file = coords
+                    self.algebraic = self.coords_to_algebraic(self.rank, self.file) 
+        except:
+            pass
         
     def algebraic_to_coords(self, algebraic):
         file_to_num = {'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5, 'f': 6, 'g': 7, 'h': 8}
@@ -41,7 +48,18 @@ class Position():
         new_file = num2letter[file]
         return f"{new_file}{8 + 1 - rank}"
     
+    def is_on_board(self):
+        return 1 <= self.rank <= 8 and 1 <= self.file <= 8
+    
     def __str__(self):
         return f"{self.algebraic}"
+    
+    def __eq__(self, other):
+        if type(other) != type(self): 
+            return False
+        return self.file == other.file and self.rank == other.rank
+    
+    def __hash__(self) -> int:
+        return hash(self.algebraic)
             
             
