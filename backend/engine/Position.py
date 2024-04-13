@@ -9,12 +9,14 @@ class Position():
             if algebraic:
                 self.rank, self.file = self.algebraic_to_coords(algebraic)
                 self.algebraic = algebraic
+                self.coords = (self.rank, self.file)
                 
             elif rank and file:
                 if not (1 <= rank <= 8 and 1 <= file <= 8):
                     raise ValueError("Rank and file must be within 1 to 8.")
                 self.algebraic = self.coords_to_algebraic(rank, file)
                 self.rank, self.file = rank, file
+                self.coords = (self.rank, self.file)
                 
             elif coords:
                 if len(coords) == 2 and all(1 <= x <= 8 for x in coords):

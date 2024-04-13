@@ -8,6 +8,8 @@ import copy
 from engine.enpassant.EnPassantStatus import EnPassantStatus
 
 from engine.Position import Position
+from engine.PGNParser import PGNParser
+from engine.Game import Game
 
 class Board(ABC):
     def __init__(self, fen=constants.START_FEN) -> None:
@@ -33,6 +35,7 @@ class Board(ABC):
         }
         
         self.en_passant = EnPassantStatus()
+        
 
     def make_fen(self):
         active = "w" if self.current_player == constants.COLOR["WHITE"] else "b"
@@ -63,7 +66,6 @@ class Board(ABC):
         self.fen = ' '.join(all_fen)
 
         return self.fen
-
 
     def get_piece(self, position: Position):
         rank, file = position.rank, position.file
@@ -242,7 +244,8 @@ class Board(ABC):
         else: 
             return False
     
-    def move_piece(self, from_pos: Position, to_pos: Position, simulate=False):
+    def move_piece(self, from_pos: Position, to_pos: Position, simulate=False, verify=True):
+        print("Trying to move from: ", from_pos, " to: ", to_pos)
         from_rank, from_file = from_pos.rank, from_pos.file
         to_rank, to_file = to_pos.rank, to_pos.file
 
@@ -252,14 +255,15 @@ class Board(ABC):
         if not piece: 
             return constants.ERROR_NO_PIECE_TO_MOVE
         
-        if simulate:
-            pseudo_legal_moves = self.get_pseudo_legal_moves(from_pos, simulate)
-            if to_pos not in pseudo_legal_moves:
-                return constants.ERROR_MOVE_NOT_POSSIBLE
-        else:
-            possible_moves = self.get_legal_moves(from_pos, simulate)
-            if to_pos not in possible_moves:
-                return constants.ERROR_MOVE_NOT_POSSIBLE
+        if verify:
+            if simulate:
+                pseudo_legal_moves = self.get_pseudo_legal_moves(from_pos, simulate)
+                if to_pos not in pseudo_legal_moves:
+                    return constants.ERROR_MOVE_NOT_POSSIBLE
+            else:
+                possible_moves = self.get_legal_moves(from_pos, simulate)
+                if to_pos not in possible_moves:
+                    return constants.ERROR_MOVE_NOT_POSSIBLE
 
 
         if piece.get_color() == constants.COLOR["BLACK"]:
