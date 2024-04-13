@@ -5,14 +5,22 @@ import error_responses
 from engine import fen_utils
 import engine.constants
 from fastapi.middleware.cors import CORSMiddleware
+from engine.Position import Position
+import time
+
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+
+logger = logging.getLogger("chess_backend")
 
 
-app = FastAPI()
+app = FastAPI(debug=True)
 board = None
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # This is for development only, specify your frontend origin in production
+    allow_origins=["*"], 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -91,8 +99,10 @@ async def possible_moves(websocket, message):
         await websocket.send_text(json.dumps(error_responses.RESPONSE_ERROR_POSITION))
 
     position = message['data']['position']
+    
+    position = Position(algebraic=position)
     possible_moves = board.get_legal_moves(position, log=True)
-    chess_notation_moves = fen_utils.convert_coords_to_chess_notation(possible_moves)
+    chess_notation_moves = fen_utils.algebraic_list(possible_moves)
     response = {
         'type': 'poss_moves',
         'data': {
@@ -115,6 +125,9 @@ async def make_move(websocket, message):
 
     from_pos = message['data']['from_position']
     to_pos = message['data']['to_position']
+    
+    from_pos = Position(algebraic=from_pos)
+    to_pos = Position(algebraic=to_pos)
 
     move_success, is_kill, special = board.move_piece(from_pos, to_pos)
 
@@ -175,7 +188,7 @@ async def websocket_endpoint(websocket: WebSocket):
             try:
                 message = json.loads(data)
                 if not isinstance(message, dict) or "type" not in message:
-                    print("Invalid message format")
+                    logger.error("Invalid message format")
                     await websocket.send_text(json.dumps({"error": "Invalid message format"}))
                     continue
 
@@ -183,13 +196,20 @@ async def websocket_endpoint(websocket: WebSocket):
                 if handler:
                     await handler(websocket, message)
                 else:
-                    print(f"Unknown message type: {message['type']}")
+                    logger.error(f"Unknown message type: {message['type']}")
                     await websocket.send_text(json.dumps({"error": "Unknown message type"}))
-            except json.JSONDecodeError:
-                print("Error decoding JSON")
+            except json.JSONDecodeError as e:
+                logger.error("Error decoding JSON", exc_info=True)
                 await websocket.send_text(json.dumps({"error": "Error decoding JSON"}))
             except KeyError as e:
-                print(f"Missing key in message: {e}")
+                logger.error(f"Missing key in message: {e}", exc_info=True)
                 await websocket.send_text(json.dumps({"error": f"Missing key: {e}"}))
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logger.error(f"An error occurred: {e}", exc_info=True)
+
+
+
+if __name__ == "__main__":
+    while True:
+        print('cleaner is up', flush=True)
+        time.sleep(5)

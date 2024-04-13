@@ -1,5 +1,6 @@
 from engine.constants import COLOR, MAX_RANK, MAX_FILE
 import engine.pieces as pieces
+from engine.Position import Position
 
 def build_board_from_fen(fen):
     board = [[None for _ in range(MAX_FILE)] for _ in range(MAX_RANK)]
@@ -14,19 +15,20 @@ def build_board_from_fen(fen):
 def get_piece_from_char(name, rank, file):
     black = COLOR["BLACK"]
     white = COLOR["WHITE"]
+    position = Position(rank=rank, file=file)
     piece_map = {
-        'p': pieces.Pawn(rank, file, black),
-        'q': pieces.Queen(rank, file, black),
-        'r': pieces.Rook(rank, file, black),
-        'b': pieces.Bishop(rank, file, black),
-        'n': pieces.Knight(rank, file, black),
-        'k': pieces.King(rank, file, black),
-        'P': pieces.Pawn(rank, file, white),
-        'Q': pieces.Queen(rank, file, white),
-        'R': pieces.Rook(rank, file, white),
-        'B': pieces.Bishop(rank, file, white),
-        'N': pieces.Knight(rank, file, white),
-        'K': pieces.King(rank, file, white),
+        'p': pieces.Pawn(position, black),
+        'q': pieces.Queen(position, black),
+        'r': pieces.Rook(position, black),
+        'b': pieces.Bishop(position, black),
+        'n': pieces.Knight(position, black),
+        'k': pieces.King(position, black),
+        'P': pieces.Pawn(position, white),
+        'Q': pieces.Queen(position, white),
+        'R': pieces.Rook(position, white),
+        'B': pieces.Bishop(position, white),
+        'N': pieces.Knight(position, white),
+        'K': pieces.King(position, white),
         'X': None
     }
 
@@ -77,7 +79,7 @@ def algebraic_to_coords(algebraic_notation):
 
     return (rank_number, file_number)
 
-def coords_to_algebraic(rank, file):
+def coords_to_algebraic(position: Position):
     num2letter = {
         1: "a",
         2: "b",
@@ -88,20 +90,9 @@ def coords_to_algebraic(rank, file):
         7: "g",
         8: "h",
     }
-    new_file = num2letter[file]
-    return f"{new_file}{8 + 1 - rank}"
-
-
-def convert_coords_to_chess_notation(possible_moves):
-    converted_moves = []
-
-    if not possible_moves: 
-        return []
-    for move in possible_moves:
-        rank, file = move
-        converted_moves.append(coords_to_algebraic(rank, file))
-
-    return converted_moves
+    
+    new_file = num2letter[position.file]
+    return f"{new_file}{8 + 1 - position.rank}"
 
 def get_current_player(fen):
     if not fen: 
@@ -136,8 +127,8 @@ def get_opposite_player(player):
     return COLOR["BLACK"] if player == COLOR["WHITE"] else COLOR["WHITE"]
 
 
-def algebraic_list(arr):
-    return [coords_to_algebraic(r, f) for r, f in arr]
+def algebraic_list(arr: list):
+    return [coords_to_algebraic(position) for position in arr]
 
 def algebraic_list_to_coords(arr):
     coords_list = []

@@ -1,21 +1,22 @@
 from engine.piece import Piece
-from engine.constants import COLOR, MAX_RANK, MAX_FILE
-
+from engine.constants import COLOR
+from engine.Position import Position
 
 class King(Piece):
-    def __init__(self, rank, file, color) -> None:
-        super().__init__(rank, file, color)
+    def __init__(self, position: Position, color: str) -> None:
+        super().__init__(position, color)
         self.name = 'k' if color == COLOR['BLACK'] else 'K'
 
 
-    def can_move(self, to_pos):
-        to_rank, to_file = to_pos
-
+    def can_move(self, to_pos: Position):
+        
         if not super().can_move(to_pos):
             return False
+        
+        to_rank, to_file = to_pos.rank, to_pos.file
 
-        rank_difference = abs(self.rank - to_rank)
-        file_difference = abs(self.file - to_file)
+        rank_difference = abs(self.position.rank - to_rank)
+        file_difference = abs(self.position.file - to_file)
 
         return (rank_difference <= 1) and (file_difference <= 1)
 
@@ -24,8 +25,9 @@ class King(Piece):
         paths = []
 
         for d_rank, d_file in directions:
-            new_rank = self.rank + d_rank
-            new_file = self.file + d_file
-            if 1 <= new_rank <= MAX_RANK and 1 <= new_file <= MAX_FILE:
-                paths.append([(new_rank, new_file)])
+            new_rank = self.position.rank + d_rank
+            new_file = self.position.file + d_file
+            new_position = Position(rank=new_rank, file=new_file)
+            if new_position.is_on_board():
+                paths.append([new_position])
         return paths

@@ -3,12 +3,9 @@ FROM python:3.11.9-alpine
 WORKDIR /app
 
 COPY requirements.txt .
-COPY Makefile .
 
 RUN pip install -r requirements.txt
 
 COPY . .
-
-RUN apk add --update make
 
 EXPOSE 8000
