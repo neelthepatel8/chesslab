@@ -1,6 +1,7 @@
 /venv
 \venv
 /backend/.venv/
+/backend/pgn
 
 /node_modules/
 \node_modules\
