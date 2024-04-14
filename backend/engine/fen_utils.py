@@ -145,3 +145,11 @@ def algebraic_list_to_coords(arr):
             alg = algebraic_to_coords(each)
             coords_list.append(each)
     return coords_list
+
+
+def algebraic_list_to_positions(algebraic_lists):
+    position_lists = []
+    for algebraic_list in algebraic_lists:
+        position_list = [Position(algebraic=algebraic) for algebraic in algebraic_list]
+        position_lists.append(position_list)
+    return position_lists

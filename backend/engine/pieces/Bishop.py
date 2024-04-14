@@ -5,6 +5,7 @@ class Bishop(Piece):
     def __init__(self, position: Position, color: str) -> None:
         super().__init__(position, color)
         self.name = 'b' if color == COLOR['BLACK'] else 'B'
+        self.symbol = "♗" if color == COLOR["WHITE"] else "♝"
 
     def can_move(self, to_pos: Position):
         if not super().can_move(to_pos):

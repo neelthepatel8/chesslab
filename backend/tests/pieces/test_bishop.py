@@ -2,8 +2,9 @@ import pytest
 from engine.pieces.Bishop import Bishop
 from engine.board import Board
 import engine.constants as constants
-from engine.fen_utils import algebraic_to_coords, algebraic_list_to_coords
+from engine.fen_utils import algebraic_list_to_positions
 from engine.utils import lists_equal
+from engine.Position import Position
 
 @pytest.fixture
 def empty_board():
@@ -13,13 +14,13 @@ def empty_board():
 @pytest.fixture
 def bishop():
     """Fixture for a white bishop at the starting position A1."""
-    return Bishop(1, 1, constants.COLOR["WHITE"])
+    return Bishop(Position(rank=1, file=1), constants.COLOR["WHITE"])
 
 @pytest.fixture
 def bishop_at_position():
     """Parameterized fixture for placing a bishop at a given position."""
-    def _place_bishop(rank, file, color):
-        return Bishop(rank, file, color)
+    def _place_bishop(position,  color):
+        return Bishop(Position(algebraic=position), color)
     return _place_bishop
 
 @pytest.mark.parametrize("start_pos, end_pos, expected", [
@@ -51,10 +52,8 @@ def bishop_at_position():
     ('c6', 'd4', False),
 ])
 def test_bishop_movement_legality(start_pos, end_pos, expected, bishop_at_position):
-    start_rank, start_file = algebraic_to_coords(start_pos)
-    end_rank, end_file = algebraic_to_coords(end_pos)
-    bishop = bishop_at_position(start_rank, start_file, constants.COLOR["WHITE"])
-    assert bishop.can_move((end_rank, end_file)) == expected
+    bishop = bishop_at_position(start_pos, constants.COLOR["WHITE"])
+    assert bishop.can_move(Position(algebraic=end_pos)) == expected
     
 @pytest.mark.parametrize("start_pos, expected", [
     # Test some basic paths
@@ -65,18 +64,17 @@ def test_bishop_movement_legality(start_pos, end_pos, expected, bishop_at_positi
             ['d3', 'c2', 'b1']]),
 ])
 def test_bishop_movement_paths(start_pos, expected, bishop_at_position):
-    start_rank, start_file = algebraic_to_coords(start_pos)
-    bishop = bishop_at_position(start_rank, start_file, constants.COLOR["WHITE"])
-    paths = bishop.get_possible_paths() 
-    expected = algebraic_list_to_coords(expected)
+    bishop = bishop_at_position(start_pos, constants.COLOR["WHITE"])
+    paths = bishop.get_possible_paths()
+    expected = algebraic_list_to_positions(expected)
     assert lists_equal(paths, expected)
 
     
 def test_bishop_initial_state(bishop):
     assert not bishop.has_moved
 
-def test_bishop_state_after_move(bishop_at_position):
-    bishop = bishop_at_position(1, 4, constants.COLOR["WHITE"])
-    bishop.update_position(2, 2)
+def test_bishop_state_after_move(bishop_at_position: Bishop):
+    bishop = bishop_at_position(Position(rank=1, file=4), constants.COLOR["WHITE"])
+    bishop.update_position(Position(rank=2, file=2))
     assert bishop.has_moved
 

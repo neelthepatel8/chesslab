@@ -2,9 +2,9 @@ import pytest
 from engine.pieces.Pawn import Pawn
 from engine.board import Board
 import engine.constants as constants
-from engine.fen_utils import algebraic_to_coords, algebraic_list_to_coords
+from engine.fen_utils import algebraic_list_to_positions
 from engine.utils import lists_equal
-
+from engine.Position import Position
 
 @pytest.fixture
 def empty_board():
@@ -14,8 +14,8 @@ def empty_board():
 @pytest.fixture
 def pawn_at_position():
     """Parameterized fixture for placing a pawn at a given position."""
-    def _place_pawn(rank, file, color):
-        return Pawn(rank, file, color)
+    def _place_pawn(position, color):
+        return Pawn(Position(algebraic=position), color)
     return _place_pawn
 
 # WHITE PAWN
@@ -68,9 +68,8 @@ def pawn_at_position():
         ('c2', 'c7', False),
 ])
 def test_white_pawn_movement_legality(start_pos, end_pos, expected, pawn_at_position):
-    start_rank, start_file = algebraic_to_coords(start_pos)
-    pawn = pawn_at_position(start_rank, start_file, constants.COLOR["WHITE"])
-    assert pawn.can_move(end_pos) == expected
+    pawn = pawn_at_position(start_pos, constants.COLOR["WHITE"])
+    assert pawn.can_move(Position(algebraic=end_pos)) == expected
 
 
 # BLACK PAWN
@@ -123,35 +122,32 @@ def test_white_pawn_movement_legality(start_pos, end_pos, expected, pawn_at_posi
         ('c7', 'c2', False),
 ])
 def test_black_pawn_movement_legality(start_pos, end_pos, expected, pawn_at_position):
-    start_rank, start_file = algebraic_to_coords(start_pos)
-    end_rank, end_file = algebraic_to_coords(end_pos)
-    pawn = pawn_at_position(start_rank, start_file, constants.COLOR["BLACK"])
-    assert pawn.can_move((end_rank, end_file)) == expected
+    pawn = pawn_at_position(start_pos, constants.COLOR["BLACK"])
+    assert pawn.can_move(Position(algebraic=end_pos)) == expected
 
 @pytest.mark.parametrize("start_pos, expected", [
     # Starting position 
-    ('c2', [['c3'], ['c3', 'c4']]),
+    ('c2', [['c3'], ['c3', 'c4'], ['b3'], ['d3']]),
 
     # Non-starting position 
-    ('c4', [['c5']]),
+    ('c4', [['c5'], ['b5'], ['d5']]),
 
     # End of board
     ('c8', []),
 ])
 def test_pawn_movement_paths(start_pos, expected, pawn_at_position):
-    start_rank, start_file = algebraic_to_coords(start_pos)
-    pawn = pawn_at_position(start_rank, start_file, constants.COLOR["WHITE"])
+    pawn = pawn_at_position(start_pos, constants.COLOR["WHITE"])
     paths = pawn.get_possible_paths() 
-    expected = algebraic_list_to_coords(expected)
+    expected = algebraic_list_to_positions(expected)
     assert lists_equal(paths, expected, verbose=True)
 
 def test_pawn_initial_state(pawn_at_position):
-    pawn = pawn_at_position(1, 2, constants.COLOR["WHITE"]) 
+    pawn = pawn_at_position(Position(rank=1, file=2), constants.COLOR["WHITE"]) 
     assert not pawn.has_moved
 
 def test_pawn_state_after_move(pawn_at_position):
-    pawn = pawn_at_position(1, 2, constants.COLOR["WHITE"])  
-    pawn.update_position(3, 3) 
+    pawn = pawn_at_position(Position(rank=1, file=2), constants.COLOR["WHITE"])  
+    pawn.update_position(Position(rank=3, file=3)) 
     assert pawn.has_moved
 
 
@@ -182,10 +178,8 @@ def test_pawn_state_after_move(pawn_at_position):
         ('c2', 'c7', False),
 ])
 def test_pawn_capture(start_pos, end_pos, expected, pawn_at_position):
-    start_rank, start_file = algebraic_to_coords(start_pos)
-    end_rank, end_file = algebraic_to_coords(end_pos)
-    pawn = pawn_at_position(start_rank, start_file, constants.COLOR["WHITE"])
-    assert pawn.can_kill((end_rank, end_file)) == expected
+    pawn = pawn_at_position(start_pos, constants.COLOR["WHITE"])
+    assert pawn.can_kill(Position(algebraic=end_pos)) == expected
 
 
 # BLACK PAWN KILL
@@ -215,7 +209,5 @@ def test_pawn_capture(start_pos, end_pos, expected, pawn_at_position):
         ('c7', 'c1', False),
 ])
 def test_pawn_capture(start_pos, end_pos, expected, pawn_at_position):
-    start_rank, start_file = algebraic_to_coords(start_pos)
-    end_rank, end_file = algebraic_to_coords(end_pos)
-    pawn = pawn_at_position(start_rank, start_file, constants.COLOR["BLACK"])
-    assert pawn.can_kill((end_rank, end_file)) == expected
+    pawn = pawn_at_position(start_pos, constants.COLOR["BLACK"])
+    assert pawn.can_kill(Position(algebraic=end_pos)) == expected
