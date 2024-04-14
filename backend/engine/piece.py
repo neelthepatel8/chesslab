@@ -33,7 +33,7 @@ class Piece():
                     possible_moves.append(to_position)
 
         return possible_moves
-
+    
     def get_name(self):
         return self.name
 
@@ -49,3 +49,10 @@ class Piece():
     
     def check_bounds(self, value: int):
         return MIN_RANK <= value <= MAX_RANK
+    
+    def deep_copy(self):
+        position_copy = self.position.deep_copy() if self.position else None
+        piece_copy = type(self)(position_copy, self.color)
+        piece_copy.has_moved = self.has_moved  
+        piece_copy.name = self.name  
+        return piece_copy

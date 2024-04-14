@@ -64,4 +64,6 @@ class Position():
     def __hash__(self) -> int:
         return hash(self.algebraic)
             
+    def deep_copy(self):
+        return Position(self.rank, self.file)
             

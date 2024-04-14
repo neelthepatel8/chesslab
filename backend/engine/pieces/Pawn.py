@@ -48,7 +48,6 @@ class Pawn(Piece):
             paths.append([new_position])
 
         if self.is_initial_position():
-            print("Is at initial position: ", self.position)
             if self.check_bounds(self.position.rank + direction * 2):
                 one_step = Position(rank=self.position.rank + direction, file=self.position.file)
                 two_step = Position(rank=self.position.rank + direction * 2, file=self.position.file)

@@ -69,21 +69,6 @@ async def configuration(websocket, message):
                 'ERROR_NO_POSITIONS_PROVIDED': engine.constants.ERROR_NO_POSITIONS_PROVIDED, 
                 'ERROR_NO_PIECE_TO_MOVE': engine.constants.ERROR_NO_PIECE_TO_MOVE,
                 'ERROR_MOVE_NOT_POSSIBLE': engine.constants.ERROR_MOVE_NOT_POSSIBLE,
-                'SUCCESS_MOVE_MADE_NO_KILL_NO_CHECK': engine.constants.SUCCESS_MOVE_MADE_NO_KILL_NO_CHECK,
-                'SUCCESS_MOVE_MADE_NO_KILL_CHECK': engine.constants.SUCCESS_MOVE_MADE_NO_KILL_CHECK,
-                'SUCCESS_MOVE_MADE_WITH_KILL_NO_CHECK': engine.constants.SUCCESS_MOVE_MADE_WITH_KILL_NO_CHECK,
-                'SUCCESS_MOVE_MADE_WITH_KILL_CHECK': engine.constants.SUCCESS_MOVE_MADE_WITH_KILL_CHECK,
-                "SUCCESS_MOVE_MADE_NO_KILL_CHECKMATE": engine.constants.SUCCESS_MOVE_MADE_NO_KILL_CHECKMATE,
-                "SUCCESS_MOVE_MADE_NO_KILL_STALEMATE": engine.constants.SUCCESS_MOVE_MADE_NO_KILL_STALEMATE,
-                "SUCCESS_MOVE_MADE_WITH_KILL_CHECKMATE": engine.constants.SUCCESS_MOVE_MADE_WITH_KILL_CHECKMATE,
-                "SUCCESS_MOVE_MADE_WITH_KILL_STALEMATE": engine.constants.SUCCESS_MOVE_MADE_WITH_KILL_STALEMATE,
-                "SUCCESS_MOVE_MADE_WTIH_KILL_PROMOTE_POSSIBLE": engine.constants.SUCCESS_MOVE_MADE_WTIH_KILL_PROMOTE_POSSIBLE,
-                "SUCCESS_MOVE_MADE_NO_KILL_PROMOTE_POSSIBLE": engine.constants.SUCCESS_MOVE_MADE_NO_KILL_PROMOTE_POSSIBLE,
-                "SUCCESS_PAWN_PROMOTED_CHECKMATE": engine.constants.SUCCESS_PAWN_PROMOTED_CHECKMATE,
-                "SUCCESS_PAWN_PROMOTED_STALEMATE": engine.constants.SUCCESS_PAWN_PROMOTED_STALEMATE,
-                "SUCCESS_PAWN_PROMOTED_CHECK": engine.constants.SUCCESS_PAWN_PROMOTED_CHECK,
-                "SUCCESS_MOVE_MADE_NO_KILL_NO_CHECK_CASTLED": engine.constants.SUCCESS_MOVE_MADE_NO_KILL_NO_CHECK_CASTLED,
-                "SUCCESS_MOVE_MADE_NO_KILL_CHECK_CASTLED": engine.constants.SUCCESS_MOVE_MADE_NO_KILL_CHECK_CASTLED,
             }
         },
     }
@@ -129,13 +114,13 @@ async def make_move(websocket, message):
     from_pos = Position(algebraic=from_pos)
     to_pos = Position(algebraic=to_pos)
 
-    move_success, is_kill, special = board.move_piece(from_pos, to_pos)
+    is_kill, special = board.move_piece(from_pos, to_pos)
 
     response = {
         'type': 'move_piece',
         'data': {
             'fen': board.make_fen(),
-            'move_success': move_success,
+            'move_success': 1,
             'is_kill': is_kill,
             'special': special
         },

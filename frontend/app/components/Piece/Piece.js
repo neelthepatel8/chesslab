@@ -18,6 +18,7 @@ const Piece = ({ type, color, ...props }) => {
           src={pieceImage}
           alt={`${color}-${type}`}
           layout="responsive"
+          quality={100}
         />
       )}
     </div>
