@@ -14,9 +14,9 @@
         "predeploy": "yarn remove-resources",
         "deploy": "yarn predeploy && yarn build-container && yarn tag-backend && yarn tag-frontend && yarn push-backend && yarn push-frontend && echo 'Deployment Complete!'",
         "start": "docker compose up --build",
-        "test": "cd backend && python3 -m pytest tests -v",
+        "test": "cd backend && python3 -m pytest tests -v -s",
         "test:coverage": "cd backend && python3 -m coverage run -m pytest tests && coverage report",
-        "test:only": "cd backend && python3 -m pytest tests/${npm_config_file}",
+        "test:only": "cd backend && python3 -m pytest tests/${npm_config_file} -s",
         "lint:backend": "ruff check backend/"
     },
     "repository": {

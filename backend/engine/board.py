@@ -30,6 +30,8 @@ class Board():
         self.is_checkmate = False 
         self.king_in_check = None
         
+        self.winner = None
+        
         self.all_legal_moves = {
             constants.COLOR["BLACK"]: [],
             constants.COLOR["WHITE"]: []
@@ -450,16 +452,21 @@ class Board():
             return True
         
         all_legal_moves = self.get_all_legal_moves(self.current_player, log=False)
+        
         if len(all_legal_moves) == 0:
             if self.are_only_kings_on_board():
                 self.is_stalemate = True
+                self.winner = None
             
             else:
                 king_in_check = self.is_king_in_check(self.current_player)
+                print("Checked if king was in check: ", king_in_check)
                 if king_in_check:
                     self.is_checkmate = True
+                    self.winner = self.current_player.opponent()
                 else:
                     self.is_stalemate = True
+                    self.winner = None
                     
         return self.is_stalemate or self.is_checkmate
     
@@ -516,3 +523,18 @@ class Board():
         
         if piece_type == "bishop":
             return pieces.Bishop(position, color)
+        
+    def get_winner(self):
+        return self.winner
+    
+    def print_board(self):
+        for row in self.board:
+            for piece in row:
+                if piece is None:
+                    print('.', end=' ')
+                else:
+                    print(piece.symbol, end=' ')
+            print()
+
+        if self.king_in_check is not None:
+            print(f"King in check: {self.king_in_check}")

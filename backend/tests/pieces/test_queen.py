@@ -2,8 +2,9 @@ import pytest
 from engine.pieces.Queen import Queen
 from engine.board import Board
 import engine.constants as constants
-from engine.fen_utils import algebraic_to_coords, algebraic_list_to_coords
+from engine.fen_utils import algebraic_list_to_positions
 from engine.utils import lists_equal
+from engine.Position import Position
 
 @pytest.fixture
 def empty_board():
@@ -13,8 +14,8 @@ def empty_board():
 @pytest.fixture
 def queen_at_position():
     """Parameterized fixture for placing a queen at a given position."""
-    def _place_queen(rank, file, color):
-        return Queen(rank, file, color)
+    def _place_queen(position, color):
+        return Queen(Position(algebraic=position), color)
     return _place_queen
 
 @pytest.mark.parametrize("start_pos, end_pos, expected", [
@@ -35,10 +36,8 @@ def queen_at_position():
     ('d4', 'e6', False),
 ])
 def test_queen_movement_legality(start_pos, end_pos, expected, queen_at_position):
-    start_rank, start_file = algebraic_to_coords(start_pos)
-    end_rank, end_file = algebraic_to_coords(end_pos)
-    queen = queen_at_position(start_rank, start_file, constants.COLOR["WHITE"])
-    assert queen.can_move((end_rank, end_file)) == expected
+    queen = queen_at_position(start_pos, constants.COLOR["WHITE"])
+    assert queen.can_move(Position(algebraic=end_pos)) == expected
 
 @pytest.mark.parametrize("start_pos, expected", [
     ('d4', [['e4', 'f4', 'g4', 'h4'], 
@@ -51,17 +50,16 @@ def test_queen_movement_legality(start_pos, end_pos, expected, queen_at_position
             ['c3', 'b2', 'a1']]),
 ])
 def test_queen_movement_paths(start_pos, expected, queen_at_position):
-    start_rank, start_file = algebraic_to_coords(start_pos)
-    queen = queen_at_position(start_rank, start_file, constants.COLOR["WHITE"])
+    queen = queen_at_position(start_pos, constants.COLOR["WHITE"])
     paths = queen.get_possible_paths() 
-    expected = algebraic_list_to_coords(expected)
+    expected = algebraic_list_to_positions(expected)
     assert lists_equal(paths, expected)
 
 def test_queen_initial_state(queen_at_position):
-    queen = queen_at_position(1, 4, constants.COLOR["WHITE"])
+    queen = queen_at_position(Position(rank=1, file=2), constants.COLOR["WHITE"])
     assert not queen.has_moved
 
 def test_queen_state_after_move(queen_at_position):
-    queen = queen_at_position(1, 4, constants.COLOR["WHITE"])
-    queen.update_position(2, 2)
+    queen = queen_at_position(Position(rank=1, file=4), constants.COLOR["WHITE"])
+    queen.update_position(Position(rank=2, file=2))
     assert queen.has_moved

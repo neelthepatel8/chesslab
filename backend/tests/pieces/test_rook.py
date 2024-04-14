@@ -2,8 +2,9 @@ import pytest
 from engine.pieces.Rook import Rook
 from engine.board import Board
 import engine.constants as constants
-from engine.fen_utils import algebraic_to_coords, algebraic_list_to_coords
+from engine.fen_utils import algebraic_list_to_positions
 from engine.utils import lists_equal
+from engine.Position import Position
 
 @pytest.fixture
 def empty_board():
@@ -13,13 +14,13 @@ def empty_board():
 @pytest.fixture
 def rook():
     """Fixture for a white rook at the starting position A1."""
-    return Rook(1, 1, constants.COLOR["WHITE"])
+    return Rook(Position(rank=1, file=1), constants.COLOR["WHITE"])
 
 @pytest.fixture
 def rook_at_position():
     """Parameterized fixture for placing a rook at a given position."""
-    def _place_rook(rank, file, color):
-        return Rook(rank, file, color)
+    def _place_rook(position, color):
+        return Rook(Position(algebraic=position), color)
     return _place_rook
 
 @pytest.mark.parametrize("start_pos, end_pos, expected", [
@@ -58,10 +59,8 @@ def rook_at_position():
     ('c6', 'g7', False),
 ])
 def test_rook_movement_legality(start_pos, end_pos, expected, rook_at_position):
-    start_rank, start_file = algebraic_to_coords(start_pos)
-    end_rank, end_file = algebraic_to_coords(end_pos)
-    rook = rook_at_position(start_rank, start_file, constants.COLOR["WHITE"])
-    assert rook.can_move((end_rank, end_file)) == expected
+    rook = rook_at_position(start_pos, constants.COLOR["WHITE"])
+    assert rook.can_move(Position(algebraic=end_pos)) == expected
     
 @pytest.mark.parametrize("start_pos, expected", [
     # Test some basic paths
@@ -76,10 +75,9 @@ def test_rook_movement_legality(start_pos, end_pos, expected, rook_at_position):
             ['b6', 'c6', 'd6', 'e6', 'f6', 'g6', 'h6']]),
 ])
 def test_rook_movement_paths(start_pos, expected, rook_at_position):
-    start_rank, start_file = algebraic_to_coords(start_pos)
-    rook = rook_at_position(start_rank, start_file, constants.COLOR["WHITE"])
+    rook = rook_at_position(start_pos, constants.COLOR["WHITE"])
     paths = rook.get_possible_paths() 
-    expected = algebraic_list_to_coords(expected)
+    expected = algebraic_list_to_positions(expected)
     assert lists_equal(paths, expected)
 
     
@@ -87,7 +85,7 @@ def test_rook_initial_state(rook):
     assert not rook.has_moved
 
 def test_rook_state_after_move(rook_at_position):
-    rook = rook_at_position(1, 4, constants.COLOR["WHITE"])
-    rook.update_position(2, 2)
+    rook = rook_at_position(Position(rank=1, file=4), constants.COLOR["WHITE"])
+    rook.update_position(Position(rank=2, file=2))
     assert rook.has_moved
 

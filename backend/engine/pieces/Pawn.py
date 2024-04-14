@@ -6,6 +6,7 @@ class Pawn(Piece):
         super().__init__(position, color)
         self.initial_position = self.is_initial_position()
         self.name = 'p' if color == COLOR['BLACK'] else 'P'
+        self.symbol = "♙" if color == COLOR["WHITE"] else "♟︎"
 
     def is_initial_position(self):
         return self.position.rank == PAWN_START["BLACK"] or self.position.rank == PAWN_START["WHITE"]
