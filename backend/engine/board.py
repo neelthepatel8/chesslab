@@ -41,8 +41,8 @@ class Board():
 
     def make_fen(self):
         active = "w" if isinstance(self.current_player, WhitePlayer) else "b"
-        castling = ''.join(self.castling_availability) if len(self.castling_availability) > 0 else '-'
-
+        standard_castling_order = 'KQkq'
+        castling = ''.join(sorted(self.castling_availability, key=lambda x: standard_castling_order.index(x))) if len(self.castling_availability) > 0 else '-'
         en_passant = self.en_passant.eligible_square.algebraic if self.en_passant.available else '-'
 
         rows = []

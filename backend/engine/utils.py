@@ -30,15 +30,18 @@ def lists_equal(lst1, lst2, verbose=False):
         return False 
     
     if (isinstance(lst1[0], list)):
-        equal = False 
+        outer_equal = False 
         for a, b in zip(lst1, lst2):
             if len(a) != len(b): 
                 equal = False 
                 break
-            equal = sorted(a) == sorted(b)
+            equal = False
+            for each, each2 in zip(a, b):
+                if each != each2:
+                    equal = False
             if not equal:
                 if verbose:
-                    print(f"{sorted(a)} != {sorted(b)}")
+                    print(f"{a} != {b}")
         equal = sorted(lst1) == sorted(lst2)
         return equal 
     
@@ -54,4 +57,24 @@ def algebraic_to_coords(algebraic_notation):
     file_number = file_to_num[file_letter]
 
     return (rank_number, file_number)
+
+
+def boards_equal(board1, board2, verbose=False):
+    if verbose:
+        print()
+    if len(board1) != len(board2):
+        if verbose:
+            print(f"Size of boards dont match: board1: {len(board1)} != board2: {len(board2)}")
+        return False
+
+    for r_index, (row1, row2) in enumerate(zip(board1, board2)):
+        for c_index, (each1, each2) in enumerate(zip(row1, row2)):
+            if each1 != each2:
+                if verbose:
+                    print(f"Square mismatch, {r_index}, {c_index} {each1} != {each2}")
+                return False
+
+    return True
+
+    
         

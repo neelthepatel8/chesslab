@@ -51,16 +51,16 @@ def test_board_initialization_default():
     board = Board()
     assert board.fen == constants.START_FEN
     assert board.board is not None
-    assert board.current_player == BlackPlayer()
+    assert board.current_player == WhitePlayer()
     assert board.halfmoves == 0
-    assert board.fullmoves == 0
-    assert lists_equal(board.castling_availability, ['k', 'K', 'q', 'Q'])
+    assert board.fullmoves == 1
+    assert board.castling_availability == set(['k', 'K', 'q', 'Q'])
     assert board.dead_pieces == {'black': [], 'white': []}
     assert not board.is_stalemate
     assert not board.is_checkmate
     assert board.king_in_check is None
     assert board.winner is None
-    assert board.en_passant.target_square is None 
+    assert board.en_passant.target_pawn_position is None 
 
 @pytest.mark.parametrize("fen, expected_player, expected_moves", [
     ("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", WhitePlayer(), 0),
@@ -71,4 +71,16 @@ def test_board_initialization_custom_fen(fen, expected_player, expected_moves):
     assert board.fen == fen
     assert board.current_player == expected_player
     assert board.halfmoves == expected_moves
-    assert boards_equal(board.board, fen_utils.build_board_from_fen(fen))
+    assert boards_equal(board.board, fen_utils.build_board_from_fen(fen), verbose=True)
+    
+@pytest.mark.parametrize("fen", [
+    ("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"),
+    ("rnbqkbnr/pppppppp/8/8/3Q4/8/PPPPPPPP/RNBQKBNR b kq - 1 10"),
+])
+def test_board_initialization_custom_fen(fen):
+    board = Board(fen=fen)
+    board.fen = ""
+    assert board.make_fen() == fen
+    
+
+
