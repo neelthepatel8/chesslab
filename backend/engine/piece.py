@@ -60,3 +60,6 @@ class Piece():
     
     def __eq__(self, other):
         return self.position == other.position
+    
+    def __repr__(self) -> str:
+        return f"{type(self)} at {self.position}"

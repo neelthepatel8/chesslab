@@ -23,6 +23,10 @@ class Position():
                     self.coords = coords
                     self.rank, self.file = coords
                     self.algebraic = self.coords_to_algebraic(self.rank, self.file) 
+            elif isinstance(rank, str):
+                self.rank, self.file = self.algebraic_to_coords(rank)
+                self.algebraic = rank
+                self.coords = (self.rank, self.file)
         except:
             pass
         
@@ -55,6 +59,9 @@ class Position():
     
     def __str__(self):
         return f"{self.algebraic}"
+    
+    def __repr__(self) -> str:
+        return self.__str__()
     
     def __eq__(self, other):
         if type(other) != type(self): 

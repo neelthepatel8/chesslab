@@ -79,7 +79,7 @@ class Board():
 
         return self.fen
 
-    def get_piece(self, position: Position):
+    def get_piece(self, position: Position) -> Piece | None:
         rank, file = position.rank, position.file
         return self.board[rank - 1][file - 1]
     
@@ -126,8 +126,10 @@ class Board():
                         valid_path.append(pos)
                     
                     if isinstance(piece, pieces.Pawn):
+                        
                         if self.en_passant.available and self.en_passant.pawn_color != piece.get_color():
-                            possible = self.check_en_passant_possible_for_piece(piece)                                
+                            possible = self.check_en_passant_possible_for_piece(piece)               
+                                             
                             if possible:
                                 valid_moves.append(self.en_passant.eligible_square)
 
@@ -161,7 +163,7 @@ class Board():
         copy_board.current_player = self.current_player
         copy_board.halfmoves = self.halfmoves
         copy_board.fullmoves = self.fullmoves
-        copy_board.castling_availability = self.castling_availability
+        copy_board.castling_availability = copy.deepcopy(self.castling_availability)
         copy_board.dead_pieces = copy.deepcopy(self.dead_pieces)
         return copy_board
 

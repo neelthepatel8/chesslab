@@ -8,6 +8,8 @@ from engine.player.WhitePlayer import WhitePlayer
 from engine.PGNParser import PGNParser
 from engine.utils import boards_equal, lists_equal
 import engine.fen_utils as fen_utils
+import engine.pieces as pieces
+import copy
 
 @pytest.fixture
 def empty_board():
@@ -180,6 +182,159 @@ def test_make_fen_with_player(fen, player, expected):
     board.current_player = player
     assert board.make_fen() == expected
     
+
+@pytest.mark.parametrize("fen, position,  expected", [
+    ("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", Position(algebraic="d2"), pieces.Pawn),
+    ("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 0 1", Position(algebraic="h8"), pieces.Rook),
+    ("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 0 1", Position(algebraic="d4"), None),
+])
+def test_get_piece(fen, position, expected):
+    board = Board(fen=fen)
+    if expected is None:
+        assert board.get_piece(position) == expected
+        return
+        
+    assert type(board.get_piece(position)) == expected
     
+    
+@pytest.mark.parametrize("fen, position, piece", [
+    ("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",Position(algebraic="d5"), pieces.Pawn),
+    ("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", Position(algebraic="a2"),  pieces.King),
+])
+def test_set_piece(fen, position, piece):
+    board = Board(fen=fen)
+    piece = piece(position, constants.COLOR["WHITE"])
+    board.set_piece(position, piece)
+    assert board.get_piece(position) == piece
 
+@pytest.mark.parametrize("fen, position", [
+    ("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", Position(algebraic="b2")),
+    ("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", Position(algebraic="e8")),
+    ("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", Position(algebraic="e4")),
+])
+def test_clear_square(fen, position):
+    board = Board(fen=fen)
+    board.clear_square(position)
+    assert board.get_piece(position) == None
+    
+    
+def test_deep_copy_basic_attributes():
+    board = Board()
+    board.fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+    board.current_player = WhitePlayer()
+    board.halfmoves = 10
+    board.fullmoves = 5
+    board.castling_availability = {'K', 'Q'}
+    board.dead_pieces = [pieces.Pawn(Position(), constants.COLOR["WHITE"])]
 
+    copied_board = board.deep_copy()
+
+    assert copied_board.fen == board.fen
+    assert copied_board.current_player == board.current_player
+    assert copied_board.halfmoves == board.halfmoves
+    assert copied_board.fullmoves == board.fullmoves
+    assert copied_board.castling_availability == board.castling_availability
+    assert copied_board.dead_pieces == board.dead_pieces
+
+def test_deep_copy_mutable_objects():
+    board = Board()
+    board.castling_availability = {'K', 'Q'}
+    board.dead_pieces = [pieces.Pawn(Position(), constants.COLOR["WHITE"])]
+
+    copied_board = board.deep_copy()
+
+    # Modify the original and check copied values
+    board.castling_availability.add('k')
+    board.dead_pieces.append(pieces.Knight(Position(), constants.COLOR["WHITE"]))
+
+    assert copied_board.castling_availability == {'K', 'Q'} 
+    assert len(copied_board.dead_pieces) == 1  
+    assert type(copied_board.dead_pieces[0]) == pieces.Pawn
+
+def test_reference_integrity():
+    board = Board()
+    board.castling_availability = {'K', 'Q'}
+    board.dead_pieces = [pieces.Pawn(Position(), constants.COLOR["WHITE"])]
+
+    copied_board = board.deep_copy()
+
+    copied_board.castling_availability.add('k')
+    copied_board.dead_pieces.append(pieces.Knight(Position(), constants.COLOR["WHITE"]))
+
+    assert 'k' not in board.castling_availability
+    assert len(board.dead_pieces) == 1
+    assert type(board.dead_pieces[0]) == pieces.Pawn
+
+import pytest
+
+@pytest.mark.parametrize("setup_fen, from_pos, to_pos, expected", [
+    # Move put the king in check
+    ("8/8/8/3q4/8/8/3K4/8 w - - 0 1", Position("d2"), Position("d3"), False),
+    
+    # Move takes the king out of check
+    ("8/8/8/3q4/3k4/8/8/8 b - - 0 1", Position("d4"), Position("d5"), True),
+    
+    # Neutral move the king is not in check
+    ("8/8/8/8/8/2N5/3K4/8 w - - 0 1", Position("c3"), Position("b5"), True),
+    
+    # Capture removes check
+    ("8/8/8/3q4/3k4/8/8/8 b - - 0 1", Position("d4"), Position("d5"), True),
+])
+def test_is_move_legal(setup_fen, from_pos, to_pos, expected):
+    board = Board(fen=setup_fen)
+    assert board.is_move_legal(from_pos, to_pos) == expected
+
+import pytest
+
+@pytest.mark.parametrize("setup_fen, position, expected_moves", [
+    # A simple scenario where a knight has two legal moves
+    ("8/8/8/2n5/8/8/8/8 b - - 0 1", Position("c5"), [Position("d7"), Position("e6"), Position("d3"), Position("e4"), Position("b7"), Position("a6"), Position("a4"), Position("b3")]),
+    
+    # King in check, must move
+    ("8/8/8/8/8/8/3Q1k2/8 b - - 0 1", Position("f2"), [Position("f1"), Position("g1"), Position("f3"), Position("g3")]),
+    
+    # King has no legal moves due to check
+    ("8/8/8/8/8/8/5Q2/7k b - - 0 1", Position("h1"), []),
+    
+    # Testing en passant move legality
+    ("8/ppp2ppK/8/8/3Pp3/P7/1PP1PP1k/8 b - d3 0 1", Position("e4"), [Position("d3"), Position("e3")]), 
+    
+    # Castling scenario, checking if castling moves are legal when not in check
+    ("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1", Position("e1"), [Position("c1"), Position("g1"), Position("d1"), Position("f1"), Position("d2"), Position("e2"), Position("f2")]),
+])
+def test_get_legal_moves(setup_fen, position, expected_moves):
+    board = Board(fen=setup_fen)
+    legal_moves = board.get_legal_moves(position)
+    assert set(legal_moves) == set(expected_moves)
+
+import pytest
+
+@pytest.mark.parametrize("setup_fen, player, expected", [
+    # Initial scenario already provided
+    ("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1", BlackPlayer(), False),
+    # Simple direct check by a rook
+    ("8/8/8/8/8/8/2R3k1/7K b - - 0 1", BlackPlayer(), True),
+    # Knight check
+    ("8/8/8/3n4/8/8/6k1/7K b - - 0 1", BlackPlayer(), True),
+    # Pawn check
+    ("8/8/8/8/8/1P6/6k1/7K b - - 0 1", BlackPlayer(), True),
+    # Multiple attackers
+    ("8/8/2q5/4r3/8/8/6k1/7K b - - 0 1", BlackPlayer(), True),
+    # Edge of the board, no check
+    ("8/8/8/8/8/8/6k1/7R b - - 0 1", BlackPlayer(), False),
+    # Edge of the board, with check
+    ("8/8/8/8/8/8/8/R6k b - - 0 1", BlackPlayer(), True)
+])
+def test_king_in_check(setup_fen, player, expected):
+    board = Board(fen=setup_fen)
+    assert board.is_king_in_check(player) == expected
+
+@pytest.mark.parametrize("setup_fen, winner", [
+    ("8/8/8/8/8/8/8/R6k b - - 0 1", BlackPlayer()),
+    ("8/8/8/8/8/8/8/R6k b - - 0 1", WhitePlayer()),
+    ("8/8/8/8/8/8/8/R6k b - - 0 1", None),
+])
+def test_winner(setup_fen, winner):
+    board = Board(fen=setup_fen)
+    board.winner = winner
+    assert board.get_winner() == winner

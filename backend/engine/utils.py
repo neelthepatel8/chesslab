@@ -1,18 +1,5 @@
 from engine.constants import MAX_RANK, MAX_FILE
 
-def visualize_possible_moves(possible_moves, piece_position, piece_name):
-    if possible_moves is None: 
-        return
-    for rank in range(1, MAX_RANK + 1):
-        for file in range(1, MAX_FILE + 1):
-            if (rank, file) == piece_position:
-                print(f" {piece_name} ", end="")
-            elif (rank, file) in possible_moves:
-                print(" X ", end="")
-            else:
-                print(" . ", end="")
-        print()
-    
 def lists_equal(lst1, lst2, verbose=False):
     if not lst1 and lst2: 
         if verbose:
