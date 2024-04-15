@@ -139,7 +139,7 @@ def test_pawn_movement_paths(start_pos, expected, pawn_at_position):
     pawn = pawn_at_position(start_pos, constants.COLOR["WHITE"])
     paths = pawn.get_possible_paths() 
     expected = algebraic_list_to_positions(expected)
-    assert lists_equal(paths, expected, verbose=True)
+    assert lists_equal(paths, expected)
 
 def test_pawn_initial_state(pawn_at_position):
     pawn = pawn_at_position(Position(rank=1, file=2), constants.COLOR["WHITE"]) 

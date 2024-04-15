@@ -3,6 +3,7 @@ from engine.Move import Move
 from engine.Position import Position
 import requests
 from engine.Game import Game
+import random
 
 import os
 
@@ -32,38 +33,41 @@ class PGNParser:
             return file_name
         
 
-    def parse(self):
+    def parse(self, checkmate=False, stalemate=False):
         if self.multi:
-            file_list = self.make_multi_files(self.pgn_file)
+            file_list = self.make_multi_files(self.pgn_file, checkmate=checkmate)
         else: 
             file_list = [self.pgn_file]
         
-        games = []
-        count = 0
-        for file in file_list:
-            pgn_file = open(file, "r")
-            print("reading file: ", file)
-            pgn = chess.pgn.read_game(pgn_file)
-            
-            if not pgn: 
-                continue
-            self.extract_tags(pgn)
-            self.extract_moves(pgn)
-            pgn_file.close()
-            
-            self.game.set_moves(self.moves)
-            self.game.set_winner(pgn.headers['Result'])
-            self.game.name = file
-            games.append(self.game)
-            self.game = Game()
-            self.moves = []
-            self.tags = None
-            count += 1
-            
-            if count > 100:
-                break
+        all_games = []
+        if not stalemate: file_list = random.sample(file_list, 20)
         
-        return games if len(games) != 1 else games[0]
+        for file in file_list:
+            with open(file, "r") as pgn_file:
+                while True:
+                    pgn = chess.pgn.read_game(pgn_file)
+                    if not pgn:
+                        break
+                    
+                    board = pgn.end().board()
+                    if stalemate and not board.is_stalemate():
+                        continue
+                    
+                    
+                    self.extract_tags(pgn)
+                    self.extract_moves(pgn)
+
+                    self.game.set_moves(self.moves)
+                    self.game.set_winner(pgn.headers['Result'])
+                    self.game.name = file
+                    all_games.append(self.game)
+                    
+                    self.game = Game()
+                    self.moves = []
+                    self.tags = None
+
+        return all_games[:20]
+
 
     def extract_tags(self, pgn):
         self.tags = dict(pgn.headers)
@@ -89,7 +93,7 @@ class PGNParser:
             self.moves.append(Move(from_pos, to_pos, piece_symbol, promotion))
             node = next_node
             
-    def make_multi_files(self, multi_file_name):
+    def make_multi_files(self, multi_file_name, checkmate=False):
         file_names = []
         pgns = []
         current_pgn = ""
@@ -120,8 +124,10 @@ class PGNParser:
             if pgn.strip() == "" or pgn.strip() == " ":
                 continue
             
-            if "#" not in pgn:
-                continue 
+            if checkmate:
+                if "#" not in pgn:
+                    continue 
+
             with open(f"{file_name}", 'w') as f:
                 f.write(pgn.strip())
                 all_files.append(file_name)

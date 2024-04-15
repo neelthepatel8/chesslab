@@ -6,7 +6,8 @@
     "scripts": {
         "remove-resources": "node predeploy.js",
         "build-container": "docker-compose up -d",
-        "build": "npm install && cd backend && pip install -r requirements.txt && cd .. && cd frontend && yarn build",
+        "gain-access": "echo India@321 | sudo -S chown -R neelpatel:neelpatel /home/neelpatel/dev/chess && echo India@321 | sudo -S chmod -R u+rwX /home/neelpatel/dev/chess",
+        "build": "yarn gain-access && npm install && cd backend && python3 -m venv .venv && . .venv/bin/activate && pip install -r requirements.txt && deactivate && cd ../frontend && rm -rf .next node_modules && yarn build-dev",
         "tag-backend": "docker tag game-backend:latest 541032831567.dkr.ecr.us-east-1.amazonaws.com/chessgame:latest-backend",
         "tag-frontend": "docker tag game-frontend:latest 541032831567.dkr.ecr.us-east-1.amazonaws.com/chessgame:latest-frontend",
         "push-backend": "docker push 541032831567.dkr.ecr.us-east-1.amazonaws.com/chessgame:latest-backend",
@@ -14,7 +15,7 @@
         "predeploy": "yarn remove-resources",
         "deploy": "yarn predeploy && yarn build-container && yarn tag-backend && yarn tag-frontend && yarn push-backend && yarn push-frontend && echo 'Deployment Complete!'",
         "start": "docker compose up --build",
-        "test": "cd backend && python3 -m pytest tests -v -s",
+        "test": "cd backend && . .venv/bin/activate && python3 -m pytest tests -v -s",
         "test:coverage": "cd backend && python3 -m coverage run -m pytest tests && coverage report",
         "test:only": "cd backend && python3 -m pytest tests/${npm_config_file} -s",
         "lint:backend": "ruff check backend/"
