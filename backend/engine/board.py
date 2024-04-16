@@ -12,6 +12,7 @@ from engine.player.Player import Player
 from engine.logging import get_logger
 from engine.player.WhitePlayer import WhitePlayer
 from engine.player.BlackPlayer import BlackPlayer
+from engine.Move import Move
 
 
 
@@ -244,6 +245,19 @@ class Board():
         self.log(f"Legal moves for position {position}: {legal_moves}")
         return legal_moves
     
+    def get_legal_moves_with_origin(self, position: Position, log=False) -> list:
+        legal_moves = []
+        self.log(f"Getting pseudo legal with origin from get legal moves for {position}")
+        pseudo_legal_moves = self.get_pseudo_legal_moves(position, log)
+        for to_pos in pseudo_legal_moves:
+            if self.is_move_legal(position, to_pos):
+                legal_moves.append(Move(position, to_pos, self.get_piece_type_from_pos(position)))
+        
+        legal_moves = list(set(legal_moves))
+        self.log(f"Legal moves for position {position}: {legal_moves}")
+        return legal_moves
+    
+    
     def get_all_legal_moves(self, player: Player, log=False) -> list:
         self.log(f"Getting all legal moves for player: {player}")
         moves = []
@@ -254,6 +268,22 @@ class Board():
                 if piece.get_color() != player.color: 
                     continue
                 moves.extend(self.get_legal_moves(piece.position, log))
+        self.all_legal_moves[player.color] = moves
+        
+        moves = list(set(moves))
+        self.log(f"All legal moves for {player.color}: {moves}")
+        return moves
+
+    def get_all_legal_moves_with_origin(self, player: Player, log=False) -> list:
+        self.log(f"Getting all legal moves with origin for player: {player}")
+        moves = []
+        for row in self.board:
+            for piece in row:
+                if not piece: 
+                    continue 
+                if piece.get_color() != player.color: 
+                    continue
+                moves.extend(self.get_legal_moves_with_origin(piece.position, log))
         self.all_legal_moves[player.color] = moves
         
         moves = list(set(moves))
@@ -693,5 +723,12 @@ class Board():
             print(board_string)
 
         return board_string
+    
+    def get_piece_type_from_pos(self, position: Position) -> str:
+        piece = self.get_piece(position)
+        if piece is None:
+            return ""
+        
+        return piece.get_name()
     
     
