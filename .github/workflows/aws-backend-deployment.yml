@@ -1,17 +1,5 @@
 name: Deploy Backend to Amazon ECS
 
-# on:
-#     push:
-#         branches: ["main"]
-#         paths:
-#             - "backend/**"
-#             - ".github/workflows/aws-backend-deploy.yml"
-#             - ".aws/task-definition-backend.json"
-#     pull_request:
-#         branches:
-#             - main
-#             - develop
-
 on:
     workflow_run:
         workflows: ["Backend CI"]
