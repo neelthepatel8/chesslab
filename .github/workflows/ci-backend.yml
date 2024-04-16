@@ -11,22 +11,28 @@ on:
             - develop
 
 jobs:
-    build-and-test:
+    test:
         runs-on: ubuntu-latest
-
-        strategy:
-            matrix:
-                node-version: [14.x, 16.x]
 
         steps:
             - uses: actions/checkout@v3
-            - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v3
+
+            - name: Set up Python
+              uses: actions/setup-python@v4
               with:
-                  node-version: ${{ matrix.node-version }}
+                  python-version: "3.8" # Adjust as necessary
+
+            - name: Create and activate virtual environment
+              run: |
+                  python -m venv .venv
+                  echo "source .venv/bin/activate" >> $GITHUB_ENV
 
             - name: Install dependencies
-              run: yarn install
+              run: |
+                  pip install -r backend/requirements.txt
 
             - name: Run tests with coverage
-              run: yarn test:coverage
+              run: |
+                  cd backend
+                  python3 -m coverage run -m pytest tests
+                  coverage report
