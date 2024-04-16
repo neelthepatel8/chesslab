@@ -1,5 +1,3 @@
-from engine.constants import MAX_RANK, MAX_FILE
-
 def lists_equal(lst1, lst2, verbose=False):
     if not lst1 and lst2: 
         if verbose:
@@ -17,7 +15,6 @@ def lists_equal(lst1, lst2, verbose=False):
         return False 
     
     if (isinstance(lst1[0], list)):
-        outer_equal = False 
         for a, b in zip(lst1, lst2):
             if len(a) != len(b): 
                 equal = False 

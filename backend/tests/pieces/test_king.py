@@ -2,7 +2,7 @@ import pytest
 from engine.pieces.King import King
 from engine.board import Board
 import engine.constants as constants
-from engine.fen_utils import algebraic_to_coords, algebraic_list_to_coords, algebraic_list_to_positions
+from engine.fen_utils import  algebraic_list_to_positions
 from engine.utils import lists_equal
 from engine.Position import Position
 

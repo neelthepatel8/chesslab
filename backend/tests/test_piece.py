@@ -1,5 +1,4 @@
-import pytest
-from engine.constants import MAX_RANK, MAX_FILE, MIN_RANK, MIN_FILE
+from engine.constants import MAX_RANK, MAX_FILE
 from engine.Position import Position
 from engine.piece import Piece
 

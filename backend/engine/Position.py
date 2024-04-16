@@ -64,7 +64,7 @@ class Position():
         return self.__str__()
     
     def __eq__(self, other):
-        return self.file == other.file and self.rank == other.rank
+        return type(self) == type(other) and self.file == other.file and self.rank == other.rank
     
     def __hash__(self) -> int:
         return hash(self.algebraic)

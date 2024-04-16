@@ -1,4 +1,3 @@
-import pytest
 from engine.Position import Position
 from engine.enpassant.EnPassantStatus import EnPassantStatus
 

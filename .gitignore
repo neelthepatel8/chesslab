@@ -4,5 +4,4 @@
 /backend/pgn
 
 /node_modules/
-\node_modules\
 *.cpython*

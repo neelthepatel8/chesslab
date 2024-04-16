@@ -1,4 +1,3 @@
-import pytest
 from engine.Move import Move
 from engine.Position import Position
 

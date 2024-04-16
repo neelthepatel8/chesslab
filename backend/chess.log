@@ -1,0 +1,1240 @@
+2024-04-16 16:02:41,103 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/8/8/3K4/8 w - - 0 1
+2024-04-16 16:02:41,104 - DEBUG - Board initialized with FEN: 8/8/8/3q4/8/8/3K4/8 w - - 0 1
+2024-04-16 16:02:41,104 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:02:41,104 - DEBUG - Checking if move: d2 -> d3 is legal..
+2024-04-16 16:02:41,105 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:02:41,105 - DEBUG - Checking if king is in check for BLACK from is move legal
+2024-04-16 16:02:41,105 - DEBUG - King is not in check, legal move.
+2024-04-16 16:02:41,125 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:02:41,125 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:02:41,125 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:02:41,125 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:02:41,125 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:02:41,125 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:02:41,125 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:02:41,125 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:02:41,126 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:02:41,126 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:02:41,126 - DEBUG - Checking if king is in check for WHITE from is move legal
+2024-04-16 16:02:41,126 - DEBUG - Checking if king is in check for WHITE from is move legal
+2024-04-16 16:02:41,126 - DEBUG - King is not in check, legal move.
+2024-04-16 16:02:41,126 - DEBUG - King is not in check, legal move.
+2024-04-16 16:02:41,127 - DEBUG - Initializing Board with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:02:41,127 - DEBUG - Initializing Board with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:02:41,127 - DEBUG - Initializing Board with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:02:41,127 - DEBUG - Board initialized with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:02:41,127 - DEBUG - Board initialized with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:02:41,127 - DEBUG - Board initialized with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:02:41,127 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . ♘ . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:02:41,127 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . ♘ . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:02:41,127 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . ♘ . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:02:41,128 - DEBUG - Checking if move: c3 -> b5 is legal..
+2024-04-16 16:02:41,128 - DEBUG - Checking if move: c3 -> b5 is legal..
+2024-04-16 16:02:41,128 - DEBUG - Checking if move: c3 -> b5 is legal..
+2024-04-16 16:02:41,128 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. ♘ . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:02:41,128 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. ♘ . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:02:41,128 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. ♘ . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:02:41,128 - DEBUG - Checking if king is in check for BLACK from is move legal
+2024-04-16 16:02:41,128 - DEBUG - Checking if king is in check for BLACK from is move legal
+2024-04-16 16:02:41,128 - DEBUG - Checking if king is in check for BLACK from is move legal
+2024-04-16 16:02:41,128 - DEBUG - King is not in check, legal move.
+2024-04-16 16:02:41,128 - DEBUG - King is not in check, legal move.
+2024-04-16 16:02:41,128 - DEBUG - King is not in check, legal move.
+2024-04-16 16:02:41,129 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:02:41,129 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:02:41,129 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:02:41,129 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:02:41,129 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:02:41,129 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:02:41,129 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:02:41,129 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:02:41,130 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:02:41,130 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:02:41,130 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:02:41,130 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:02:41,130 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:02:41,130 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:02:41,130 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:02:41,130 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:02:41,130 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:02:41,130 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:02:41,130 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:02:41,130 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:02:41,130 - DEBUG - Checking if king is in check for WHITE from is move legal
+2024-04-16 16:02:41,130 - DEBUG - Checking if king is in check for WHITE from is move legal
+2024-04-16 16:02:41,130 - DEBUG - Checking if king is in check for WHITE from is move legal
+2024-04-16 16:02:41,130 - DEBUG - Checking if king is in check for WHITE from is move legal
+2024-04-16 16:02:41,130 - DEBUG - King is not in check, legal move.
+2024-04-16 16:02:41,130 - DEBUG - King is not in check, legal move.
+2024-04-16 16:02:41,130 - DEBUG - King is not in check, legal move.
+2024-04-16 16:02:41,130 - DEBUG - King is not in check, legal move.
+2024-04-16 16:06:14,605 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/8/8/3K4/8 w - - 0 1
+2024-04-16 16:06:14,606 - DEBUG - Board initialized with FEN: 8/8/8/3q4/8/8/3K4/8 w - - 0 1
+2024-04-16 16:06:14,606 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:06:14,606 - DEBUG - Checking if move: d2 -> d3 is legal..
+2024-04-16 16:06:14,607 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:06:14,607 - DEBUG - Checking if king is in check for white from is move legal
+2024-04-16 16:06:14,644 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:06:14,644 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:06:14,644 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:06:14,644 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:06:14,645 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:06:14,645 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:06:14,645 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:06:14,645 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:06:14,645 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:06:14,645 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:06:14,645 - DEBUG - Checking if king is in check for black from is move legal
+2024-04-16 16:06:14,645 - DEBUG - Checking if king is in check for black from is move legal
+2024-04-16 16:06:14,669 - DEBUG - Initializing Board with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:06:14,669 - DEBUG - Initializing Board with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:06:14,669 - DEBUG - Initializing Board with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:06:14,670 - DEBUG - Board initialized with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:06:14,670 - DEBUG - Board initialized with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:06:14,670 - DEBUG - Board initialized with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:06:14,670 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . ♘ . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:06:14,670 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . ♘ . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:06:14,670 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . ♘ . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:06:14,670 - DEBUG - Checking if move: c3 -> b5 is legal..
+2024-04-16 16:06:14,670 - DEBUG - Checking if move: c3 -> b5 is legal..
+2024-04-16 16:06:14,670 - DEBUG - Checking if move: c3 -> b5 is legal..
+2024-04-16 16:06:14,671 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. ♘ . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:06:14,671 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. ♘ . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:06:14,671 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. ♘ . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:06:14,671 - DEBUG - Checking if king is in check for white from is move legal
+2024-04-16 16:06:14,671 - DEBUG - Checking if king is in check for white from is move legal
+2024-04-16 16:06:14,671 - DEBUG - Checking if king is in check for white from is move legal
+2024-04-16 16:06:14,708 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:06:14,708 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:06:14,708 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:06:14,708 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:06:14,708 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:06:14,708 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:06:14,708 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:06:14,708 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:06:14,709 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:06:14,709 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:06:14,709 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:06:14,709 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:06:14,709 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:06:14,709 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:06:14,709 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:06:14,709 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:06:14,709 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:06:14,709 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:06:14,709 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:06:14,709 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:06:14,709 - DEBUG - Checking if king is in check for black from is move legal
+2024-04-16 16:06:14,709 - DEBUG - Checking if king is in check for black from is move legal
+2024-04-16 16:06:14,709 - DEBUG - Checking if king is in check for black from is move legal
+2024-04-16 16:06:14,709 - DEBUG - Checking if king is in check for black from is move legal
+2024-04-16 16:07:41,461 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/8/8/3K4/8 w - - 0 1
+2024-04-16 16:07:41,462 - DEBUG - Board initialized with FEN: 8/8/8/3q4/8/8/3K4/8 w - - 0 1
+2024-04-16 16:07:41,462 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:41,462 - DEBUG - Checking if move: d2 -> d3 is legal..
+2024-04-16 16:07:41,462 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:41,462 - DEBUG - Checking if king is in check for WHITE from is move legal
+2024-04-16 16:07:41,463 - DEBUG - King is in check, illegal move.
+2024-04-16 16:07:41,463 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:07:41,463 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:07:41,464 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:07:41,464 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:07:41,464 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:41,464 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:41,464 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:07:41,464 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:07:41,465 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:41,465 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:41,465 - DEBUG - Checking if king is in check for BLACK from is move legal
+2024-04-16 16:07:41,465 - DEBUG - Checking if king is in check for BLACK from is move legal
+2024-04-16 16:07:41,465 - DEBUG - King is not in check, legal move.
+2024-04-16 16:07:41,465 - DEBUG - King is not in check, legal move.
+2024-04-16 16:07:41,465 - DEBUG - Initializing Board with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:07:41,465 - DEBUG - Initializing Board with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:07:41,465 - DEBUG - Initializing Board with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:07:41,466 - DEBUG - Board initialized with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:07:41,466 - DEBUG - Board initialized with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:07:41,466 - DEBUG - Board initialized with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:07:41,466 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . ♘ . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:41,466 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . ♘ . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:41,466 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . ♘ . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:41,466 - DEBUG - Checking if move: c3 -> b5 is legal..
+2024-04-16 16:07:41,466 - DEBUG - Checking if move: c3 -> b5 is legal..
+2024-04-16 16:07:41,466 - DEBUG - Checking if move: c3 -> b5 is legal..
+2024-04-16 16:07:41,466 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. ♘ . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:41,466 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. ♘ . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:41,466 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. ♘ . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:41,467 - DEBUG - Checking if king is in check for WHITE from is move legal
+2024-04-16 16:07:41,467 - DEBUG - Checking if king is in check for WHITE from is move legal
+2024-04-16 16:07:41,467 - DEBUG - Checking if king is in check for WHITE from is move legal
+2024-04-16 16:07:41,467 - DEBUG - King is not in check, legal move.
+2024-04-16 16:07:41,467 - DEBUG - King is not in check, legal move.
+2024-04-16 16:07:41,467 - DEBUG - King is not in check, legal move.
+2024-04-16 16:07:41,467 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:07:41,467 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:07:41,467 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:07:41,467 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:07:41,468 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:07:41,468 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:07:41,468 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:07:41,468 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:07:41,468 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:41,468 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:41,468 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:41,468 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:41,468 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:07:41,468 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:07:41,468 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:07:41,468 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:07:41,468 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:41,468 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:41,468 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:41,468 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:41,469 - DEBUG - Checking if king is in check for BLACK from is move legal
+2024-04-16 16:07:41,469 - DEBUG - Checking if king is in check for BLACK from is move legal
+2024-04-16 16:07:41,469 - DEBUG - Checking if king is in check for BLACK from is move legal
+2024-04-16 16:07:41,469 - DEBUG - Checking if king is in check for BLACK from is move legal
+2024-04-16 16:07:41,469 - DEBUG - King is not in check, legal move.
+2024-04-16 16:07:41,469 - DEBUG - King is not in check, legal move.
+2024-04-16 16:07:41,469 - DEBUG - King is not in check, legal move.
+2024-04-16 16:07:41,469 - DEBUG - King is not in check, legal move.
+2024-04-16 16:07:56,601 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/8/8/3K4/8 w - - 0 1
+2024-04-16 16:07:56,602 - DEBUG - Board initialized with FEN: 8/8/8/3q4/8/8/3K4/8 w - - 0 1
+2024-04-16 16:07:56,603 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:56,603 - DEBUG - Checking if move: d2 -> d3 is legal..
+2024-04-16 16:07:56,606 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:56,606 - DEBUG - Checking if king is in check for WHITE from is move legal
+2024-04-16 16:07:56,607 - DEBUG - King is in check, illegal move.
+2024-04-16 16:07:56,609 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:07:56,609 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:07:56,610 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:07:56,610 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:07:56,610 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:56,610 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:56,611 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:07:56,611 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:07:56,612 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:56,612 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:56,613 - DEBUG - Checking if king is in check for BLACK from is move legal
+2024-04-16 16:07:56,613 - DEBUG - Checking if king is in check for BLACK from is move legal
+2024-04-16 16:07:56,613 - DEBUG - King is not in check, legal move.
+2024-04-16 16:07:56,613 - DEBUG - King is not in check, legal move.
+2024-04-16 16:07:56,614 - DEBUG - Initializing Board with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:07:56,614 - DEBUG - Initializing Board with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:07:56,614 - DEBUG - Initializing Board with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:07:56,616 - DEBUG - Board initialized with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:07:56,616 - DEBUG - Board initialized with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:07:56,616 - DEBUG - Board initialized with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:07:56,616 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . ♘ . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:56,616 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . ♘ . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:56,616 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . ♘ . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:56,616 - DEBUG - Checking if move: c3 -> b5 is legal..
+2024-04-16 16:07:56,616 - DEBUG - Checking if move: c3 -> b5 is legal..
+2024-04-16 16:07:56,616 - DEBUG - Checking if move: c3 -> b5 is legal..
+2024-04-16 16:07:56,618 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. ♘ . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:56,618 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. ♘ . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:56,618 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. ♘ . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:56,619 - DEBUG - Checking if king is in check for WHITE from is move legal
+2024-04-16 16:07:56,619 - DEBUG - Checking if king is in check for WHITE from is move legal
+2024-04-16 16:07:56,619 - DEBUG - Checking if king is in check for WHITE from is move legal
+2024-04-16 16:07:56,619 - DEBUG - King is not in check, legal move.
+2024-04-16 16:07:56,619 - DEBUG - King is not in check, legal move.
+2024-04-16 16:07:56,619 - DEBUG - King is not in check, legal move.
+2024-04-16 16:07:56,621 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:07:56,621 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:07:56,621 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:07:56,621 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:07:56,622 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:07:56,622 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:07:56,622 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:07:56,622 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:07:56,623 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:56,623 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:56,623 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:56,623 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:56,623 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:07:56,623 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:07:56,623 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:07:56,623 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:07:56,625 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:56,625 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:56,625 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:56,625 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:07:56,625 - DEBUG - Checking if king is in check for BLACK from is move legal
+2024-04-16 16:07:56,625 - DEBUG - Checking if king is in check for BLACK from is move legal
+2024-04-16 16:07:56,625 - DEBUG - Checking if king is in check for BLACK from is move legal
+2024-04-16 16:07:56,625 - DEBUG - Checking if king is in check for BLACK from is move legal
+2024-04-16 16:07:56,625 - DEBUG - King is not in check, legal move.
+2024-04-16 16:07:56,625 - DEBUG - King is not in check, legal move.
+2024-04-16 16:07:56,625 - DEBUG - King is not in check, legal move.
+2024-04-16 16:07:56,625 - DEBUG - King is not in check, legal move.
+2024-04-16 16:11:28,129 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/8/8/3K4/8 w - - 0 1
+2024-04-16 16:11:28,131 - DEBUG - Board initialized with FEN: 8/8/8/3q4/8/8/3K4/8 w - - 0 1
+2024-04-16 16:11:28,131 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:11:28,131 - DEBUG - Checking if move: d2 -> d3 is legal..
+2024-04-16 16:11:28,133 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:11:28,133 - DEBUG - Checking if king is in check for WHITE from is move legal
+2024-04-16 16:11:28,134 - DEBUG - King is in check, illegal move.
+2024-04-16 16:11:28,135 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:11:28,135 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:11:28,137 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:11:28,137 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:11:28,137 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:11:28,137 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:11:28,138 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:11:28,138 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:11:28,140 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:11:28,140 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:11:28,140 - DEBUG - Checking if king is in check for BLACK from is move legal
+2024-04-16 16:11:28,140 - DEBUG - Checking if king is in check for BLACK from is move legal
+2024-04-16 16:11:28,140 - DEBUG - King is not in check, legal move.
+2024-04-16 16:11:28,140 - DEBUG - King is not in check, legal move.
+2024-04-16 16:11:28,142 - DEBUG - Initializing Board with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:11:28,142 - DEBUG - Initializing Board with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:11:28,142 - DEBUG - Initializing Board with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:11:28,144 - DEBUG - Board initialized with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:11:28,144 - DEBUG - Board initialized with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:11:28,144 - DEBUG - Board initialized with FEN: 8/8/8/8/8/2N5/3K4/8 w - - 0 1
+2024-04-16 16:11:28,144 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . ♘ . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:11:28,144 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . ♘ . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:11:28,144 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . ♘ . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:11:28,144 - DEBUG - Checking if move: c3 -> b5 is legal..
+2024-04-16 16:11:28,144 - DEBUG - Checking if move: c3 -> b5 is legal..
+2024-04-16 16:11:28,144 - DEBUG - Checking if move: c3 -> b5 is legal..
+2024-04-16 16:11:28,146 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. ♘ . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:11:28,146 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. ♘ . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:11:28,146 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. ♘ . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♔ . . . . 
+. . . . . . . . 
+
+2024-04-16 16:11:28,146 - DEBUG - Checking if king is in check for WHITE from is move legal
+2024-04-16 16:11:28,146 - DEBUG - Checking if king is in check for WHITE from is move legal
+2024-04-16 16:11:28,146 - DEBUG - Checking if king is in check for WHITE from is move legal
+2024-04-16 16:11:28,147 - DEBUG - King is not in check, legal move.
+2024-04-16 16:11:28,147 - DEBUG - King is not in check, legal move.
+2024-04-16 16:11:28,147 - DEBUG - King is not in check, legal move.
+2024-04-16 16:11:28,148 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:11:28,148 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:11:28,148 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:11:28,148 - DEBUG - Initializing Board with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:11:28,150 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:11:28,150 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:11:28,150 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:11:28,150 - DEBUG - Board initialized with FEN: 8/8/8/3q4/3k4/8/8/8 b - - 0 1
+2024-04-16 16:11:28,150 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:11:28,150 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:11:28,150 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:11:28,150 - DEBUG - Initial board state:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♛ . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:11:28,151 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:11:28,151 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:11:28,151 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:11:28,151 - DEBUG - Checking if move: d4 -> d5 is legal..
+2024-04-16 16:11:28,153 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:11:28,153 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:11:28,153 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:11:28,153 - DEBUG - Board state after simulated move:
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . ♚ . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+. . . . . . . . 
+
+2024-04-16 16:11:28,153 - DEBUG - Checking if king is in check for BLACK from is move legal
+2024-04-16 16:11:28,153 - DEBUG - Checking if king is in check for BLACK from is move legal
+2024-04-16 16:11:28,153 - DEBUG - Checking if king is in check for BLACK from is move legal
+2024-04-16 16:11:28,153 - DEBUG - Checking if king is in check for BLACK from is move legal
+2024-04-16 16:11:28,154 - DEBUG - King is not in check, legal move.
+2024-04-16 16:11:28,154 - DEBUG - King is not in check, legal move.
+2024-04-16 16:11:28,154 - DEBUG - King is not in check, legal move.
+2024-04-16 16:11:28,154 - DEBUG - King is not in check, legal move.

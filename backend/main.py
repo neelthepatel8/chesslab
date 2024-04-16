@@ -6,7 +6,6 @@ from engine import fen_utils
 import engine.constants
 from fastapi.middleware.cors import CORSMiddleware
 from engine.Position import Position
-import time
 
 import logging
 
@@ -185,7 +184,7 @@ async def websocket_endpoint(websocket: WebSocket):
                     logger.error(f"Unknown message type: {message['type']}")
                     await websocket.send_text(json.dumps({"error": "Unknown message type"}))
             except json.JSONDecodeError as e:
-                logger.error("Error decoding JSON", exc_info=True)
+                logger.error(f"Error decoding JSON {e}", exc_info=True)
                 await websocket.send_text(json.dumps({"error": "Error decoding JSON"}))
             except KeyError as e:
                 logger.error(f"Missing key in message: {e}", exc_info=True)

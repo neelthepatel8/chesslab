@@ -178,7 +178,7 @@ def test_pawn_state_after_move(pawn_at_position):
         ('c2', 'f8', False),
         ('c2', 'c7', False),
 ])
-def test_pawn_capture(start_pos, end_pos, expected, pawn_at_position):
+def test_white_pawn_capture(start_pos, end_pos, expected, pawn_at_position):
     pawn = pawn_at_position(start_pos, constants.COLOR["WHITE"])
     assert pawn.can_kill(Position(algebraic=end_pos)) == expected
 
@@ -209,6 +209,6 @@ def test_pawn_capture(start_pos, end_pos, expected, pawn_at_position):
         ('c7', 'f8', False),
         ('c7', 'c1', False),
 ])
-def test_pawn_capture(start_pos, end_pos, expected, pawn_at_position):
+def test_black_pawn_capture(start_pos, end_pos, expected, pawn_at_position):
     pawn = pawn_at_position(start_pos, constants.COLOR["BLACK"])
     assert pawn.can_kill(Position(algebraic=end_pos)) == expected

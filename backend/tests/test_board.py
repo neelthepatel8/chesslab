@@ -6,10 +6,11 @@ from engine.GameSimulator import GameSimulator
 from engine.player.BlackPlayer import BlackPlayer
 from engine.player.WhitePlayer import WhitePlayer
 from engine.PGNParser import PGNParser
-from engine.utils import boards_equal, lists_equal
+from engine.utils import boards_equal
 import engine.fen_utils as fen_utils
 import engine.pieces as pieces
-import copy
+from dotenv import load_dotenv
+import os
 
 
 @pytest.fixture
@@ -17,7 +18,7 @@ def empty_board():
     """Fixture for an empty chess board."""
     return Board()
 
-@pytest.mark.skip("Temporarily not testing since takes a long time, PLEASE COMMENT SKIP BEFORE DEPLOYING")
+# @pytest.mark.skip("Temporarily not testing since takes a long time, PLEASE COMMENT SKIP BEFORE DEPLOYING")
 @pytest.mark.parametrize("file_name", [
     ('twic1535'),
 ])
@@ -28,7 +29,10 @@ def test_board_checkmate_full_games(file_name):
     
     for index, game in enumerate(games):
 
-        simulator = GameSimulator()
+        
+        # Set to 'DEBUG' for log file generation.
+        log_level = None
+        simulator = GameSimulator(log_level=log_level)
         simulator.load_game(game)
         winner = game.winner
 
@@ -38,6 +42,7 @@ def test_board_checkmate_full_games(file_name):
         else: 
             print(f"Simulating game {index}: ", game.name, end=", ")
 
+
         while True:
             result, move = simulator.next_move()
             if result == "Game Over":
@@ -46,6 +51,7 @@ def test_board_checkmate_full_games(file_name):
             # print(move)
             # if winner is not None: 
             #     simulator.show_board()
+        print(f"Game Name: {game.name}")
         print(f"Simulation over. Played {len(simulator.current_game.moves)} moves, winner is: ", simulator.get_winner(), " expected: ", winner)
         assert type(simulator.get_winner()) == type(winner)
         
@@ -115,6 +121,7 @@ def test_move_counters(fen, expected_halfmoves, expected_fullmoves):
 def test_make_fen_with_init(fen):
     board = Board(fen=fen)
     board.fen = ""
+    print(board.make_fen(), fen)
     assert board.make_fen() == fen
 
 @pytest.mark.parametrize("fen, move, expected", [
@@ -216,7 +223,7 @@ def test_set_piece(fen, position, piece):
 def test_clear_square(fen, position):
     board = Board(fen=fen)
     board.clear_square(position)
-    assert board.get_piece(position) == None
+    assert board.get_piece(position) is None
     
     
 def test_deep_copy_basic_attributes():
@@ -266,8 +273,6 @@ def test_reference_integrity():
     assert len(board.dead_pieces) == 1
     assert type(board.dead_pieces[0]) == pieces.Pawn
 
-import pytest
-
 @pytest.mark.parametrize("setup_fen, from_pos, to_pos, expected", [
     # Move put the king in check
     ("8/8/8/3q4/8/8/3K4/8 w - - 0 1", Position("d2"), Position("d3"), False),
@@ -282,10 +287,8 @@ import pytest
     ("8/8/8/3q4/3k4/8/8/8 b - - 0 1", Position("d4"), Position("d5"), True),
 ])
 def test_is_move_legal(setup_fen, from_pos, to_pos, expected):
-    board = Board(fen=setup_fen)
+    board = Board(fen=setup_fen, log_level="DEBUG")
     assert board.is_move_legal(from_pos, to_pos) == expected
-
-import pytest
 
 @pytest.mark.parametrize("setup_fen, position, expected_moves", [
     # A simple scenario where a knight has two legal moves
@@ -307,8 +310,6 @@ def test_get_legal_moves(setup_fen, position, expected_moves):
     board = Board(fen=setup_fen)
     legal_moves = board.get_legal_moves(position)
     assert set(legal_moves) == set(expected_moves)
-
-import pytest
 
 @pytest.mark.parametrize("setup_fen, player, expected", [
     # Initial scenario already provided

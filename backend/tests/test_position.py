@@ -1,4 +1,3 @@
-import pytest
 from engine.Position import Position
 
 def test_position_initialization_with_algebraic():

@@ -1,5 +1,5 @@
 from engine.piece import Piece
-from engine.constants import COLOR, MAX_RANK, MAX_FILE
+from engine.constants import COLOR, MAX_RANK
 from engine.Position import Position
 
 class Rook(Piece):

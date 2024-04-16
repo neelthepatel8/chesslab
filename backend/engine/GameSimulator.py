@@ -1,11 +1,10 @@
 from engine.board import Board
 from engine.Game import Game
-from engine.Position import Position
 from engine.Move import Move
 
 class GameSimulator:
-    def __init__(self):
-        self.board = Board()  
+    def __init__(self, log_level=None):
+        self.board = Board(log_level=log_level)  
         self.current_game = None
         self.move_generator = None
 
@@ -28,7 +27,10 @@ class GameSimulator:
     def move_piece(self, move: Move):
         result = self.board.move_piece(move.from_pos, move.to_pos)
         if move.promotion:
+            self.board.current_player = self.board.current_player.opponent()
             self.board.try_pawn_promote(move.to_pos, promote_to=full_name(move.promotion), do_it=True)
+            self.board.current_player = self.board.current_player.opponent()
+            
             
         return result
 
@@ -39,7 +41,7 @@ class GameSimulator:
         return self.board.get_winner()
     
     def show_board(self):
-        self.board.print_board()
+        self.board.print_board(print=True)
         
     def get_stalemate(self):
         return self.board.is_stalemate

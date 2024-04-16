@@ -40,7 +40,8 @@ class PGNParser:
             file_list = [self.pgn_file]
         
         all_games = []
-        if not stalemate: file_list = random.sample(file_list, 20)
+        if not stalemate: 
+            file_list = random.sample(file_list, 20)
         
         for file in file_list:
             with open(file, "r") as pgn_file:
