@@ -20,7 +20,7 @@ permissions:
 jobs:
     check_previous_run:
         runs-on: ubuntu-latest
-        if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' }}
+        if: ${{ github.event.workflow_run.conclusion == 'success' && (github.event.workflow_run.event == 'push' || github.event.workflow_run.event == 'pull_request') }}
         steps:
             - name: Check output
               run: echo "Previous workflow succeeded, ready for deployment."
