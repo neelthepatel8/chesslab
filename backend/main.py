@@ -7,6 +7,8 @@ import engine.constants
 from fastapi.middleware.cors import CORSMiddleware
 from engine.Position import Position
 
+from valkyrie.Valkyrie import Valkyrie
+
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
@@ -16,6 +18,7 @@ logger = logging.getLogger("chess_backend")
 
 app = FastAPI(debug=True)
 board = None
+valkyrie = None
 
 app.add_middleware(
     CORSMiddleware,
@@ -33,6 +36,7 @@ async def root():
 async def init_board(websocket, message):
     global board
     board = Board()
+    valkyrie = Valkyrie()
     
     response = {
         'type': 'init',
@@ -155,6 +159,29 @@ async def promote_pawn(websocket, message):
     }
 
     await websocket.send_text(json.dumps(response))
+    
+async def next_move(websocket, message):
+    global board
+
+    if "data" not in message: 
+        await websocket.send_text(json.dumps(error_responses.RESPONSE_ERROR_DATA))
+
+    best_move = valkyrie.best_move(board)
+    is_kill, special = board.move_piece(best_move.from_pos, best_move.to_piece)
+
+    response = {
+        'type': 'promote_pawn',
+        'data': {
+            'from_pos': best_move.from_pos,
+            'to_pos': best_move.to_pos,
+            'fen': board.make_fen(),
+            'move_success': 1,
+            'is_kill': is_kill,
+            'special': special
+            },
+    }
+
+    await websocket.send_text(json.dumps(response))
 
 message_handlers = {
     'init': init_board,
@@ -162,6 +189,7 @@ message_handlers = {
     'poss_moves': possible_moves,
     'move_piece': make_move,
     'promote_pawn': promote_pawn,
+    'next_move': next_move
 }
 
 @app.websocket("/ws")
