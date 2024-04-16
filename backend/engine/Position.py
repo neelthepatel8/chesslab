@@ -64,31 +64,21 @@ class Position():
         return self.__str__()
     
     def __eq__(self, other):
-        if type(other) != type(self): 
-            return False
         return self.file == other.file and self.rank == other.rank
     
     def __hash__(self) -> int:
         return hash(self.algebraic)
     
     def __lt__(self, other):
-        if not isinstance(other, Position):
-            return NotImplemented
         return (self.rank, self.file) < (other.rank, other.file)
 
     def __le__(self, other):
-        if not isinstance(other, Position):
-            return NotImplemented
         return (self.rank, self.file) <= (other.rank, other.file)
 
     def __gt__(self, other):
-        if not isinstance(other, Position):
-            return NotImplemented
         return (self.rank, self.file) > (other.rank, other.file)
 
     def __ge__(self, other):
-        if not isinstance(other, Position):
-            return NotImplemented
         return (self.rank, self.file) >= (other.rank, other.file)
             
     def deep_copy(self):

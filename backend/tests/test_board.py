@@ -338,3 +338,41 @@ def test_winner(setup_fen, winner):
     board = Board(fen=setup_fen)
     board.winner = winner
     assert board.get_winner() == winner
+
+
+def test_get_all_legal_moves():
+    board = Board()
+    player = WhitePlayer()
+    moves = board.get_all_legal_moves(player)
+    assert isinstance(moves, list)
+    assert len(moves) > 0
+
+def test_post_move_checks():
+    board = Board()
+    board.post_move_checks(Position("e2"), Position("e4"))
+
+def test_check_for_en_passant():
+    board = Board()
+    board.set_piece(Position("e5"), pieces.Pawn(Position("e5"), constants.COLOR["BLACK"]))
+    board.en_passant.set(Position("e6"), Position("e5"), "black")
+    result = board.check_for_en_passant(Position("e5"), Position("e6"))
+    assert not result
+
+def test_is_game_over():
+    board = Board()
+    assert not board.is_game_over()
+
+def test_are_only_kings_on_board():
+    board = Board()
+    board.board = [[None for _ in range(8)] for _ in range(8)]
+    board.set_piece(Position("e1"), pieces.King(Position("e1"), constants.COLOR["WHITE"]))
+    board.set_piece(Position("e1"), pieces.King(Position("e8"), constants.COLOR["BLACK"]))
+    assert board.are_only_kings_on_board()
+
+def test_make_promotion_piece():
+    board = Board()
+    new_queen = board.make_promotion_piece("queen", Position("e8"), "white")
+    assert isinstance(new_queen, pieces.Queen)
+    
+    new_knight = board.make_promotion_piece("knight", Position("e8"), constants.COLOR["WHITE"])
+    assert isinstance(new_knight, pieces.Knight)

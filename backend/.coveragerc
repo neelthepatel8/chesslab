@@ -5,3 +5,8 @@ omit =
     */tests/*
     test*
     */__pycache__/*
+    *PGNParser*
+    *GameSimulator*
+    *utils*
+[report]
+show_missing = true
