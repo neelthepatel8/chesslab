@@ -22,12 +22,6 @@ jobs:
               with:
                   python-version: "3.8"
 
-            - name: Set up a virtual environment
-              run: |
-                  python -m venv .venv
-                  echo "VIRTUAL_ENV=.venv" >> $GITHUB_ENV
-                  echo ".venv/bin" >> $GITHUB_PATH
-
             - name: Install dependencies
               run: |
                   python -m pip install --upgrade pip
@@ -35,5 +29,6 @@ jobs:
 
             - name: Run tests with coverage
               run: |
-                  python -m coverage run --source=backend -m pytest backend/tests
+                  cd backend
+                  python -m coverage run -m pytest tests
                   coverage report
