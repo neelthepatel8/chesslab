@@ -37,13 +37,23 @@ class Board():
             constants.COLOR["WHITE"]: []
         }
         
-        self.en_passant = EnPassantStatus()
+        available, eligible_square, target_pawn, pawn_color = fen_utils.get_en_passant_status(fen)
+        self.en_passant = EnPassantStatus(
+            available=available,
+            eligible_square=eligible_square,
+            target_pawn_position=target_pawn,
+            pawn_color=pawn_color,
+        )
 
     def make_fen(self):
         active = "w" if isinstance(self.current_player, WhitePlayer) else "b"
-        castling = ''.join(self.castling_availability) if len(self.castling_availability) > 0 else '-'
-
         en_passant = self.en_passant.eligible_square.algebraic if self.en_passant.available else '-'
+        standard_castling_order = 'KQkq'
+        castling = ''.join(sorted((c for c in self.castling_availability if c in standard_castling_order), 
+                          key=lambda x: standard_castling_order.index(x))) if self.castling_availability else '-'
+        
+        if not castling: 
+            castling = "-"
 
         rows = []
         for rank in range(8):
@@ -69,7 +79,7 @@ class Board():
 
         return self.fen
 
-    def get_piece(self, position: Position):
+    def get_piece(self, position: Position) -> Piece | None:
         rank, file = position.rank, position.file
         return self.board[rank - 1][file - 1]
     
@@ -116,8 +126,10 @@ class Board():
                         valid_path.append(pos)
                     
                     if isinstance(piece, pieces.Pawn):
+                        
                         if self.en_passant.available and self.en_passant.pawn_color != piece.get_color():
-                            possible = self.check_en_passant_possible_for_piece(piece)                                
+                            possible = self.check_en_passant_possible_for_piece(piece)               
+                                             
                             if possible:
                                 valid_moves.append(self.en_passant.eligible_square)
 
@@ -151,7 +163,7 @@ class Board():
         copy_board.current_player = self.current_player
         copy_board.halfmoves = self.halfmoves
         copy_board.fullmoves = self.fullmoves
-        copy_board.castling_availability = self.castling_availability
+        copy_board.castling_availability = copy.deepcopy(self.castling_availability)
         copy_board.dead_pieces = copy.deepcopy(self.dead_pieces)
         return copy_board
 

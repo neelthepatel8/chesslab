@@ -6,6 +6,7 @@ class Piece():
         self.position = position
         self.color = color
         self.has_moved = False
+        self.name = ""
 
     def can_move(self, to_pos: Position):
 
@@ -56,3 +57,9 @@ class Piece():
         piece_copy.has_moved = self.has_moved  
         piece_copy.name = self.name  
         return piece_copy
+    
+    def __eq__(self, other):
+        return self.position == other.position
+    
+    def __repr__(self) -> str:
+        return f"{type(self)} at {self.position}"

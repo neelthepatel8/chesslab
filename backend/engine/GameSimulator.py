@@ -18,7 +18,6 @@ class GameSimulator:
             move_result, move = next(self.move_generator)
             return move_result, move
         except StopIteration:
-            print("All moves have been played.")
             return "Game Over", None
 
     def imitate_gameplay(self):
@@ -41,6 +40,9 @@ class GameSimulator:
     
     def show_board(self):
         self.board.print_board()
+        
+    def get_stalemate(self):
+        return self.board.is_stalemate
 
 def full_name(char):
     promotion_map = {

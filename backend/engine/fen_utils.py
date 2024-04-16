@@ -119,9 +119,12 @@ def get_fullmoves(fen):
 
 def get_castling_availability(fen):
     if not fen: 
-        return COLOR["WHITE"]
+        return set()
 
     _, _, castling_availability, _, _, _ = fen.split(" ")
+    
+    if castling_availability == "-":
+        return set()
     return set([letter for letter in castling_availability])
 
 
@@ -153,3 +156,26 @@ def algebraic_list_to_positions(algebraic_lists):
         position_list = [Position(algebraic=algebraic) for algebraic in algebraic_list]
         position_lists.append(position_list)
     return position_lists
+  
+def get_en_passant_status(fen):
+    placements, player, castling, en_passant, halfmoves, fullmoves = fen.split(" ")
+
+    if en_passant == "-":
+        return False, None, None, None
+
+    en_passant_position = Position(algebraic=en_passant)
+
+    col = ord(en_passant_position.algebraic[0]) - ord('a')
+    row = int(en_passant_position.algebraic[1]) - 1
+
+    if player == 'w':
+        target_pawn_row = row - 1
+        pawn_color = COLOR["BLACK"]
+    else:
+        target_pawn_row = row + 1
+        pawn_color = COLOR["WHITE"]
+    
+    target_pawn_position = Position(algebraic=chr(col + ord('a')) + str(target_pawn_row + 1))
+
+    return True, en_passant_position, target_pawn_position, pawn_color
+
