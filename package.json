@@ -15,7 +15,7 @@
         "predeploy": "yarn remove-resources",
         "deploy": "yarn predeploy && yarn build-container && yarn tag-backend && yarn tag-frontend && yarn push-backend && yarn push-frontend && echo 'Deployment Complete!'",
         "start": "docker compose up --build",
-        "test": "cd backend && . .venv/bin/activate && unset LOG_LEVEL && python3 -m pytest tests -v -s",
+        "test": "cd backend && . .venv/bin/activate && unset LOG_LEVEL && python3 -m pytest tests valkyrie/tests -v -s",
         "export-log-level": "export LOG_LEVEL=DEBUG",
         "test:debug": "cd backend && rm *.log && . .venv/bin/activate && export LOG_LEVEL=DEBUG && python3 -m pytest tests -v -s",
         "test:coverage": "cd backend  && . .venv/bin/activate  && python3 -m coverage run -m pytest tests -s -v && coverage report",
@@ -25,7 +25,8 @@
         "test:function:debug": "cd backend && rm *.log  && . .venv/bin/activate && export LOG_LEVEL=DEBUG && . .venv/bin/activate && python3 -m pytest -s",
         "test:only": "cd backend && . .venv/bin/activate && python3 -m pytest tests/${npm_config_file} -s",
         "test:only:debug": "cd backend && rm *.log && export LOG_LEVEL=DEBUG && python3 -m pytest tests/${npm_config_file} -s",
-        "lint:backend": "ruff check backend/"
+        "lint:backend": "ruff check backend/",
+        "test:valkyrie": "cd backend && . .venv/bin/activate && python3 -m pytest -s valkyrie/tests"
     },
     "repository": {
         "type": "git",
