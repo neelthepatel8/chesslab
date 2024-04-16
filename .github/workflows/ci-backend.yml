@@ -6,6 +6,7 @@ on:
         paths:
             - "backend/**"
             - ".github/workflows/aws-backend-deploy.yml"
+            - ".github/workflows/ci-backend.yml"
             - ".aws/task-definition-backend.json"
     pull_request:
         branches:
