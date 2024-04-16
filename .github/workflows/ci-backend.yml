@@ -2,9 +2,11 @@ name: Backend CI
 
 on:
     push:
-        branches:
-            - main
-            - develop
+        branches: ["main"]
+        paths:
+            - "backend/**"
+            - ".github/workflows/aws-backend-deploy.yml"
+            - ".aws/task-definition-backend.json"
     pull_request:
         branches:
             - main

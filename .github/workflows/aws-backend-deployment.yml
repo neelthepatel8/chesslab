@@ -1,64 +1,76 @@
 name: Deploy Backend to Amazon ECS
 
+# on:
+#     push:
+#         branches: ["main"]
+#         paths:
+#             - "backend/**"
+#             - ".github/workflows/aws-backend-deploy.yml"
+#             - ".aws/task-definition-backend.json"
+#     pull_request:
+#         branches:
+#             - main
+#             - develop
+
 on:
-  push:
-    branches: [ "main" ]
-    paths:
-      - 'backend/**'
-      - '.github/workflows/aws-backend-deploy.yml'
-      - '.aws/task-definition-backend.json'
+    workflow_run:
+        workflows: ["Backend CI"]
+        types:
+            - completed
 env:
-  AWS_REGION: "us-east-1"
-  ECR_REPOSITORY: "541032831567.dkr.ecr.us-east-1.amazonaws.com/chessgame"
-  ECS_SERVICE: "ChessBackendService"
-  ECS_CLUSTER: "ChessContainerCluster"
-  ECS_TASK_DEFINITION: .aws/task-definition-backend.json
-  BACKEND_CONTAINER_NAME: "backend"
-  IMAGE_TAG: ${{ github.sha }}    
+    AWS_REGION: "us-east-1"
+    ECR_REPOSITORY: "541032831567.dkr.ecr.us-east-1.amazonaws.com/chessgame"
+    ECS_SERVICE: "ChessBackendService"
+    ECS_CLUSTER: "ChessContainerCluster"
+    ECS_TASK_DEFINITION: .aws/task-definition-backend.json
+    BACKEND_CONTAINER_NAME: "backend"
+    IMAGE_TAG: ${{ github.sha }}
 
 permissions:
-  contents: read
+    contents: read
 
 jobs:
-  deploy:
-    name: Deploy Backend
-    runs-on: ubuntu-latest
-    environment: production
+    deploy:
+        needs: test
+        name: Deploy Backend
+        runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
+        environment: production
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ env.AWS_REGION }}
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v1
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ env.AWS_REGION }}
 
-    - name: Login to Amazon ECR
-      uses: aws-actions/amazon-ecr-login@v1
+            - name: Login to Amazon ECR
+              uses: aws-actions/amazon-ecr-login@v1
 
-    # BACKEND
-    - name: Build, tag, and push backend image to Amazon ECR
-      run: |
-        docker build -t ${{ env.ECR_REPOSITORY }}:backend-${{ env.IMAGE_TAG }} ./backend
-        docker push ${{ env.ECR_REPOSITORY }}:backend-${{ env.IMAGE_TAG }}
-        echo "BACKEND_IMAGE=${{ env.ECR_REPOSITORY }}:backend-${{ env.IMAGE_TAG }}" >> $GITHUB_ENV
+            # BACKEND
+            - name: Build, tag, and push backend image to Amazon ECR
+              run: |
+                  docker build -t ${{ env.ECR_REPOSITORY }}:backend-${{ env.IMAGE_TAG }} ./backend
+                  docker push ${{ env.ECR_REPOSITORY }}:backend-${{ env.IMAGE_TAG }}
+                  echo "BACKEND_IMAGE=${{ env.ECR_REPOSITORY }}:backend-${{ env.IMAGE_TAG }}" >> $GITHUB_ENV
 
-    # UPDATE ECS TASK DEFINITION FOR BACKEND
-    - name: Fill in the new backend image ID in the Amazon ECS task definition
-      id: task-def-backend
-      uses: aws-actions/amazon-ecs-render-task-definition@v1
-      with:
-        task-definition: ${{ env.ECS_TASK_DEFINITION }}
-        container-name: ${{ env.BACKEND_CONTAINER_NAME }}
-        image: ${{ env.BACKEND_IMAGE }}
+            # UPDATE ECS TASK DEFINITION FOR BACKEND
+            - name: Fill in the new backend image ID in the Amazon ECS task definition
+              id: task-def-backend
+              uses: aws-actions/amazon-ecs-render-task-definition@v1
+              with:
+                  task-definition: ${{ env.ECS_TASK_DEFINITION }}
+                  container-name: ${{ env.BACKEND_CONTAINER_NAME }}
+                  image: ${{ env.BACKEND_IMAGE }}
 
-    - name: Deploy Amazon ECS task definition
-      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-      with:
-        task-definition: ${{ steps.task-def-backend.outputs.task-definition }}
-        service: ${{ env.ECS_SERVICE }}
-        cluster: ${{ env.ECS_CLUSTER }}
-        wait-for-service-stability: false
+            - name: Deploy Amazon ECS task definition
+              uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+              with:
+                  task-definition: ${{ steps.task-def-backend.outputs.task-definition }}
+                  service: ${{ env.ECS_SERVICE }}
+                  cluster: ${{ env.ECS_CLUSTER }}
+                  wait-for-service-stability: false
