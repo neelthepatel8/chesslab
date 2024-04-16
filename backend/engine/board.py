@@ -472,6 +472,7 @@ class Board():
             
             else:
                 king_in_check = self.is_king_in_check(self.current_player)
+                print("Checked if king was in check: ", king_in_check)
                 if king_in_check:
                     self.is_checkmate = True
                     self.winner = self.current_player.opponent()

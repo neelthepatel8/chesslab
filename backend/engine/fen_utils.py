@@ -156,7 +156,7 @@ def algebraic_list_to_positions(algebraic_lists):
         position_list = [Position(algebraic=algebraic) for algebraic in algebraic_list]
         position_lists.append(position_list)
     return position_lists
-
+  
 def get_en_passant_status(fen):
     placements, player, castling, en_passant, halfmoves, fullmoves = fen.split(" ")
 
@@ -179,5 +179,3 @@ def get_en_passant_status(fen):
 
     return True, en_passant_position, target_pawn_position, pawn_color
 
-    
-    

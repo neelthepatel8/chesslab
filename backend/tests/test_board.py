@@ -11,6 +11,7 @@ import engine.fen_utils as fen_utils
 import engine.pieces as pieces
 import copy
 
+
 @pytest.fixture
 def empty_board():
     """Fixture for an empty chess board."""
@@ -23,6 +24,7 @@ def empty_board():
 def test_board_checkmate_full_games(file_name):
     parser = PGNParser(file_name=file_name, multi=True)
     games = parser.parse(checkmate=True)
+
     
     for index, game in enumerate(games):
 
@@ -35,7 +37,7 @@ def test_board_checkmate_full_games(file_name):
             print(f"\nSimulating game {index}: ", game.name, end=", ")
         else: 
             print(f"Simulating game {index}: ", game.name, end=", ")
-            
+
         while True:
             result, move = simulator.next_move()
             if result == "Game Over":
@@ -44,7 +46,6 @@ def test_board_checkmate_full_games(file_name):
             # print(move)
             # if winner is not None: 
             #     simulator.show_board()
-
         print(f"Simulation over. Played {len(simulator.current_game.moves)} moves, winner is: ", simulator.get_winner(), " expected: ", winner)
         assert type(simulator.get_winner()) == type(winner)
         
@@ -376,3 +377,4 @@ def test_make_promotion_piece():
     
     new_knight = board.make_promotion_piece("knight", Position("e8"), constants.COLOR["WHITE"])
     assert isinstance(new_knight, pieces.Knight)
+

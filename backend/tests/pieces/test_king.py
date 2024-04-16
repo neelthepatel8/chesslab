@@ -41,6 +41,7 @@ def test_king_movement_paths(start_pos, expected, king_at_position):
     expected = algebraic_list_to_positions(expected)
     assert lists_equal(paths, expected)
 
+
 def test_king_initial_state(king_at_position):
     king = king_at_position(Position(rank=1, file=5), constants.COLOR["WHITE"]) 
     assert not king.has_moved

@@ -68,7 +68,6 @@ class PGNParser:
 
         return all_games[:20]
 
-
     def extract_tags(self, pgn):
         self.tags = dict(pgn.headers)
 
@@ -123,7 +122,7 @@ class PGNParser:
         for pgn, file_name in zip(pgns, file_names):
             if pgn.strip() == "" or pgn.strip() == " ":
                 continue
-            
+
             if checkmate:
                 if "#" not in pgn:
                     continue 
