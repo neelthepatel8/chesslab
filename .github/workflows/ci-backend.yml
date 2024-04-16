@@ -2,17 +2,17 @@ name: Backend CI
 
 on:
     push:
-        branches: ["main"]
+        branches: [main]
         paths:
             - "backend/**"
-            - ".github/workflows/"
-            - ".github/workflows/aws-backend-deploy.yml"
-            - ".github/workflows/ci-backend.yml"
-            - ".aws/task-definition-backend.json"
+            - ".github/workflows/**"
     pull_request:
         branches:
             - main
             - develop
+        paths:
+            - "backend/**"
+            - ".github/workflows/**"
 
 jobs:
     test:
