@@ -30,11 +30,17 @@ permissions:
     contents: read
 
 jobs:
+    check_previous_run:
+        runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' }}
+        steps:
+            - name: Check output
+              run: echo "Previous workflow succeeded, ready for deployment."
+
     deploy:
-        needs: test
+        needs: check_previous_run
         name: Deploy Backend
         runs-on: ubuntu-latest
-        if: ${{ github.event.workflow_run.conclusion == 'success' }}
         environment: production
 
         steps:
