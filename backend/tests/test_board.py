@@ -6,7 +6,8 @@ from engine.GameSimulator import GameSimulator
 from engine.player.BlackPlayer import BlackPlayer
 from engine.player.WhitePlayer import WhitePlayer
 from engine.PGNParser import PGNParser
-from engine.utils import boards_equal
+from engine.Move import Move
+from engine.utils import boards_equal, lists_equal
 import engine.fen_utils as fen_utils
 import engine.pieces as pieces
 from dotenv import load_dotenv
@@ -379,3 +380,26 @@ def test_make_promotion_piece():
     new_knight = board.make_promotion_piece("knight", Position("e8"), constants.COLOR["WHITE"])
     assert isinstance(new_knight, pieces.Knight)
 
+@pytest.mark.parametrize("fen, player, expected_legal_moves", [
+    # Happy day, has some moves for all pieces
+    ("8/8/8/8/p4K2/8/8/r1k5 b - - 0 1", 
+     BlackPlayer(), 
+     [("a1", "a2", "r"), ("a1", "a3", "r"), ("a1", "b1", "r"),
+      ("a4", "a3", "p"), 
+      ("c1", "b1", "k"), ("c1", "b2", "k"), ("c1", "c2", "k"), ("c1", "d2", "k"), ("c1", "d1", "k")]
+     ), 
+    
+    # White has no moves left (checkmate)
+    ("8/8/8/8/8/q7/8/K1k5 w - - 0 1", 
+     WhitePlayer(), 
+     []
+     ),     
+])
+def test_get_legal_moves_with_origin(fen, player, expected_legal_moves):
+    board = Board(fen=fen, log_level="DEBUG")
+    moves = board.get_all_legal_moves_with_origin(player)
+    expected_moves = []
+    for from_pos, to_pos, name in expected_legal_moves:
+        expected_moves.append(Move(Position(from_pos), Position(to_pos), name))
+    assert set(moves) == set(expected_moves)
+    

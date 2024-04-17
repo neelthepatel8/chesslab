@@ -7,5 +7,11 @@ class Move():
         self.piece_type = piece_type
         self.promotion = promotion
     
-    def __str__(self):
+    def __repr__(self):
         return f"{self.piece_type}: {self.from_pos} -> {self.to_pos} {'Promoting!' if self.promotion else ''}"
+    
+    def __eq__(self, other):
+        return self.from_pos == other.from_pos and self.to_pos == other.to_pos and self.piece_type == other.piece_type
+    
+    def __hash__(self) -> int:
+        return hash(self.from_pos) ^ hash(self.to_pos) ^ hash(self.piece_type)
