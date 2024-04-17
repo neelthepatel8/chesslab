@@ -23,16 +23,14 @@ def test_best_move_returns_legal_move():
     result = valkyrie.best_move(board)
     assert result in moves
     
-@pytest.mark.parametrize("fen, score, expected_white, expected_black", [
-    ('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 0, 1042.5, 1042.5),
-    ('r1b1k1nr/ppp2ppp/8/3P4/8/2P2N2/PP1P1PqP/RNb1Kn1R w KQkq - 0 1', -16.0, 1024.5, 1040.5),
-    ('5R2/8/8/8/8/8/8/3q4 w - - 0 1', -4.75, 5.25, 10.0),
+@pytest.mark.parametrize("fen, score", [
+    ('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 0),
+    ('r1b1k1nr/ppp2ppp/8/3P4/8/2P2N2/PP1P1PqP/RNb1Kn1R w KQkq - 0 1', -12.5),
+    ('5R2/8/8/8/8/8/8/3q4 w - - 0 1', -4.25),
 ])
-def test_evaluate(fen, score, expected_white, expected_black):
+def test_evaluate(fen, score):
     board = Board(fen=fen)
     valkyrie = Valkyrie()
-    total_score, white_score, black_score = valkyrie.evaluate(board)
+    total_score = valkyrie.evaluate(board)
     assert total_score == score
-    assert white_score == expected_white
-    assert black_score == expected_black
     

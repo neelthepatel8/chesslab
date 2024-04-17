@@ -8,7 +8,19 @@ class Pawn(Piece):
         self.name = 'p' if color == COLOR['BLACK'] else 'P'
         self.symbol = "♙" if color == COLOR["WHITE"] else "♟︎"
         self.value = 1.0
-
+        self.positional_values = [
+            [0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0],
+            [5.0,  5.0,  5.0,  5.0,  5.0,  5.0,  5.0,  5.0],
+            [1.0,  1.0,  2.0,  3.0,  3.0,  2.0,  1.0,  1.0],
+            [0.5,  0.5,  1.0,  2.5,  2.5,  1.0,  0.5,  0.5],
+            [0.0,  0.0,  0.0,  2.0,  2.0,  0.0,  0.0,  0.0],
+            [0.5, -0.5, -1.0,  0.0,  0.0, -1.0, -0.5,  0.5],
+            [0.5,  1.0,  1.0,  -2.0, -2.0,  1.0,  1.0,  0.5],
+            [0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0]
+        ]
+        
+        self.positional_values = list(reversed(self.positional_values)) if color == COLOR["BLACK"] else self.positional_values
+        
     def is_initial_position(self):
         return self.position.rank == PAWN_START["BLACK"] or self.position.rank == PAWN_START["WHITE"]
         

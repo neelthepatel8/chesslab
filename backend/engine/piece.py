@@ -7,7 +7,11 @@ class Piece():
         self.color = color
         self.has_moved = False
         self.name = ""
-
+        self.value = 0
+        
+        self.positional_values = []
+        self.value_color_factor = 0
+        
     def can_move(self, to_pos: Position):
 
         if self.position == to_pos: 
