@@ -7,6 +7,7 @@ class King(Piece):
         super().__init__(position, color)
         self.name = 'k' if color == COLOR['BLACK'] else 'K'
         self.symbol = "♔" if color == COLOR["WHITE"] else "♚"
+        self.value = 1000.0
 
 
     def can_move(self, to_pos: Position):

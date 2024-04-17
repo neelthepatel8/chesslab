@@ -7,6 +7,7 @@ class Rook(Piece):
         super().__init__(position, color)
         self.name = 'r' if color == COLOR['BLACK'] else 'R'
         self.symbol = "♖" if color == COLOR["WHITE"] else "♜"
+        self.value = 5.25
         
     def can_move(self, to_pos: Position) -> bool:
         to_rank, to_file = to_pos.rank, to_pos.file

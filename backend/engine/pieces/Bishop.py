@@ -6,7 +6,8 @@ class Bishop(Piece):
         super().__init__(position, color)
         self.name = 'b' if color == COLOR['BLACK'] else 'B'
         self.symbol = "♗" if color == COLOR["WHITE"] else "♝"
-
+        self.value = 3.5
+        
     def can_move(self, to_pos: Position):
         if not super().can_move(to_pos):
             return False

@@ -7,6 +7,7 @@ class Knight(Piece):
         super().__init__(position, color)
         self.name = 'n' if color == COLOR['BLACK'] else 'N'
         self.symbol = "♘" if color == COLOR["WHITE"] else "♞"
+        self.value = 3.5
 
     def can_move(self, to_pos: Position):
         move_offsets = [(2, 1), (2, -1), (-2, 1), (-2, -1), (1, 2), (1, -2), (-1, 2), (-1, -2)]
