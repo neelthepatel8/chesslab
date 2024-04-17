@@ -112,6 +112,13 @@ const Board = () => {
           handleStalemate(message.data?.fen);
         }
       });
+
+      if (
+        currentPlayer == PIECE_COLOR.WHITE &&
+        special !== config.PROMOTE_POSSIBLE
+      ) {
+        await setTimeout(wsRequestEngineMove, 500);
+      }
     }
     setPossibleMoves([]);
     setSelectedSquare([]);
@@ -122,7 +129,7 @@ const Board = () => {
     setPossibleMoves(possibleMoves);
   };
 
-  const handlePromotePawnMessage = (message) => {
+  const handlePromotePawnMessage = async (message) => {
     const updatedFen = message.data?.fen;
     setCurrentFen(updatedFen);
     setCurrentPlayer(fen.getCurrentPlayer(updatedFen));
@@ -139,6 +146,10 @@ const Board = () => {
     } else if (message.data?.special === config.CHECK) {
       handleCheck();
     }
+
+    if (currentPlayer == PIECE_COLOR.BLACK) {
+      await setTimeout(wsRequestEngineMove, 500);
+    }
   };
 
   const handleWebSockMessaging = async (latestMessage) => {
@@ -147,6 +158,7 @@ const Board = () => {
       return;
     }
 
+    console.log("Processing message ", latestMessage);
     if (latestMessage.error < 0) {
       log("Received error from backend: ", latestMessage);
       return;
@@ -166,7 +178,7 @@ const Board = () => {
         handlePossibleMovesMessage(latestMessage);
         break;
       case WEBSOCKET.TYPES.PROMOTE_PAWN:
-        handlePromotePawnMessage(latestMessage);
+        await handlePromotePawnMessage(latestMessage);
         break;
       default:
         break;
@@ -400,8 +412,6 @@ const Board = () => {
       },
     };
     sendMessage(message);
-
-    await setTimeout(wsRequestEngineMove, 500);
   };
 
   const wsPromotePawn = (at_pos) => {
