@@ -7,6 +7,20 @@ class King(Piece):
         super().__init__(position, color)
         self.name = 'k' if color == COLOR['BLACK'] else 'K'
         self.symbol = "♔" if color == COLOR["WHITE"] else "♚"
+        self.value = 1000.0
+        
+        self.positional_values = [
+            [ -3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
+            [ -3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
+            [ -3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
+            [ -3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
+            [ -2.0, -3.0, -3.0, -4.0, -4.0, -3.0, -3.0, -2.0],
+            [ -1.0, -2.0, -2.0, -2.0, -2.0, -2.0, -2.0, -1.0],
+            [  2.0,  2.0,  0.0,  0.0,  0.0,  0.0,  2.0,  2.0 ],
+            [  2.0,  3.0,  1.0,  0.0,  0.0,  1.0,  3.0,  2.0 ]
+        ]
+        
+        self.positional_values = list(reversed(self.positional_values)) if color == COLOR["BLACK"] else self.positional_values
 
 
     def can_move(self, to_pos: Position):

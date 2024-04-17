@@ -168,8 +168,6 @@ async def next_move(websocket, message):
     if valkyrie is None:
         valkyrie = Valkyrie()
 
-    if "data" not in message: 
-        await websocket.send_text(json.dumps(error_responses.RESPONSE_ERROR_DATA))
 
     best_move = valkyrie.best_move(board)
     if not best_move:

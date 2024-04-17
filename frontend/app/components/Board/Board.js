@@ -36,6 +36,8 @@ const Board = () => {
   ]);
   const [selectedPromotion, setSelectedPromotion] = useState({});
 
+  const [playMode, setPlayMode] = useState("pve");
+
   // Sound Effects:
   const [playMove] = useSound("sfx/move.mp3", { volume: 1 });
   const [playMoveCheck] = useSound("sfx/move.mp3", { volume: 5 });
@@ -112,6 +114,19 @@ const Board = () => {
           handleStalemate(message.data?.fen);
         }
       });
+
+      console.log("Playmode is: ", playMode);
+      if (playMode === "pve") {
+        if (
+          currentPlayer == PIECE_COLOR.WHITE &&
+          special !== config.PROMOTE_POSSIBLE
+        ) {
+          await setTimeout(wsRequestEngineMove, 500);
+        }
+      } else {
+        await setTimeout(wsRequestEngineMove, 500);
+      }
+
     }
     setPossibleMoves([]);
     setSelectedSquare([]);
@@ -122,7 +137,8 @@ const Board = () => {
     setPossibleMoves(possibleMoves);
   };
 
-  const handlePromotePawnMessage = (message) => {
+  const handlePromotePawnMessage = async (message) => {
+
     const updatedFen = message.data?.fen;
     setCurrentFen(updatedFen);
     setCurrentPlayer(fen.getCurrentPlayer(updatedFen));
@@ -139,6 +155,15 @@ const Board = () => {
     } else if (message.data?.special === config.CHECK) {
       handleCheck();
     }
+
+    if (playMode === "pve") {
+      if (currentPlayer == PIECE_COLOR.BLACK) {
+        await setTimeout(wsRequestEngineMove, 500);
+      }
+    } else {
+      await setTimeout(wsRequestEngineMove, 500);
+    }
+
   };
 
   const handleWebSockMessaging = async (latestMessage) => {
@@ -147,6 +172,7 @@ const Board = () => {
       return;
     }
 
+    console.log("Processing message ", latestMessage);
     if (latestMessage.error < 0) {
       log("Received error from backend: ", latestMessage);
       return;
@@ -166,6 +192,7 @@ const Board = () => {
         handlePossibleMovesMessage(latestMessage);
         break;
       case WEBSOCKET.TYPES.PROMOTE_PAWN:
+        await handlePromotePawnMessage(latestMessage);
         handlePromotePawnMessage(latestMessage);
         break;
       default:
@@ -402,6 +429,7 @@ const Board = () => {
     sendMessage(message);
 
     await setTimeout(wsRequestEngineMove, 500);
+
   };
 
   const wsPromotePawn = (at_pos) => {
@@ -489,21 +517,39 @@ const Board = () => {
   };
 
   return (
-    <div className="flex flex-col overflow-hidden  drop-shadow-2xl">
-      {rows.map((row) => (
-        <Row
-          possibleMoves={possibleMoves}
-          selectedSquare={selectedSquare}
-          handleSquareClick={handleSquareClick}
-          rowFenString={fen.getRow(currentFen, row)}
-          key={`row${row}`}
-          index={row}
-          showPromotionOptions={showPromotionOptions}
-          promotionOptions={generatePromotionOptions()}
-          setSelectedPromotion={setSelectedPromotion}
-        />
-      ))}
-    </div>
+    <>
+      <button
+        onClick={() => {
+          setPlayMode("eve");
+          wsRequestEngineMove();
+        }}
+        className="absolute left-20 top-20 z-50 rounded-md bg-white px-3 py-1 font-bold hover:opacity-60"
+      >
+        Valkyrie vs Valkyrie
+      </button>
+      <button
+        onClick={() => setPlayMode("pve")}
+        className="absolute left-20 top-40 z-50 rounded-md bg-white px-3 py-1 font-bold hover:opacity-60"
+      >
+        Player vs Valkyrie
+      </button>
+      <div className="flex flex-col overflow-hidden drop-shadow-2xl">
+        {rows.map((row) => (
+          <Row
+            possibleMoves={possibleMoves}
+            selectedSquare={selectedSquare}
+            handleSquareClick={handleSquareClick}
+            rowFenString={fen.getRow(currentFen, row)}
+            key={`row${row}`}
+            index={row}
+            showPromotionOptions={showPromotionOptions}
+            promotionOptions={generatePromotionOptions()}
+            setSelectedPromotion={setSelectedPromotion}
+          />
+        ))}
+      </div>
+    </>
+
   );
 };
 

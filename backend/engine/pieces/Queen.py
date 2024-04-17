@@ -7,6 +7,20 @@ class Queen(Piece):
         super().__init__(position, color)
         self.name = 'q' if color == COLOR['BLACK'] else 'Q'
         self.symbol = "♕" if color == COLOR["WHITE"] else "♛"
+        self.value = 10.0
+        
+        self.positional_values = [
+            [ -2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0],
+            [ -1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -1.0],
+            [ -1.0,  0.0,  0.5,  0.5,  0.5,  0.5,  0.0, -1.0],
+            [ -0.5,  0.0,  0.5,  0.5,  0.5,  0.5,  0.0, -0.5],
+            [  0.0,  0.0,  0.5,  0.5,  0.5,  0.5,  0.0, -0.5],
+            [ -1.0,  0.5,  0.5,  0.5,  0.5,  0.5,  0.0, -1.0],
+            [ -1.0,  0.0,  0.5,  0.0,  0.0,  0.0,  0.0, -1.0],
+            [ -2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0]
+        ]
+        
+        
         
     def can_move(self, to_pos: Position):
         to_rank, to_file = to_pos.rank, to_pos.file

@@ -434,6 +434,8 @@ class Board():
         self.log(f"Executing move {from_pos} -> {to_pos}")
         
         piece = self.get_piece(from_pos)
+        if piece is None:
+            return constants.NO_KILL
         self.clear_square(from_pos)
         killed_piece = self.get_piece(to_pos)
         self.set_piece(to_pos, piece)

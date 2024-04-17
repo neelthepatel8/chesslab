@@ -1,0 +1,64 @@
+// Chess Move Search Tree
+digraph {
+	<engine.board.Board object at 0x7f8b23d35dd0> [label="Initial Score: 5.0"]
+	<engine.board.Board object at 0x7f8b23d35dd0> [label="Move: p: g7 -> g6 
+Score: 6.5"]
+	<engine.board.Board object at 0x7f8b23d35dd0> -> <engine.board.Board object at 0x7f8b23d35dd0> [label="p: g7 -> g6 "]
+	<engine.board.Board object at 0x7f8b23d4a650> [label="Move: p: b7 -> b6 
+Score: 6.5"]
+	<engine.board.Board object at 0x7f8b23d35dd0> -> <engine.board.Board object at 0x7f8b23d4a650> [label="p: b7 -> b6 "]
+	<engine.board.Board object at 0x7f8b25e54190> [label="Move: p: h7 -> h5 
+Score: 5.5"]
+	<engine.board.Board object at 0x7f8b23d35dd0> -> <engine.board.Board object at 0x7f8b25e54190> [label="p: h7 -> h5 "]
+	<engine.board.Board object at 0x7f8b23d43d90> [label="Move: p: a7 -> a6 
+Score: 5.0"]
+	<engine.board.Board object at 0x7f8b23d35dd0> -> <engine.board.Board object at 0x7f8b23d43d90> [label="p: a7 -> a6 "]
+	<engine.board.Board object at 0x7f8b24e947d0> [label="Move: p: e7 -> e5 
+Score: 1.0"]
+	<engine.board.Board object at 0x7f8b23d35dd0> -> <engine.board.Board object at 0x7f8b24e947d0> [label="p: e7 -> e5 "]
+	<engine.board.Board object at 0x7f8b23d3f650> [label="Move: p: h7 -> h6 
+Score: 5.0"]
+	<engine.board.Board object at 0x7f8b23d35dd0> -> <engine.board.Board object at 0x7f8b23d3f650> [label="p: h7 -> h6 "]
+	<engine.board.Board object at 0x7f8b24c2fa90> [label="Move: n: g8 -> h6 
+Score: 4.0"]
+	<engine.board.Board object at 0x7f8b23d35dd0> -> <engine.board.Board object at 0x7f8b24c2fa90> [label="n: g8 -> h6 "]
+	<engine.board.Board object at 0x7f8b23d3c390> [label="Move: p: e7 -> e6 
+Score: 3.0"]
+	<engine.board.Board object at 0x7f8b23d35dd0> -> <engine.board.Board object at 0x7f8b23d3c390> [label="p: e7 -> e6 "]
+	<engine.board.Board object at 0x7f8b23facb10> [label="Move: n: g8 -> f6 
+Score: 0.0"]
+	<engine.board.Board object at 0x7f8b23d35dd0> -> <engine.board.Board object at 0x7f8b23facb10> [label="n: g8 -> f6 "]
+	<engine.board.Board object at 0x7f8b23d47910> [label="Move: n: b8 -> a6 
+Score: 4.0"]
+	<engine.board.Board object at 0x7f8b23d35dd0> -> <engine.board.Board object at 0x7f8b23d47910> [label="n: b8 -> a6 "]
+	<engine.board.Board object at 0x7f8b25d5dd50> [label="Move: p: c7 -> c6 
+Score: 7.0"]
+	<engine.board.Board object at 0x7f8b23d35dd0> -> <engine.board.Board object at 0x7f8b25d5dd50> [label="p: c7 -> c6 "]
+	<engine.board.Board object at 0x7f8b23f9abd0> [label="Move: p: g7 -> g5 
+Score: 6.0"]
+	<engine.board.Board object at 0x7f8b23d35dd0> -> <engine.board.Board object at 0x7f8b23f9abd0> [label="p: g7 -> g5 "]
+	<engine.board.Board object at 0x7f8b2477b190> [label="Move: p: f7 -> f5 
+Score: 6.0"]
+	<engine.board.Board object at 0x7f8b23d35dd0> -> <engine.board.Board object at 0x7f8b2477b190> [label="p: f7 -> f5 "]
+	<engine.board.Board object at 0x7f8b23d47d10> [label="Move: p: b7 -> b5 
+Score: 6.0"]
+	<engine.board.Board object at 0x7f8b23d35dd0> -> <engine.board.Board object at 0x7f8b23d47d10> [label="p: b7 -> b5 "]
+	<engine.board.Board object at 0x7f8b23d35dd0> [label="Move: p: d7 -> d6 
+Score: 3.0"]
+	<engine.board.Board object at 0x7f8b23d35dd0> -> <engine.board.Board object at 0x7f8b23d35dd0> [label="p: d7 -> d6 "]
+	<engine.board.Board object at 0x7f8b23d3fc50> [label="Move: p: c7 -> c5 
+Score: 6.0"]
+	<engine.board.Board object at 0x7f8b23d35dd0> -> <engine.board.Board object at 0x7f8b23d3fc50> [label="p: c7 -> c5 "]
+	<engine.board.Board object at 0x7f8b23d49fd0> [label="Move: p: f7 -> f6 
+Score: 7.0"]
+	<engine.board.Board object at 0x7f8b23d35dd0> -> <engine.board.Board object at 0x7f8b23d49fd0> [label="p: f7 -> f6 "]
+	<engine.board.Board object at 0x7f8b23d3fc50> [label="Move: n: b8 -> c6 
+Score: 0.0"]
+	<engine.board.Board object at 0x7f8b23d35dd0> -> <engine.board.Board object at 0x7f8b23d3fc50> [label="n: b8 -> c6 "]
+	<engine.board.Board object at 0x7f8b23d3a450> [label="Move: p: a7 -> a5 
+Score: 5.5"]
+	<engine.board.Board object at 0x7f8b23d35dd0> -> <engine.board.Board object at 0x7f8b23d3a450> [label="p: a7 -> a5 "]
+	<engine.board.Board object at 0x7f8b23f9a990> [label="Move: p: d7 -> d5 
+Score: 1.0"]
+	<engine.board.Board object at 0x7f8b23d35dd0> -> <engine.board.Board object at 0x7f8b23f9a990> [label="p: d7 -> d5 "]
+}
