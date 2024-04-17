@@ -4,6 +4,8 @@ import engine.constants as constants
 from engine.player.Player import Player
 from engine.piece import Piece
 import random
+from graphviz import Digraph
+
 
 class Valkyrie():
     def __init__(self):
@@ -12,9 +14,9 @@ class Valkyrie():
     def get_all_moves(self, board: Board, player: Player) -> list[Move]:
         return board.get_all_legal_moves_with_origin(player)
         
-    def best_move(self, board: Board) -> Move:
-        all_legal_moves = self.get_all_moves(board, board.current_player)
-        return random.choice(all_legal_moves)
+    # def best_move(self, board: Board) -> Move:
+    #     all_legal_moves = self.get_all_moves(board, board.current_player)
+    #     return random.choice(all_legal_moves)
     
     def evaluate(self, board: Board):
         black_score, white_score = 0, 0
@@ -39,4 +41,41 @@ class Valkyrie():
         rank, file = position.coords
         position_value = piece.positional_values[rank - 1][file - 1]
         return position_value
+    
+    def best_move(self, board: Board):
+        dot = Digraph(format='png') 
+
+        player = board.current_player
+        moves = self.get_all_moves(board, player)
+
+        initial_board_copy = board.deep_copy()
+        current_score = self.evaluate(initial_board_copy)
+        best_score, best_move = current_score, None
+
+        root_id = str(initial_board_copy) 
+        initial_board_state = initial_board_copy.print_board()
+        dot.node(root_id, label=f'Initial Score: {current_score}\n{initial_board_state}')
+
+        for move in moves:
+            board_copy = board.deep_copy()
+            board_copy.move(move.from_pos, move.to_pos)
+            new_score = self.evaluate(board_copy)
+            
+            move_id = str(board_copy)  
+            board_state = board_copy.print_board()
+            dot.node(move_id, label=f'Move: {move}\nScore: {new_score}\n{board_state}')
+            dot.edge(root_id, move_id, label=str(move))
+
+            is_better_move = new_score >= best_score if player == constants.COLOR["WHITE"] else new_score <= best_score
+            if is_better_move:
+                best_score = new_score
+                best_move = move
+
+        dot.render('output/move_tree', view=False) 
+        return best_move
+
+
+        
+        
+            
         

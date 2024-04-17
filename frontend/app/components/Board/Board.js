@@ -36,6 +36,8 @@ const Board = () => {
   ]);
   const [selectedPromotion, setSelectedPromotion] = useState({});
 
+  const [playMode, setPlayMode] = useState("pve");
+
   // Sound Effects:
   const [playMove] = useSound("sfx/move.mp3", { volume: 1 });
   const [playMoveCheck] = useSound("sfx/move.mp3", { volume: 5 });
@@ -113,10 +115,15 @@ const Board = () => {
         }
       });
 
-      if (
-        currentPlayer == PIECE_COLOR.WHITE &&
-        special !== config.PROMOTE_POSSIBLE
-      ) {
+      console.log("Playmode is: ", playMode);
+      if (playMode === "pve") {
+        if (
+          currentPlayer == PIECE_COLOR.WHITE &&
+          special !== config.PROMOTE_POSSIBLE
+        ) {
+          await setTimeout(wsRequestEngineMove, 500);
+        }
+      } else {
         await setTimeout(wsRequestEngineMove, 500);
       }
     }
@@ -147,7 +154,11 @@ const Board = () => {
       handleCheck();
     }
 
-    if (currentPlayer == PIECE_COLOR.BLACK) {
+    if (playMode === "pve") {
+      if (currentPlayer == PIECE_COLOR.BLACK) {
+        await setTimeout(wsRequestEngineMove, 500);
+      }
+    } else {
       await setTimeout(wsRequestEngineMove, 500);
     }
   };
@@ -499,21 +510,38 @@ const Board = () => {
   };
 
   return (
-    <div className="flex flex-col overflow-hidden  drop-shadow-2xl">
-      {rows.map((row) => (
-        <Row
-          possibleMoves={possibleMoves}
-          selectedSquare={selectedSquare}
-          handleSquareClick={handleSquareClick}
-          rowFenString={fen.getRow(currentFen, row)}
-          key={`row${row}`}
-          index={row}
-          showPromotionOptions={showPromotionOptions}
-          promotionOptions={generatePromotionOptions()}
-          setSelectedPromotion={setSelectedPromotion}
-        />
-      ))}
-    </div>
+    <>
+      <button
+        onClick={() => {
+          setPlayMode("eve");
+          wsRequestEngineMove();
+        }}
+        className="absolute left-20 top-20 z-50 rounded-md bg-white px-3 py-1 font-bold hover:opacity-60"
+      >
+        Valkyrie vs Valkyrie
+      </button>
+      <button
+        onClick={() => setPlayMode("pve")}
+        className="absolute left-20 top-40 z-50 rounded-md bg-white px-3 py-1 font-bold hover:opacity-60"
+      >
+        Player vs Valkyrie
+      </button>
+      <div className="flex flex-col overflow-hidden drop-shadow-2xl">
+        {rows.map((row) => (
+          <Row
+            possibleMoves={possibleMoves}
+            selectedSquare={selectedSquare}
+            handleSquareClick={handleSquareClick}
+            rowFenString={fen.getRow(currentFen, row)}
+            key={`row${row}`}
+            index={row}
+            showPromotionOptions={showPromotionOptions}
+            promotionOptions={generatePromotionOptions()}
+            setSelectedPromotion={setSelectedPromotion}
+          />
+        ))}
+      </div>
+    </>
   );
 };
 

@@ -1,0 +1,372 @@
+digraph {
+	<engine.board.Board object at 0x7f3450c02a10> [label="Initial Score: -21.0
+♜ . ♝ ♛ ♚ ♝ . ♜ 
+♟︎ ♟︎ ♟︎ ♟︎ . ♟︎ ♟︎ ♟︎ 
+. . ♞ . . ♞ . . 
+. . . . ♟︎ . . . 
+. . . . . . . . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f34503d0050> [label="Move: p: a7 -> a6 
+Score: -21.0
+♜ . ♝ ♛ ♚ ♝ . ♜ 
+. ♟︎ ♟︎ ♟︎ . ♟︎ ♟︎ ♟︎ 
+♟︎ . ♞ . . ♞ . . 
+. . . . ♟︎ . . . 
+. . . . . . . . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f34503d0050> [label="p: a7 -> a6 "]
+	<engine.board.Board object at 0x7f3450bf6290> [label="Move: p: g7 -> g6 
+Score: -19.5
+♜ . ♝ ♛ ♚ ♝ . ♜ 
+♟︎ ♟︎ ♟︎ ♟︎ . ♟︎ . ♟︎ 
+. . ♞ . . ♞ ♟︎ . 
+. . . . ♟︎ . . . 
+. . . . . . . . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f3450bf6290> [label="p: g7 -> g6 "]
+	<engine.board.Board object at 0x7f34503aa410> [label="Move: b: f8 -> c5 
+Score: -23.0
+♜ . ♝ ♛ ♚ . . ♜ 
+♟︎ ♟︎ ♟︎ ♟︎ . ♟︎ ♟︎ ♟︎ 
+. . ♞ . . ♞ . . 
+. . ♝ . ♟︎ . . . 
+. . . . . . . . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f34503aa410> [label="b: f8 -> c5 "]
+	<engine.board.Board object at 0x7f34503ae2d0> [label="Move: b: f8 -> a3 
+Score: -21.0
+♜ . ♝ ♛ ♚ . . ♜ 
+♟︎ ♟︎ ♟︎ ♟︎ . ♟︎ ♟︎ ♟︎ 
+. . ♞ . . ♞ . . 
+. . . . ♟︎ . . . 
+. . . . . . . . 
+♝ ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f34503ae2d0> [label="b: f8 -> a3 "]
+	<engine.board.Board object at 0x7f34503bd410> [label="Move: n: f6 -> g4 
+Score: -20.0
+♜ . ♝ ♛ ♚ ♝ . ♜ 
+♟︎ ♟︎ ♟︎ ♟︎ . ♟︎ ♟︎ ♟︎ 
+. . ♞ . . . . . 
+. . . . ♟︎ . . . 
+. . . . . . ♞ . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f34503bd410> [label="n: f6 -> g4 "]
+	<engine.board.Board object at 0x7f34503dc750> [label="Move: n: c6 -> d4 
+Score: -22.0
+♜ . ♝ ♛ ♚ ♝ . ♜ 
+♟︎ ♟︎ ♟︎ ♟︎ . ♟︎ ♟︎ ♟︎ 
+. . . . . ♞ . . 
+. . . . ♟︎ . . . 
+. . . ♞ . . . . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f34503dc750> [label="n: c6 -> d4 "]
+	<engine.board.Board object at 0x7f34503cc350> [label="Move: n: c6 -> a5 
+Score: -17.0
+♜ . ♝ ♛ ♚ ♝ . ♜ 
+♟︎ ♟︎ ♟︎ ♟︎ . ♟︎ ♟︎ ♟︎ 
+. . . . . ♞ . . 
+♞ . . . ♟︎ . . . 
+. . . . . . . . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f34503cc350> [label="n: c6 -> a5 "]
+	<engine.board.Board object at 0x7f34503dda10> [label="Move: n: f6 -> g8 
+Score: -16.0
+♜ . ♝ ♛ ♚ ♝ ♞ ♜ 
+♟︎ ♟︎ ♟︎ ♟︎ . ♟︎ ♟︎ ♟︎ 
+. . ♞ . . . . . 
+. . . . ♟︎ . . . 
+. . . . . . . . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f34503dda10> [label="n: f6 -> g8 "]
+	<engine.board.Board object at 0x7f34503cec10> [label="Move: p: h7 -> h5 
+Score: -20.5
+♜ . ♝ ♛ ♚ ♝ . ♜ 
+♟︎ ♟︎ ♟︎ ♟︎ . ♟︎ ♟︎ . 
+. . ♞ . . ♞ . . 
+. . . . ♟︎ . . ♟︎ 
+. . . . . . . . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f34503cec10> [label="p: h7 -> h5 "]
+	<engine.board.Board object at 0x7f34503de450> [label="Move: n: c6 -> b4 
+Score: -20.0
+♜ . ♝ ♛ ♚ ♝ . ♜ 
+♟︎ ♟︎ ♟︎ ♟︎ . ♟︎ ♟︎ ♟︎ 
+. . . . . ♞ . . 
+. . . . ♟︎ . . . 
+. ♞ . . . . . . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f34503de450> [label="n: c6 -> b4 "]
+	<engine.board.Board object at 0x7f34503acf10> [label="Move: p: d7 -> d5 
+Score: -25.0
+♜ . ♝ ♛ ♚ ♝ . ♜ 
+♟︎ ♟︎ ♟︎ . . ♟︎ ♟︎ ♟︎ 
+. . ♞ . . ♞ . . 
+. . . ♟︎ ♟︎ . . . 
+. . . . . . . . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f34503acf10> [label="p: d7 -> d5 "]
+	<engine.board.Board object at 0x7f34503ad790> [label="Move: n: c6 -> b8 
+Score: -16.0
+♜ ♞ ♝ ♛ ♚ ♝ . ♜ 
+♟︎ ♟︎ ♟︎ ♟︎ . ♟︎ ♟︎ ♟︎ 
+. . . . . ♞ . . 
+. . . . ♟︎ . . . 
+. . . . . . . . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f34503ad790> [label="n: c6 -> b8 "]
+	<engine.board.Board object at 0x7f34503a4290> [label="Move: b: f8 -> b4 
+Score: -22.5
+♜ . ♝ ♛ ♚ . . ♜ 
+♟︎ ♟︎ ♟︎ ♟︎ . ♟︎ ♟︎ ♟︎ 
+. . ♞ . . ♞ . . 
+. . . . ♟︎ . . . 
+. ♝ . . . . . . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f34503a4290> [label="b: f8 -> b4 "]
+	<engine.board.Board object at 0x7f3450be5790> [label="Move: r: h8 -> g8 
+Score: -21.0
+♜ . ♝ ♛ ♚ ♝ ♜ . 
+♟︎ ♟︎ ♟︎ ♟︎ . ♟︎ ♟︎ ♟︎ 
+. . ♞ . . ♞ . . 
+. . . . ♟︎ . . . 
+. . . . . . . . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f3450be5790> [label="r: h8 -> g8 "]
+	<engine.board.Board object at 0x7f345345f3d0> [label="Move: p: g7 -> g5 
+Score: -20.0
+♜ . ♝ ♛ ♚ ♝ . ♜ 
+♟︎ ♟︎ ♟︎ ♟︎ . ♟︎ . ♟︎ 
+. . ♞ . . ♞ . . 
+. . . . ♟︎ . ♟︎ . 
+. . . . . . . . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f345345f3d0> [label="p: g7 -> g5 "]
+	<engine.board.Board object at 0x7f34503b9c50> [label="Move: b: f8 -> d6 
+Score: -23.0
+♜ . ♝ ♛ ♚ . . ♜ 
+♟︎ ♟︎ ♟︎ ♟︎ . ♟︎ ♟︎ ♟︎ 
+. . ♞ ♝ . ♞ . . 
+. . . . ♟︎ . . . 
+. . . . . . . . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f34503b9c50> [label="b: f8 -> d6 "]
+	<engine.board.Board object at 0x7f34503cec10> [label="Move: p: b7 -> b6 
+Score: -19.5
+♜ . ♝ ♛ ♚ ♝ . ♜ 
+♟︎ . ♟︎ ♟︎ . ♟︎ ♟︎ ♟︎ 
+. ♟︎ ♞ . . ♞ . . 
+. . . . ♟︎ . . . 
+. . . . . . . . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f34503cec10> [label="p: b7 -> b6 "]
+	<engine.board.Board object at 0x7f34503ad050> [label="Move: k: e8 -> e7 
+Score: -21.0
+♜ . ♝ ♛ . ♝ . ♜ 
+♟︎ ♟︎ ♟︎ ♟︎ ♚ ♟︎ ♟︎ ♟︎ 
+. . ♞ . . ♞ . . 
+. . . . ♟︎ . . . 
+. . . . . . . . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f34503ad050> [label="k: e8 -> e7 "]
+	<engine.board.Board object at 0x7f34503cec50> [label="Move: p: b7 -> b5 
+Score: -20.0
+♜ . ♝ ♛ ♚ ♝ . ♜ 
+♟︎ . ♟︎ ♟︎ . ♟︎ ♟︎ ♟︎ 
+. . ♞ . . ♞ . . 
+. ♟︎ . . ♟︎ . . . 
+. . . . . . . . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f34503cec50> [label="p: b7 -> b5 "]
+	<engine.board.Board object at 0x7f3450bf6e10> [label="Move: n: f6 -> h5 
+Score: -17.0
+♜ . ♝ ♛ ♚ ♝ . ♜ 
+♟︎ ♟︎ ♟︎ ♟︎ . ♟︎ ♟︎ ♟︎ 
+. . ♞ . . . . . 
+. . . . ♟︎ . . ♞ 
+. . . . . . . . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f3450bf6e10> [label="n: f6 -> h5 "]
+	<engine.board.Board object at 0x7f34503cec10> [label="Move: p: d7 -> d6 
+Score: -23.0
+♜ . ♝ ♛ ♚ ♝ . ♜ 
+♟︎ ♟︎ ♟︎ . . ♟︎ ♟︎ ♟︎ 
+. . ♞ ♟︎ . ♞ . . 
+. . . . ♟︎ . . . 
+. . . . . . . . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f34503cec10> [label="p: d7 -> d6 "]
+	<engine.board.Board object at 0x7f3450be6d10> [label="Move: b: f8 -> e7 
+Score: -22.0
+♜ . ♝ ♛ ♚ . . ♜ 
+♟︎ ♟︎ ♟︎ ♟︎ ♝ ♟︎ ♟︎ ♟︎ 
+. . ♞ . . ♞ . . 
+. . . . ♟︎ . . . 
+. . . . . . . . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f3450be6d10> [label="b: f8 -> e7 "]
+	<engine.board.Board object at 0x7f34503dfb90> [label="Move: r: a8 -> b8 
+Score: -21.0
+. ♜ ♝ ♛ ♚ ♝ . ♜ 
+♟︎ ♟︎ ♟︎ ♟︎ . ♟︎ ♟︎ ♟︎ 
+. . ♞ . . ♞ . . 
+. . . . ♟︎ . . . 
+. . . . . . . . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f34503dfb90> [label="r: a8 -> b8 "]
+	<engine.board.Board object at 0x7f34503b9c50> [label="Move: q: d8 -> e7 
+Score: -21.5
+♜ . ♝ . ♚ ♝ . ♜ 
+♟︎ ♟︎ ♟︎ ♟︎ ♛ ♟︎ ♟︎ ♟︎ 
+. . ♞ . . ♞ . . 
+. . . . ♟︎ . . . 
+. . . . . . . . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f34503b9c50> [label="q: d8 -> e7 "]
+	<engine.board.Board object at 0x7f34503bbf50> [label="Move: p: a7 -> a5 
+Score: -20.5
+♜ . ♝ ♛ ♚ ♝ . ♜ 
+. ♟︎ ♟︎ ♟︎ . ♟︎ ♟︎ ♟︎ 
+. . ♞ . . ♞ . . 
+♟︎ . . . ♟︎ . . . 
+. . . . . . . . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f34503bbf50> [label="p: a7 -> a5 "]
+	<engine.board.Board object at 0x7f34505d1c50> [label="Move: n: f6 -> e4 
+Score: -22.0
+♜ . ♝ ♛ ♚ ♝ . ♜ 
+♟︎ ♟︎ ♟︎ ♟︎ . ♟︎ ♟︎ ♟︎ 
+. . ♞ . . . . . 
+. . . . ♟︎ . . . 
+. . . . ♞ . . . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f34505d1c50> [label="n: f6 -> e4 "]
+	<engine.board.Board object at 0x7f34503c2950> [label="Move: n: f6 -> d5 
+Score: -22.0
+♜ . ♝ ♛ ♚ ♝ . ♜ 
+♟︎ ♟︎ ♟︎ ♟︎ . ♟︎ ♟︎ ♟︎ 
+. . ♞ . . . . . 
+. . . ♞ ♟︎ . . . 
+. . . . . . . . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f34503c2950> [label="n: f6 -> d5 "]
+	<engine.board.Board object at 0x7f34503b9c50> [label="Move: n: c6 -> e7 
+Score: -20.0
+♜ . ♝ ♛ ♚ ♝ . ♜ 
+♟︎ ♟︎ ♟︎ ♟︎ ♞ ♟︎ ♟︎ ♟︎ 
+. . . . . ♞ . . 
+. . . . ♟︎ . . . 
+. . . . . . . . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f34503b9c50> [label="n: c6 -> e7 "]
+	<engine.board.Board object at 0x7f34503a45d0> [label="Move: p: e5 -> e4 
+Score: -21.5
+♜ . ♝ ♛ ♚ ♝ . ♜ 
+♟︎ ♟︎ ♟︎ ♟︎ . ♟︎ ♟︎ ♟︎ 
+. . ♞ . . ♞ . . 
+. . . . . . . . 
+. . . . ♟︎ . . . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f34503a45d0> [label="p: e5 -> e4 "]
+	<engine.board.Board object at 0x7f34505d1c50> [label="Move: p: h7 -> h6 
+Score: -21.0
+♜ . ♝ ♛ ♚ ♝ . ♜ 
+♟︎ ♟︎ ♟︎ ♟︎ . ♟︎ ♟︎ . 
+. . ♞ . . ♞ . ♟︎ 
+. . . . ♟︎ . . . 
+. . . . . . . . 
+. ♙ ♙ . . ♙ ♙ . 
+♙ . . ♙ ♙ . . ♙ 
+♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ 
+"]
+	<engine.board.Board object at 0x7f3450c02a10> -> <engine.board.Board object at 0x7f34505d1c50> [label="p: h7 -> h6 "]
+}
