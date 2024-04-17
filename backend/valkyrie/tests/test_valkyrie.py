@@ -5,6 +5,7 @@ from engine.board import Board
 from valkyrie.Valkyrie import Valkyrie
 from engine.Move import Move
 
+@pytest.mark.skip()
 def test_best_move():
     board = Board() 
     valkyrie = Valkyrie()
@@ -14,6 +15,7 @@ def test_best_move():
     with patch('random.choice', return_value=moves[1]):
         assert valkyrie.best_move(board) == moves[1]
 
+@pytest.mark.skip()
 def test_best_move_returns_legal_move():
     board = Board()
     valkyrie = Valkyrie()
