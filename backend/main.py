@@ -168,6 +168,7 @@ async def next_move(websocket, message):
     if valkyrie is None:
         valkyrie = Valkyrie()
 
+
     best_move = valkyrie.best_move(board)
     if not best_move:
         print("Error: Valkyrie could not find the best move!")

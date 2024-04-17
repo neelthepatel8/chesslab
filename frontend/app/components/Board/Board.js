@@ -126,6 +126,7 @@ const Board = () => {
       } else {
         await setTimeout(wsRequestEngineMove, 500);
       }
+
     }
     setPossibleMoves([]);
     setSelectedSquare([]);
@@ -137,6 +138,7 @@ const Board = () => {
   };
 
   const handlePromotePawnMessage = async (message) => {
+
     const updatedFen = message.data?.fen;
     setCurrentFen(updatedFen);
     setCurrentPlayer(fen.getCurrentPlayer(updatedFen));
@@ -161,6 +163,7 @@ const Board = () => {
     } else {
       await setTimeout(wsRequestEngineMove, 500);
     }
+
   };
 
   const handleWebSockMessaging = async (latestMessage) => {
@@ -190,6 +193,7 @@ const Board = () => {
         break;
       case WEBSOCKET.TYPES.PROMOTE_PAWN:
         await handlePromotePawnMessage(latestMessage);
+        handlePromotePawnMessage(latestMessage);
         break;
       default:
         break;
@@ -423,6 +427,9 @@ const Board = () => {
       },
     };
     sendMessage(message);
+
+    await setTimeout(wsRequestEngineMove, 500);
+
   };
 
   const wsPromotePawn = (at_pos) => {
@@ -542,6 +549,7 @@ const Board = () => {
         ))}
       </div>
     </>
+
   );
 };
 

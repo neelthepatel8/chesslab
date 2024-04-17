@@ -7,6 +7,7 @@ import random
 from graphviz import Digraph
 
 
+
 class Valkyrie():
     def __init__(self):
         pass 
@@ -74,9 +75,3 @@ class Valkyrie():
 
         dot.render('output/move_tree', view=False) 
         return best_move
-
-
-        
-        
-            
-        

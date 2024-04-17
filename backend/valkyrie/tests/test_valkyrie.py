@@ -1,4 +1,5 @@
 import pytest
+
 from unittest.mock import patch
 from engine.board import Board 
 from valkyrie.Valkyrie import Valkyrie
@@ -33,4 +34,4 @@ def test_evaluate(fen, score):
     valkyrie = Valkyrie()
     total_score = valkyrie.evaluate(board)
     assert total_score == score
-    
+

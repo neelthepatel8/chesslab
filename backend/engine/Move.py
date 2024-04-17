@@ -12,6 +12,7 @@ class Move():
     
     def __eq__(self, other):
         return type(self) == type(other) and self.from_pos == other.from_pos and self.to_pos == other.to_pos and self.piece_type == other.piece_type
+
     
     def __hash__(self) -> int:
         return hash(self.from_pos) ^ hash(self.to_pos) ^ hash(self.piece_type)
