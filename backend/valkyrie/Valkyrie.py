@@ -61,15 +61,16 @@ class Valkyrie():
             board_copy.move(move.from_pos, move.to_pos)
             new_score = self.evaluate(board_copy)
             
-            move_id = str(board_copy)  
-            board_state = board_copy.print_board()
-            dot.node(move_id, label=f'Move: {move}\nScore: {new_score}\n{board_state}')
-            dot.edge(root_id, move_id, label=str(move))
-
             is_better_move = new_score >= best_score if player == constants.COLOR["WHITE"] else new_score <= best_score
             if is_better_move:
                 best_score = new_score
                 best_move = move
+            
+            # Update graph:
+            move_id = str(board_copy)  
+            board_state = board_copy.print_board()
+            dot.node(move_id, label=f'Move: {move}\nScore: {new_score}\n{board_state}')
+            dot.edge(root_id, move_id, label=str(move))
 
         dot.render('output/move_tree', view=False) 
         return best_move
