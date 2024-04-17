@@ -7,3 +7,6 @@
 *.cpython*
 /backend/chess.log
 backend/chess.log
+/backend/*.log*
+*.log*
+
