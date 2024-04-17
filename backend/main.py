@@ -122,6 +122,8 @@ async def make_move(websocket, message):
     response = {
         'type': 'move_piece',
         'data': {
+            'from_pos': from_pos.algebraic,
+            'to_pos': to_pos.algebraic,
             'fen': board.make_fen(),
             'move_success': 1,
             'is_kill': is_kill,
@@ -161,19 +163,26 @@ async def promote_pawn(websocket, message):
     await websocket.send_text(json.dumps(response))
     
 async def next_move(websocket, message):
-    global board
+    global board, valkyrie
+    
+    if valkyrie is None:
+        valkyrie = Valkyrie()
 
     if "data" not in message: 
         await websocket.send_text(json.dumps(error_responses.RESPONSE_ERROR_DATA))
 
     best_move = valkyrie.best_move(board)
-    is_kill, special = board.move_piece(best_move.from_pos, best_move.to_piece)
+    if not best_move:
+        print("Error: Valkyrie could not find the best move!")
+        return 
+    
+    is_kill, special = board.move_piece(best_move.from_pos, best_move.to_pos)
 
     response = {
-        'type': 'promote_pawn',
+        'type': 'move_piece',
         'data': {
-            'from_pos': best_move.from_pos,
-            'to_pos': best_move.to_pos,
+            'from_pos': best_move.from_pos.algebraic,
+            'to_pos': best_move.to_pos.algebraic,
             'fen': board.make_fen(),
             'move_success': 1,
             'is_kill': is_kill,

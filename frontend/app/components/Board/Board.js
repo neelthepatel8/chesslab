@@ -71,8 +71,6 @@ const Board = () => {
   useEffect(() => {
     if (messageQueue.length > 0) {
       const processMessage = async (message) => {
-        console.log("Processing message: ", message);
-
         handleWebSockMessaging(message);
 
         await new Promise((resolve) => setTimeout(resolve, 200));
@@ -100,6 +98,8 @@ const Board = () => {
     if (message.data?.move_success) {
       const special = message.data?.special;
       await animateMove(
+        message.data?.from_pos,
+        message.data?.to_pos,
         message.data?.fen,
         message.data?.is_kill === config.KILL,
         special === config.CHECK || special === config.CASTLED_CHECK,
@@ -169,7 +169,6 @@ const Board = () => {
         handlePromotePawnMessage(latestMessage);
         break;
       default:
-        log("Unhandled message type: ", latestMessage.type);
         break;
     }
   };
@@ -253,6 +252,8 @@ const Board = () => {
   };
 
   const animateMove = async (
+    fromPos,
+    toPos,
     newFen,
     isKill = false,
     isCheck = false,
@@ -260,11 +261,12 @@ const Board = () => {
     isCastle = false,
     movingRook = false,
   ) => {
-    console.log("Moving");
     const [from_rank, from_file] = movingRook
       ? rookMoving[0]
-      : currentMoving[0];
-    const [to_rank, to_file] = movingRook ? rookMoving[1] : currentMoving[1];
+      : algebraicToCoords(fromPos);
+    const [to_rank, to_file] = movingRook
+      ? rookMoving[1]
+      : algebraicToCoords(toPos);
 
     const fromSquare = document.getElementById(
       `square-${coordsToAlgebraic(from_rank, from_file)}`,
@@ -387,7 +389,7 @@ const Board = () => {
     sendMessage(message);
   };
 
-  const wsMovePiece = (from_pos, to_pos) => {
+  const wsMovePiece = async (from_pos, to_pos) => {
     setCurrentMoving([from_pos, to_pos]);
 
     const message = {
@@ -398,6 +400,8 @@ const Board = () => {
       },
     };
     sendMessage(message);
+
+    await setTimeout(wsRequestEngineMove, 500);
   };
 
   const wsPromotePawn = (at_pos) => {
@@ -411,6 +415,15 @@ const Board = () => {
 
     sendMessage(message);
   };
+
+  const wsRequestEngineMove = () => {
+    const message = {
+      type: WEBSOCKET.TYPES.NEXT_MOVE,
+    };
+
+    sendMessage(message);
+  };
+
   const handleSquareClick = (rank, file, hasPiece, pieceColor) => {
     if (hasPiece) {
       if (
