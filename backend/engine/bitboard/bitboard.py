@@ -28,6 +28,7 @@ class BitBoard():
             self.load_fen(fen)
 
     def get_piece(self, position: Position) -> Piece | None:
+        print(f"Getting piece for {position} with lsr: {position.lsrcoords}")
         piece_details = self.piece_details(position)
         if piece_details is None:
             return None
@@ -55,19 +56,18 @@ class BitBoard():
         return None
 
     def piece_details(self, position):
-        index = self.position_to_index(position)
+        index = 63 - self.position_to_index(position)
         for color, color_bitboards in self.bitboards.items():
             for piece_type, bitboard in color_bitboards.items():
-                if bitwise.get_bit(bitboard, index):
-                    return color, piece_type
+                if piece_type != NULL:
+                    if bitwise.get_bit(bitboard, index):
+                        return color, piece_type
             
         return None
     
     def position_to_index(self, position: Position) -> int:
-        rank, file = position.coords
-        rank, file = rank - 1, file - 1
+        rank, file = position.lsrcoords
         index = rank * 8 + file 
-
         return index
     
     def init(self):
@@ -98,13 +98,13 @@ class BitBoard():
     def load_fen(self, fen: str) -> dict:
         rows = fen_utils.make_complete(fen)
 
-        index = 63
+        index = 0
         for row in rows:
-            for char in row:
+            for char in reversed(row):
                 color, piece = self.bitboard_location_from_piece_name(char)
                 bitboard = self.bitboards[color][piece]
                 self.bitboards[color][piece] = bitwise.set_bit(bitboard, index)
-                index -= 1
+                index += 1
 
     def bitboard_location_from_piece_name(self, name: str) -> int:
         color = WHITE if name.isupper() else BLACK
@@ -127,9 +127,10 @@ class BitBoard():
 
     def board(self):
         board = 0
-        for color_boards in self.bitboards.values():
+        for color, color_boards in self.bitboards.items():
             for piece, piece_board in color_boards.items():
                 if piece != NULL:
+                    print(f"Bitboard for {color}:{piece} is: {piece_board:064b}")
                     board = board | piece_board
         
         return board
@@ -158,10 +159,10 @@ class BitBoard():
         board = self.board()
         print(f"{board} -> {board:064b}")
         print(" +-----------------+")
-        for rank in range(8, 0, -1): 
+        for rank in range(8): 
             print(f"{rank} |", end=' ')
-            for file in range(0, 8):  
-                index = 8 * (rank - 1) + file  
+            for file in range(8):  
+                index = rank * 8 + file  
                 piece = self.get_piece_at_index(index)
                 print(piece, end=' ')
             print("|")

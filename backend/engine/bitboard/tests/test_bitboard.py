@@ -12,13 +12,14 @@ def test_position_to_index():
     index = 0
     for r in range(8):
         for f in range(8):
-            position = Position(rank=r + 1, file=f + 1)
-            assert bitboard.position_to_index(position) == index 
+            position = Position(lsrcoords=(r, f))
+            assert bitboard.position_to_index(position) == index
+            
             index += 1
 
 @pytest.mark.parametrize('fen, expected_board', [ 
     ('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', '1111111111111111000000000000000000000000000000001111111111111111'),   
-    ('7k/8/8/8/8/8/8/K1Q5 w - - 0 1', '0000000100000000000000000000000000000000000000000000000010100000'),   
+    ('7k/8/8/8/8/8/8/K1Q5 w - - 0 1', '1010000000000000000000000000000000000000000000000000000000000001'),   
                          
 ])
 def test_board(fen, expected_board):

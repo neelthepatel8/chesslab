@@ -1,8 +1,9 @@
 class Position():
-    def __init__(self, rank=None, file=None, algebraic=None, coords=None):
+    def __init__(self, rank=None, file=None, algebraic=None, coords=None, lsrcoords=None):
         
         self.rank = self.file = -1
         self.coords = (-1, -1)
+        self.lsrcoords = (-1, -1)
         self.algebraic = ""
         
         try:
@@ -10,6 +11,7 @@ class Position():
                 self.rank, self.file = self.algebraic_to_coords(algebraic)
                 self.algebraic = algebraic
                 self.coords = (self.rank, self.file)
+                self.lsrcoords = (8 - self.rank, self.file - 1)
                 
             elif rank and file:
                 if not (1 <= rank <= 8 and 1 <= file <= 8):
@@ -17,16 +19,29 @@ class Position():
                 self.algebraic = self.coords_to_algebraic(rank, file)
                 self.rank, self.file = rank, file
                 self.coords = (self.rank, self.file)
+                self.lsrcoords = (8 - self.rank, self.file - 1)
                 
             elif coords:
                 if len(coords) == 2 and all(1 <= x <= 8 for x in coords):
                     self.coords = coords
                     self.rank, self.file = coords
                     self.algebraic = self.coords_to_algebraic(self.rank, self.file) 
+                    self.lsrcoords = (8 - self.rank, self.file - 1)
+
+            elif lsrcoords:
+                if len(lsrcoords) == 2 and all(0 <= x <= 7 for x in lsrcoords):
+                    self.lsrcoords = lsrcoords
+                    self.rank, self.file = 8 - lsrcoords[0] , lsrcoords[1] + 1
+                    self.coords = (self.rank, self.file)
+                    self.algebraic = self.coords_to_algebraic(self.rank, self.file)
+                
             elif isinstance(rank, str):
                 self.rank, self.file = self.algebraic_to_coords(rank)
                 self.algebraic = rank
                 self.coords = (self.rank, self.file)
+                self.lsrcoords = (8 - rank, file - 1)
+                
+
         except:
             pass
         
