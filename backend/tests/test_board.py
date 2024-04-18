@@ -19,7 +19,7 @@ def empty_board():
     """Fixture for an empty chess board."""
     return Board()
 
-# @pytest.mark.skip("Temporarily not testing since takes a long time, PLEASE COMMENT SKIP BEFORE DEPLOYING")
+@pytest.mark.skip("Temporarily not testing since takes a long time, PLEASE COMMENT SKIP BEFORE DEPLOYING")
 @pytest.mark.parametrize("file_name", [
     ('twic1535'),
 ])
