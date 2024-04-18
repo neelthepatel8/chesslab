@@ -9,4 +9,5 @@
 backend/chess.log
 /backend/*.log*
 *.log*
+backend/output/
 
