@@ -3,22 +3,24 @@ from engine.Move import Move
 import engine.constants as constants
 from engine.player.Player import Player
 from engine.piece import Piece
-import random
+import engine.movegen.movegen as MoveGen
 from graphviz import Digraph
 
 
 
 class Valkyrie():
     def __init__(self):
-        pass 
+        self.rook_moves = MoveGen.rook()
+        self.bishop_moves = MoveGen.bishop()
+        self.queen_moves = MoveGen.queen()
+        self.king_moves = MoveGen.king()
+        self.knight_moves = MoveGen.knight()
+
+        # TODO: Pawn moves
     
     def get_all_moves(self, board: Board, player: Player) -> list[Move]:
         return board.get_all_legal_moves_with_origin(player)
         
-    # def best_move(self, board: Board) -> Move:
-    #     all_legal_moves = self.get_all_moves(board, board.current_player)
-    #     return random.choice(all_legal_moves)
-    
     def evaluate(self, board: Board):
         black_score, white_score = 0, 0
         for row in board.board:

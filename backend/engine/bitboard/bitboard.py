@@ -89,8 +89,9 @@ class BitBoard():
                 QUEEN: EMPTY,
                 KING: EMPTY,
                 NULL: EMPTY,
-
-            }
+            },
+            WHITE: EMPTY,
+            BLACK: EMPTY,
         }
 
         return bitboards
