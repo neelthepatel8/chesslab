@@ -3,6 +3,7 @@ from engine.Position import Position
 from engine.constants import START_FEN
 import engine.pieces as pieces
 from engine.constants import COLOR
+from engine.bitboard.utils import count_bits, lsb
 
 import pytest 
 
@@ -35,6 +36,24 @@ def test_get_piece(position, expected_type, expected_color):
     piece = bitboard.get_piece(Position(algebraic=position))
     assert type(piece) == expected_type
     assert piece.color == expected_color
+
+
+@pytest.mark.parametrize("board, expected_count", [
+    (36187135283560448, 5),
+    (36187135283568660, 8),
+])
+def test_bit_counter(board, expected_count):
+    assert count_bits(board) == expected_count
+    
+@pytest.mark.parametrize("board, expected", [
+    (1125899906842624, 50),
+    (1125900443713536, 29),
+    (128, 7),
+    (18446744073709551615, 0),
+    (0, -1),
+])
+def test_lsb(board, expected):
+    assert lsb(board) == expected
 
 @pytest.mark.skip("Temporary test to visualize board, not needed")
 def test_temp_show():

@@ -155,6 +155,7 @@ class BitBoard():
             KING: 'K'
         }
         return piece_symbols[piece_type].upper() if is_white else piece_symbols[piece_type].lower()
+    
 
     def show(self):
         board = self.board()

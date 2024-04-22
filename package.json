@@ -22,7 +22,7 @@
         "test:coverage": "cd backend  && . .venv/bin/activate  && python3 -m coverage run -m pytest -s -v && coverage report",
         "test:coverage:debug": "cd backend && rm *.log && . .venv/bin/activate && export LOG_LEVEL=DEBUG && python3 -m coverage run -m pytest && coverage report",
         "coverage-report": "cd backend && . .venv/bin/activate && python3 -m coverage run -m pytest -s && coverage html",
-        "test:function": "cd backend && . .venv/bin/activate && export LOG_LEVEL=DEBUG && python3 -m pytest -s",
+        "test:function": "cd backend && . .venv/bin/activate && export LOG_LEVEL=DEBUG && python3 -m pytest -s -k",
         "test:function:debug": "cd backend && rm *.log  && . .venv/bin/activate && export LOG_LEVEL=DEBUG && . .venv/bin/activate && python3 -m pytest -s",
         "test:only": "cd backend && . .venv/bin/activate && python3 -m pytest tests/${npm_config_file} -s",
         "test:only:debug": "cd backend && rm *.log && export LOG_LEVEL=DEBUG && python3 -m pytest tests/${npm_config_file} -s",
