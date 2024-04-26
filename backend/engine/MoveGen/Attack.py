@@ -8,6 +8,25 @@ not_a_file = 18374403900871474942
 not_hg_file = 4557430888798830399
 not_ab_file = 18229723555195321596
 
+
+file_mask_a = 72340172838076673
+file_mask_b = 144680345676153346
+file_mask_c = 289360691352306692
+file_mask_d = 578721382704613384
+file_mask_e = 1157442765409226768
+file_mask_f = 2314885530818453536
+file_mask_g = 4629771061636907072
+file_mask_h = 9259542123273814144
+
+rank_mask_0 = 18374686479671623680
+rank_mask_1 = 71776119061217280
+rank_mask_2 = 280375465082880
+rank_mask_3 = 1095216660480
+rank_mask_4 = 4278190080
+rank_mask_5 = 16711680
+rank_mask_6 = 65280
+rank_mask_7 = 255
+
 def king_at(index: int) -> int:
     
     attacks = 0
@@ -212,3 +231,4 @@ def rook_at_relative(index: int, board: int) -> int:
 
 def rook():
     return [rook_at(i) for i in range(64)]
+
