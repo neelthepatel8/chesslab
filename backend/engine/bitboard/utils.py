@@ -7,7 +7,6 @@ def show_raw(board: int) -> None:
     bin_string = bin_string[::-1]
 
     rows = [bin_string[i:i+8] for i in range(0, len(bin_string), 8)][::-1]
-    print(rows)
     print("  +-----------------+")
 
     for rank in range(8):

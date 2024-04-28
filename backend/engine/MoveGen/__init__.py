@@ -1,2 +1,2 @@
-from engine.MoveGen import Attack
-from engine.MoveGen import Defend
+from . import Attack
+from . import Defend
