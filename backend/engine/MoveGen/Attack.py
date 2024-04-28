@@ -1,5 +1,5 @@
-import engine.bitboard.bitwise as bitwise
-from engine.bitboard.utils import count_bits, show_raw
+import engine.bitmanipulation.bitwise as bitwise
+from engine.bitmanipulation.utils import count_bits, show_raw
 from engine.constants import COLOR
 from engine.MoveGen.magic import ROOK_MAGICS, BISHOP_MAGICS
 
@@ -243,7 +243,7 @@ def rook_at_relative(index: int, board: int) -> int:
 def rook_masks():
     return [rook_at(i) for i in range(64)]
 
-def generate_blocker_configurations(mask):
+def generate_blocker_configurations(mask: int):
     n = count_bits(mask)
     for i in range(bitwise.lshift(1, n)):
         blockers = 0
@@ -255,7 +255,7 @@ def generate_blocker_configurations(mask):
                 k += 1
         yield blockers
 
-def compute_rook_moves(square, blockers):
+def compute_rook_moves(square: int, blockers: int):
     moves = 0
     directions = [1, -1, 8, -8] 
     for direction in directions:
@@ -289,7 +289,7 @@ def rook_lookup_table():
             rook_moves[square][index] = compute_rook_moves(square, blockers)
     return rook_moves
 
-def compute_bishop_moves(square, blockers):
+def compute_bishop_moves(square: int, blockers: int):
     moves = 0
     directions = [9, 7, -9, -7]  
     for direction in directions:
@@ -322,7 +322,7 @@ def bishop_lookup_table():
     return bishop_moves
 
 
-def shifts(masks):
+def shifts(masks: int):
     shifts = []
     for mask in masks:
         index_bits = count_bits(mask)
@@ -330,7 +330,7 @@ def shifts(masks):
         shifts.append(shift)
     return shifts
 
-def rook_move(index, board):
+def rook_move(index: int, board: int):
     blockers = board & ROOK_MASKS[index]
     index_bits = ROOK_INDEX_BITS[index]  
     index_mask = bitwise.lshift(1, index_bits) - 1
@@ -338,13 +338,14 @@ def rook_move(index, board):
     safe_index = magic_index & index_mask
     return ROOK_MOVES[index][safe_index]
 
-def bishop_move(index, board):
+def bishop_move(index: int, board: int):
     blockers = board & BISHOP_MASKS[index]
     index_bits = BISHOP_INDEX_BITS[index]  
     index_mask = bitwise.lshift(1, index_bits) - 1
     magic_index = bitwise.rshift((blockers * BISHOP_MAGICS[index]), BISHOP_SHIFTS[index])
     safe_index = magic_index & index_mask
     return BISHOP_MOVES[index][safe_index]
+
 
 def init():
     global ROOK_MASKS, BISHOP_MASKS, ROOK_MOVES, BISHOP_MOVES, ROOK_SHIFTS, BISHOP_SHIFTS, ROOK_INDEX_BITS, BISHOP_INDEX_BITS

@@ -1,4 +1,4 @@
-from engine.bitboard.bitwise import get_bit
+from engine.bitmanipulation.bitwise import get_bit
 
 def show_raw(board: int) -> None:
     bin_string = f"{board:064b}"

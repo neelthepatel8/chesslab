@@ -44,7 +44,7 @@ class Position():
                 self.rank, self.file = self.algebraic_to_coords(rank)
                 self.algebraic = rank
                 self.coords = (self.rank, self.file)
-                self.lsrcoords = (8 - rank, file - 1)
+                self.lsrcoords = (8 - self.rank, self.file - 1)
                 self.index = self.lsrcoords[0] * 8 + self.lsrcoords[1]
         except:
             pass

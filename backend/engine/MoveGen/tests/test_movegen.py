@@ -1,8 +1,7 @@
 import pytest
 from engine import MoveGen
-from engine.bitboard.utils import show_raw
+from engine.bitmanipulation.utils import show_raw
 from engine.constants import COLOR
-from engine.bitboard.bitwise import set_bit, rshift
 
 ### LEAPING ATTACKS ###
 

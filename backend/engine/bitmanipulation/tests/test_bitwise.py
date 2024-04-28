@@ -1,4 +1,4 @@
-from engine.bitboard.bitwise import get_bit, set_bit, clear_bit
+from engine.bitmanipulation.bitwise import get_bit, set_bit, clear_bit
 
 def test_get_bit():
     assert get_bit(0b0101, 0) == True  

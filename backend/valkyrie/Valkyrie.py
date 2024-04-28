@@ -10,13 +10,10 @@ from graphviz import Digraph
 
 class Valkyrie():
     def __init__(self):
-        # self.rook_moves = MoveGen.rook()
-        # self.bishop_moves = MoveGen.bishop()
-        # self.queen_moves = MoveGen.queen()
-        self.king_moves = MoveGen.Attack.king()
-        self.knight_moves = MoveGen.Attack.knight()
-        self.pawn_moves_black = MoveGen.Attack.pawn(constants.COLOR["BLACK"])
-        self.pawn_moves_white = MoveGen.Attack.pawn(constants.COLOR["WHITE"])
+        self.king_move_cache = MoveGen.Attack.king()
+        self.knight_move_cache = MoveGen.Attack.knight()
+        self.whitepawn_move_cache = MoveGen.Attack.pawn(constants.COLOR["BLACK"])
+        self.blackpawn_move_cache = MoveGen.Attack.pawn(constants.COLOR["WHITE"])
     
     def get_all_moves(self, board: Board, player: Player) -> list[Move]:
         return board.get_all_legal_moves_with_origin(player)

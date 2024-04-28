@@ -1,6 +1,6 @@
 import engine.MoveGen.Attack as Attack 
-from engine.bitboard.utils import count_bits
-import engine.bitboard.bitwise as bitwise
+from engine.bitmanipulation.utils import count_bits
+import engine.bitmanipulation.bitwise as bitwise
 import random
 
 def transform(b, magic, bits):
