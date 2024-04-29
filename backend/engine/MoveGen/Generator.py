@@ -4,10 +4,12 @@ import engine.MoveGen as MoveGen
 from engine.MoveGen.magic import ROOK_MAGICS, BISHOP_MAGICS 
 from engine.constants import COLOR
 from engine.Position import Position
-from engine.Move import Move
 import engine.MoveGen.setup as setup
 from queue import PriorityQueue
+from collections import namedtuple
 
+Move = namedtuple('Move', ('start', 'end', 'pieceType', 'color', 'captureType',
+                           'captureStrength', 'isPrincipleVariation'))
 
 class MovePQ(PriorityQueue):
     def __init__(self):
@@ -34,13 +36,28 @@ class MovePQ(PriorityQueue):
 
     def __len__(self):
         return self.size
+    
+    def __str__(self):
+        temp_list = []
+        while not self.empty():
+            temp_list.append(self.get())
+
+        result = ""
+        for priority, move in temp_list:
+            result += f"{move.start} -> {move.end}, "
+            self.put((priority, move))
+
+        return result
+
 
 class Generator:
     def __init__(self):
         self.masks = setup.load_move_masks()
         self.moves, self.movesets = setup.Moves, setup.MoveSets
         self.bishopMagic, self.rookMagic = setup.load_magic()
-
+        self.principleVariations = {}
+        
+        
     def find_attacks(self, board: FastBoard): 
         attacks = [], []
         attackSets = [0] * 2

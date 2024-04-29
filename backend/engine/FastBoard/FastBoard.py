@@ -4,7 +4,6 @@ import engine.bitmanipulation.bitwise as bitwise
 from engine.piece import Piece
 from engine.constants import WHITE, BLACK, PIECE_REPRESENTATION
 import engine.pieces as pieces
-from engine.Move import Move
 from engine.FastBoard.PieceList import PieceList
 
 PAWN = 1
@@ -81,12 +80,15 @@ class FastBoard():
         index = rank * 8 + file 
         return index
     
-    def __add__(self, move: Move):
+    def __add__(self, move):
         return self._update(move)
+    
+    def __sub__(self, move):
+        return self._update(move, reverse=True)
 
-    def _update(self, move: Move):
-        p0 , p1 = move.from_bb, move.to_bb
-        color = self.active
+    def _update(self, move, reverse=False):
+        p0, p1 = (move.end, move.start) if reverse else (move.start, move.end)
+        color = not self.active if reverse else self.active
 
         self.pieces.update(p0, p1, color)
 
@@ -96,10 +98,15 @@ class FastBoard():
         self.pieceTypes[move.pieceType] |= p1
         self.colors[color] |= p1
 
-        is_capture = move.capture
+        is_capture = move.captureType is not None
         
 
-        if is_capture:
+        if reverse and is_capture:
+            self.pieces.insert(p0, move.captureType, not color)
+            self.pieceTypes[move.captureType] |= p0
+            self.colors[not color] |= p0
+        
+        elif is_capture:
             self.pieces.remove(p1, not color)
             self.colors[not color] &= ~p1
             if move.pieceType != move.captureType:

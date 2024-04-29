@@ -37,3 +37,7 @@ def test_evaluate(fen, score):
     total_score = valkyrie.evaluate(board)
     assert total_score == score
 
+
+def test_temp_valkyrie():
+    engine = Valkyrie()
+    engine.play_computer_game()

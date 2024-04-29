@@ -4,8 +4,10 @@ class PieceList(list):
         
         self.colorCounts = [16, 16]
         self.colorRanges = [(0, 16), (16, 32)]
+        self.colorLookup = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
         self.typeLookup =  [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 5, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 5]
-
+        self.numPieces = 32
+        
     def __iter__(self):
         for index in range(self.numPieces):
             piece = self[index]
@@ -39,6 +41,19 @@ class PieceList(list):
                 self[index] = 0
                 return self.typeLookup[index]
         raise RuntimeError(f'Cannot remove piece')
+    
+    def insert(self, piece, pieceType, color):
+        self.colorCounts[color] += 1
+        start,end = self.colorRanges[color]
+        for index in range(start,end):
+            indexCanStorePiece = self[index] == 0 \
+                            and self.typeLookup[index]  == pieceType \
+                            and self.colorLookup[index] == color
+
+            if indexCanStorePiece:
+                self[index] = piece
+                return
+        raise RuntimeError(f'Cannot insert piece')
 
     def size(self, color):
         return self.colorCounts[color]
