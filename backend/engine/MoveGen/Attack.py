@@ -323,7 +323,7 @@ def bishop_lookup_table():
 
 
 def shifts(masks: int):
-    shifts = []
+    shifts = [] 
     for mask in masks:
         index_bits = count_bits(mask)
         shift = 64 - index_bits

@@ -11,16 +11,17 @@ MIN_RANK = 1
 MIN_FILE = 1
 
 COLOR = {
-    "BLACK": 'black',
-    "WHITE": 'white'
+    "BLACK": 1,
+    "WHITE": 0
 }
+
+WHITE = 0
+BLACK = 1
 
 PAWN_START = {
     "BLACK": 2,
     "WHITE": 7
 }
-
-
 
 NO_MOVE_MADE = 0
 MOVE_MADE = 1
@@ -76,3 +77,16 @@ SUCCESS_PAWN_PROMOTED_CHECK = (PROMOTED, CHECK)
 
 PAWN_CAN_PROMOTE = PROMOTE_POSSIBLE
 PAWN_CANNOT_PROMOTE = PROMOTE_NOT_POSSIBLE
+
+
+PIECE_PRINT_MODE = 'UNICODE'
+PIECE_REPRESENTATION = {
+    'UNICODE': (
+        ['♙', '♘', '♗', '♖', '♕', '♔'],
+        ['♟', '♞', '♝','♜', '♛', '♚']
+    ),
+    'CHARS': (
+        ['P', 'N', 'B', 'R', 'Q', 'K'],
+        ['p', 'n', 'b', 'r', 'q', 'k']
+    )
+}[PIECE_PRINT_MODE]
