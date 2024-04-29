@@ -27,7 +27,6 @@ class FastBoard():
             self.load_fen(fen)
 
     def get_piece(self, position: Position) -> Piece | None:
-        print(f"Getting piece for {position} with lsr: {position.lsrcoords}")
         piece_details = self.piece_details(position)
         if piece_details is None:
             return None
@@ -94,16 +93,20 @@ class FastBoard():
 
         return bitboards
     
-    def load_fen(self, fen: str) -> dict:
+    def load_fen(self, fen: str) -> None:
         rows = fen_utils.make_complete(fen)
 
-        index = 0
+        index = 56 
         for row in rows:
-            for char in reversed(row):
-                color, piece = self.bitboard_location_from_piece_name(char)
-                bitboard = self.bitboards[color][piece]
-                self.bitboards[color][piece] = bitwise.set_bit(bitboard, index)
-                index += 1
+            for char in row:
+                if char.isdigit():
+                    index += int(char)
+                else:
+                    color, piece = self.bitboard_location_from_piece_name(char)
+                    bitboard = self.bitboards[color][piece]
+                    self.bitboards[color][piece] = bitwise.set_bit(bitboard, index)
+                    index += 1
+            index -= 16
 
     def bitboard_location_from_piece_name(self, name: str) -> int:
         color = WHITE if name.isupper() else BLACK
@@ -173,36 +176,40 @@ class FastBoard():
         from_index = from_pos.index
         to_index = to_pos.index
 
-        print(from_index, to_index)
-
         self.bitboards[color][piece_type] &= ~(1 << from_index)
 
-        print()
-
-        self.bitboards[color][piece_type] |= (1 << to_index)
-
         opposing_color = WHITE if color == BLACK else BLACK
+        captured_piece_type = None
         for p_type in self.bitboards[opposing_color]:
             if self.bitboards[opposing_color][p_type] & (1 << to_index):
                 self.bitboards[opposing_color][p_type] &= ~(1 << to_index)
-                break 
+                captured_piece_type = p_type
+                break
+
+        self.bitboards[color][piece_type] |= (1 << to_index)
 
         # TODO Additional checks (castling, pawn promotion, en passant)
 
 
     def show(self):
-        board = self.board()
-        print(f"{board} -> {board:064b}")
-        print(" +-----------------+")
-        for rank in range(8): 
-            print(f"{rank} |", end=' ')
-            for file in range(8):  
-                index = rank * 8 + file  
+        board_binary = f"{self.board():064b}"
+        print(f"{self.board()} -> {board_binary}")
+
+        board_binary = board_binary[::-1]
+
+        rows = [board_binary[i:i+8] for i in range(0, len(board_binary), 8)][::-1]
+
+        print("  +-----------------+")
+        for rank in range(8):
+            print(f"{8 - rank} |", end=' ')
+            for file in range(8):
+                index = (7 - rank) * 8 + file 
                 piece = self.get_piece_at_index(index)
                 print(piece, end=' ')
             print("|")
         print("  +-----------------+")
         print("    a b c d e f g h ")
+
 
         
                     

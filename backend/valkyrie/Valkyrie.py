@@ -42,7 +42,7 @@ class Valkyrie():
         position_value = piece.positional_values[rank - 1][file - 1]
         return position_value
     
-    def best_move(self, board: Board):
+    def best_move(self, board: Board):                                
         dot = Digraph(format='png') 
 
         player = board.current_player
