@@ -1,32 +1,19 @@
-from engine.Position import Position
-import engine.fen_utils as fen_utils 
-import engine.bitmanipulation.bitwise as bitwise
-from engine.piece import Piece
-from engine.constants import WHITE, BLACK, PIECE_REPRESENTATION
-import engine.pieces as pieces
+from engine.constants import WHITE, PIECE_REPRESENTATION
 from engine.FastBoard.PieceList import PieceList
 
-PAWN = 1
-BISHOP = 2
-QUEEN = 3
-KNIGHT = 4
-ROOK = 5
-KING = 6
-NULL = -1
-
-EMPTY = 0
-UNIVERSE = 1
-
 class FastBoard():
-    def __init__(self) -> None:
-        self.pieces = PieceList([32768, 16384, 8192, 4096, 2048, 1024, 512, 256, 64, 2, 32, 4, 128, 1, 16, 8, 
-                       36028797018963968, 18014398509481984, 9007199254740992, 4503599627370496,
-                       2251799813685248, 1125899906842624, 562949953421312, 281474976710656,
-                       4611686018427387904, 144115188075855872, 2305843009213693952,
-                       288230376151711744, 9223372036854775808, 72057594037927936,
-                       1152921504606846976, 576460752303423488])
+    def __init__(self, active=WHITE, pieces=None) -> None:
+        self.pieces = pieces
         
-        self.active = WHITE
+        if pieces is None:
+            self.pieces = PieceList([32768, 16384, 8192, 4096, 2048, 1024, 512, 256, 64, 2, 32, 4, 128, 1, 16, 8, 
+                        36028797018963968, 18014398509481984, 9007199254740992, 4503599627370496,
+                        2251799813685248, 1125899906842624, 562949953421312, 281474976710656,
+                        4611686018427387904, 144115188075855872, 2305843009213693952,
+                        288230376151711744, 9223372036854775808, 72057594037927936,
+                        1152921504606846976, 576460752303423488])
+        
+        self.active = active
         
         # Occupancy bitboards
         self.pieceTypes = [0] * 6
@@ -39,47 +26,6 @@ class FastBoard():
             self.colors[pieceColor] |= piece
             self.occupied |= piece
 
-    def get_piece(self, position: Position) -> Piece | None:
-        piece_details = self.piece_details(position)
-        if piece_details is None:
-            return None
-        
-        color, piece_type = piece_details
-        piece = self.make_piece(color, piece_type, position)
-        return piece 
-    
-    def make_piece(self, color: int, piece_type: int, position: Position) -> Piece:
-        if piece_type == PAWN:
-            return pieces.Pawn(position, color)
-        if piece_type == BISHOP:
-            return pieces.Bishop(position, color)
-        if piece_type == KNIGHT:
-            return pieces.Knight(position, color)
-        if piece_type == ROOK:
-            return pieces.Rook(position, color)
-        if piece_type == QUEEN:
-            return pieces.Queen(position, color)
-        if piece_type == KING:
-            return pieces.King(position, color)
-        
-        return None
-
-    def piece_details(self, position):
-        index = 63 - self.position_to_index(position)
-        for color, color_bitboards in self.bitboards.items():
-            for piece_type, bitboard in color_bitboards.items():
-                if piece_type != NULL:
-                    if bitwise.get_bit(bitboard, index):
-                        return color, piece_type
-            
-        return None
-    
-    def position_to_index(self, position: Position) -> int:
-        rank, file = position.lsrcoords
-        print("Pos: ", rank, file)
-        index = rank * 8 + file 
-        return index
-    
     def __add__(self, move):
         return self._update(move)
     
