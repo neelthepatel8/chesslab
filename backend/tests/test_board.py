@@ -402,4 +402,3 @@ def test_get_legal_moves_with_origin(fen, player, expected_legal_moves):
     for from_pos, to_pos, name in expected_legal_moves:
         expected_moves.append(Move(Position(from_pos), Position(to_pos), name))
     assert set(moves) == set(expected_moves)
-    

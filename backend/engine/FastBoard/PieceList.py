@@ -6,6 +6,7 @@ class PieceList(list):
         self.colorRanges = [(0, 16), (16, 32)]
         self.colorLookup = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
         self.typeLookup =  [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 5, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 5]
+        #                   wp wp wp wp wp wp wp wp wn wn wb wb wr wr wq wk bp bp bp bp bp bp bp bp bn bn bb bb br br bq bk
         self.numPieces = 32
         
     def __iter__(self):

@@ -1,7 +1,7 @@
 from engine.constants import MAX_RANK, MAX_FILE, MIN_RANK, MIN_FILE
 from engine.Position import Position
 class Piece():
-    def __init__(self, position: Position, color: str) -> None:
+    def __init__(self, position: Position, color: int) -> None:
 
         self.position = position
         self.color = color

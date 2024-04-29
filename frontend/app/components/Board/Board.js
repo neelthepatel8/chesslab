@@ -36,7 +36,7 @@ const Board = () => {
   ]);
   const [selectedPromotion, setSelectedPromotion] = useState({});
 
-  const [playMode, setPlayMode] = useState("pve");
+  const [playMode, setPlayMode] = useState("eve");
 
   // Sound Effects:
   const [playMove] = useSound("sfx/move.mp3", { volume: 1 });
@@ -126,7 +126,6 @@ const Board = () => {
       } else {
         await setTimeout(wsRequestEngineMove, 500);
       }
-
     }
     setPossibleMoves([]);
     setSelectedSquare([]);
@@ -138,7 +137,6 @@ const Board = () => {
   };
 
   const handlePromotePawnMessage = async (message) => {
-
     const updatedFen = message.data?.fen;
     setCurrentFen(updatedFen);
     setCurrentPlayer(fen.getCurrentPlayer(updatedFen));
@@ -163,7 +161,6 @@ const Board = () => {
     } else {
       await setTimeout(wsRequestEngineMove, 500);
     }
-
   };
 
   const handleWebSockMessaging = async (latestMessage) => {
@@ -427,9 +424,6 @@ const Board = () => {
       },
     };
     sendMessage(message);
-
-    await setTimeout(wsRequestEngineMove, 500);
-
   };
 
   const wsPromotePawn = (at_pos) => {
@@ -549,7 +543,6 @@ const Board = () => {
         ))}
       </div>
     </>
-
   );
 };
 

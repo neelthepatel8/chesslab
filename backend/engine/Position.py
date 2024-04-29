@@ -40,14 +40,14 @@ class Position():
                     self.algebraic = self.coords_to_algebraic(self.rank, self.file)
                     self.index = self.lsrcoords[0] * 8 + self.lsrcoords[1]
                 
-            elif index is not None:
-                if  0 <= index < 64:
+            elif index:
+                if index >= 0 and index < 63:
+                    self.index = index
                     self.lsrcoords = (index // 8, index % 8)
                     self.rank = 8 - self.lsrcoords[0]
-                    self.file = lsrcoords[1] + 1
+                    self.file = self.lsrcoords[1] + 1
                     self.coords = (self.rank, self.file)
                     self.algebraic = self.coords_to_algebraic(self.rank, self.file)
-                    self.index = index
 
             elif isinstance(rank, str):
                 self.rank, self.file = self.algebraic_to_coords(rank)

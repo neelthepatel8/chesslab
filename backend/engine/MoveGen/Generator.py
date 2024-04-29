@@ -109,63 +109,47 @@ class Generator:
         enemies = board.colors[not color]
         threatened = attackSets[not color]
 
+        get_piece_rank = lambda pt: pt - 1 if pt >= 2 else pt
+
         pieceIndex = 0
         for piece, pieceType in board.pieces.get_color(color):
+            
             pieceAttacks = attacks[color][pieceIndex]
             pieceIndex+=1
-
-            if pieceType == 0:
-                moveset,attackSet = self.movesets[0][color][piece]
-
+            
+            if pieceType == 0: 
+                moveset, attackSet = self.movesets[0][color][piece]
                 blocker = self.masks.pawnBlockers[color][piece]
-
                 pawnIsBlocked = blocker & board.occupied != 0
-
-                if pawnIsBlocked:
-                    moveMask = 0
-                else:
-                    moveMask = moveset & ~board.occupied
-
+                moveMask = 0 if pawnIsBlocked else moveset & ~board.occupied
                 attackMask = attackSet & enemies
-
                 legalMoveMask = attackMask | moveMask
-
-            elif pieceType == 5:
+                
+            elif pieceType == 5:  # King logic considering threats
                 legalMoveMask = pieceAttacks & ~friends & ~threatened
-
             else:
                 legalMoveMask = pieceAttacks & ~friends
 
-            if pieceType == 0:
-                cachedMoves = self.moves[pieceType][color][piece]
-            else:
-                cachedMoves = self.moves[pieceType][piece]
+            cachedMoves = self.moves[pieceType][color][piece] if pieceType == 0 else self.moves[pieceType][piece]
 
             for moveBitboard in cachedMoves:
                 if moveBitboard & legalMoveMask != 0:
                     isACapture = moveBitboard & enemies != 0
                     if isACapture:
                         captureType = board.get_piece_type(moveBitboard)
-
-                        get_piece_rank = lambda pt: pt - 1 if pt >= 2 else pt
-
-                        captureStrength = get_piece_rank(captureType) \
-                                        - get_piece_rank(pieceType)
-
-                        move = Move(piece, moveBitboard, pieceType, color,
-                                    captureType, captureStrength, False)
+                        captureStrength = get_piece_rank(captureType) - get_piece_rank(pieceType)
+                        if onlyCaptures and (minCaptureStrength > captureStrength):
+                            continue
+                        move = Move(piece, moveBitboard, pieceType, color, captureType, captureStrength, False)
                     else:
-                        move = Move(piece, moveBitboard, pieceType,
-                                    color, None, None, False)
-
-
-                    if onlyCaptures and (move.captureType is None
-                        or minCaptureStrength > move.captureStrength): continue
+                        if onlyCaptures:
+                            continue
+                        move = Move(piece, moveBitboard, pieceType, color, None, None, False)
 
                     moves.push(move)
 
-
         return moves
+
 
     def set_a_principle_variation(self, board, move):
         self.principleVariations[board] = move

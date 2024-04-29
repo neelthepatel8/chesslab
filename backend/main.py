@@ -7,18 +7,25 @@ import engine.constants
 from fastapi.middleware.cors import CORSMiddleware
 from engine.Position import Position
 
+from engine.utils import bitboard_move_to_object
 from valkyrie.Valkyrie import Valkyrie
+from engine.player.WhitePlayer import WhitePlayer
 
 import logging
+import time 
+
+from collections import namedtuple
 
 logging.basicConfig(level=logging.DEBUG)
 
 logger = logging.getLogger("chess_backend")
 
-
+Move = namedtuple('Move', ('start', 'end', 'pieceType', 'color', 'captureType',
+                           'captureStrength', 'isPrincipleVariation'))
 app = FastAPI(debug=True)
 board = None
 valkyrie = None
+fastboard = None 
 
 app.add_middleware(
     CORSMiddleware,
@@ -34,9 +41,10 @@ async def root():
 
 
 async def init_board(websocket, message):
-    global board
+    global board, valkyrie, fastboard
     board = Board()
     valkyrie = Valkyrie()
+    fastboard = board.to_fastboard()
     
     response = {
         'type': 'init',
@@ -102,7 +110,7 @@ async def possible_moves(websocket, message):
 
 
 async def make_move(websocket, message):
-    global board
+    global board, fastboard
 
     if "data" not in message: 
         await websocket.send_text(json.dumps(error_responses.RESPONSE_ERROR_DATA))
@@ -117,8 +125,31 @@ async def make_move(websocket, message):
     from_pos = Position(algebraic=from_pos)
     to_pos = Position(algebraic=to_pos)
 
-    is_kill, special = board.move_piece(from_pos, to_pos)
-
+    move_return = board.move_piece(from_pos, to_pos, detailed_return=True)
+    
+    if len(move_return) == 3:
+        is_kill, special, piece = move_return 
+    else: 
+        is_kill = -1
+        special = move_return if len(move_return) == 1 else move_return[1]
+        piece = None
+    
+    if special >= 0:
+        move_start = from_pos.index 
+        move_end = to_pos.index 
+        
+        piece_map = {
+            'p': 0,
+            'n': 1,
+            'b': 2,
+            'r': 3,
+            'q': 4,
+            'k': 5
+        }
+        
+        move = Move((1 << move_start), (1 << move_end), piece_map[piece.get_name().lower()], piece.get_color(), 1 if is_kill == 3 else None, None, None)
+        fastboard += move
+    
     response = {
         'type': 'move_piece',
         'data': {
@@ -163,24 +194,35 @@ async def promote_pawn(websocket, message):
     await websocket.send_text(json.dumps(response))
     
 async def next_move(websocket, message):
-    global board, valkyrie
+    global board, valkyrie, fastboard
     
-    if valkyrie is None:
-        valkyrie = Valkyrie()
-
-
-    best_move = valkyrie.best_move(board)
+    whole_start = time.time()
+    
+    start_ = time.time()
+    best_move = valkyrie.best_move(fastboard)
+    end_ = time.time()
+    
+    print(f"Best Move search: {end_ - start_}s")
     if not best_move:
         print("Error: Valkyrie could not find the best move!")
         return 
     
-    is_kill, special = board.move_piece(best_move.from_pos, best_move.to_pos)
+    best_move_object = bitboard_move_to_object(best_move)
+    
+    start = time.time()
+    is_kill, special = board.move_piece(best_move_object.from_pos, best_move_object.to_pos)
+    end = time.time()
+    
+    if special >= 0:
+        fastboard += best_move
+
+    print(f"Board Piece Movement: {end - start}s")
 
     response = {
         'type': 'move_piece',
         'data': {
-            'from_pos': best_move.from_pos.algebraic,
-            'to_pos': best_move.to_pos.algebraic,
+            'from_pos': best_move_object.from_pos.algebraic,
+            'to_pos': best_move_object.to_pos.algebraic,
             'fen': board.make_fen(),
             'move_success': 1,
             'is_kill': is_kill,
@@ -188,6 +230,8 @@ async def next_move(websocket, message):
             },
     }
 
+    whole_end = time.time()
+    print(f"Total time taken to process a best move: {whole_end - whole_start}")
     await websocket.send_text(json.dumps(response))
 
 message_handlers = {

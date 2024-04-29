@@ -5,7 +5,7 @@ from engine.piece import Piece
 import engine.pieces as pieces
 import copy
 from engine.enpassant.EnPassantStatus import EnPassantStatus
-
+from engine.utils import fen_to_bitboards
 from engine.Position import Position
 
 from engine.player.Player import Player   
@@ -13,6 +13,8 @@ from engine.logging import get_logger
 from engine.player.WhitePlayer import WhitePlayer
 from engine.player.BlackPlayer import BlackPlayer
 from engine.Move import Move
+
+from engine.FastBoard.FastBoard import FastBoard
 
 
 
@@ -26,8 +28,8 @@ class Board():
         self.fen = fen
         self.board = fen_utils.build_board_from_fen(fen)
         self.dead_pieces = {
-            'black': [],
-            'white': []
+            constants.COLOR["BLACK"]: [],
+            constants.COLOR["WHITE"]: []
         }
         self.current_player = fen_utils.get_current_player(fen)
         self.halfmoves = fen_utils.get_halfmoves(fen)
@@ -353,7 +355,7 @@ class Board():
             return False
 
     
-    def move_piece(self, from_pos: Position, to_pos: Position, simulate=False):
+    def move_piece(self, from_pos: Position, to_pos: Position, simulate=False, detailed_return=False):
         self.log(f"Received command for move: {from_pos} -> {to_pos}")
         piece = self.get_piece(from_pos)
         piece_at_pos = self.get_piece(to_pos)
@@ -382,7 +384,6 @@ class Board():
         kill_status = self.move(from_pos, to_pos)
         self.update_board(from_pos, to_pos)
         
-        # if not simulate: print(f"Doing post move checks for move {from_pos} -> {to_pos}")
         special_status = self.post_move_checks(from_pos, to_pos) if not simulate else constants.NO_CHECK
         self.current_player = self.current_player.opponent() if not simulate else self.current_player
         self.log(f"Swapped current player from {self.current_player.opponent()} -> {self.current_player}")
@@ -391,7 +392,7 @@ class Board():
         
         self.log(f"Completed move: {from_pos} -> {to_pos} with kill status: {kill_status} and special status: {special_status}")
         self.log(f"Updated FEN: {self.fen}")
-        return kill_status, special_status
+        return (kill_status, special_status) if not detailed_return else (kill_status, special_status, piece)
         
     def update_board(self, from_pos: Position, to_pos: Position):
         self.log("Updating board state post-move")
@@ -732,5 +733,10 @@ class Board():
             return ""
         
         return piece.get_name()
+    
+    def to_fastboard(self) -> FastBoard:
+        return FastBoard(pieces=fen_to_bitboards(self.fen), active=1 if isinstance(self.current_player, BlackPlayer) else 0)
+        
+
     
     

@@ -1,3 +1,7 @@
+from engine.bitmanipulation.utils import lsb
+from engine.Move import Move 
+from engine.Position import Position
+
 def lists_equal(lst1, lst2, verbose=False):
     if not lst1 and lst2: 
         if verbose:
@@ -60,5 +64,56 @@ def boards_equal(board1, board2, verbose=False):
 
     return True
 
+def fen_to_bitboards(fen):
+    pieces_placement = fen.split(' ')[0]
+    rows = pieces_placement.split('/')
     
-        
+    bitboards = [0] * 32 
+
+    piece_count = {
+        'R': 0, 'N': 0, 'B': 0, 'Q': 0, 'K': 0, 'P': 0,
+        'r': 0, 'n': 0, 'b': 0, 'q': 0, 'k': 0, 'p': 0
+    }
+
+    piece_start_indices = {
+        'R': 12, 'N': 8, 'B': 10, 'Q': 14, 'K': 15, 'P': 0,
+        'r': 28, 'n': 24, 'b': 26, 'q': 30, 'k': 31, 'p': 16
+    }
+
+    rows.reverse()
+    
+    for row_index, row in enumerate(rows):
+        file_index = 0
+        for char in row:
+            if char.isdigit():
+                file_index += int(char)
+            elif char.isalpha():
+                current_piece_index = piece_start_indices[char] + piece_count[char]
+                adjusted_file_index = 7 - file_index  # This line inverts the order
+                bit_position = (8 * row_index) + adjusted_file_index
+                bitboards[current_piece_index] = 1 << bit_position
+                piece_count[char] += 1
+                file_index += 1
+
+    return bitboards
+
+
+def bitboard_move_to_object(move):
+    piece_map = {
+        0: 'p',
+        1: 'n',
+        2: 'b',
+        3: 'r',
+        4: 'q',
+        5: 'k'
+    }
+    start = Position(index=lsb(move.start))
+    end = Position(index=lsb(move.end))
+    piece_type = piece_map[move.pieceType] if move.color == 1 else piece_map[move.pieceType].upper()
+    color = move.color 
+    capture = move.captureType
+    
+    return Move(start, end, piece_type, color=color, capture=capture)
+    
+    
+    

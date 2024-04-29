@@ -81,12 +81,13 @@ class Valkyrie():
         depth, maxDepth = 0, 5
 
         evaluation, best_move = self.search(board, maximizeRoot, alpha, beta, depth, maxDepth, 1000)
-        print('leaf eval: ' + str(evaluation))
+        
         return best_move
         
     def search(self, board, maximize, alpha, beta, depth, maxDepth, maxValue, isQuiet=True):
+        
         attacks, attackSets = self.generator.find_attacks(board)
-
+        
         # Recursive base case. Leaf has been reached. Return its valuation.
         if depth >= maxDepth and isQuiet:
             return self.evaluator(board, attacks)
@@ -101,9 +102,6 @@ class Valkyrie():
         else:
             moves = self.generator.find_strong_captures(board, attacks, attackSets,
                                                 findTrades = depth == maxDepth + 1)
-
-        print(f"All moves found: {moves}")
-        return
 
         if len(moves) == 0:
             assert depth >= maxDepth
@@ -120,8 +118,9 @@ class Valkyrie():
         moves = sorted(moveOrder, key=lambda x:x[0], reverse = board.active == 1)
         moves = [m[1] for m in moves]
 
+
         # beam search
-        if depth == maxDepth-1: 
+        if depth == maxDepth - 1: 
             moves = moves[-10:]
 
         # initilize best as worst value
@@ -136,7 +135,7 @@ class Valkyrie():
 
             # get child node by updating board
             board += move
-
+            
             # make recursive call to perform depth first search
             value = self.search(board, not maximize, alpha, beta, depth + 1, maxDepth, maxValue, isQuiet = move.captureType is None)
             
@@ -155,6 +154,8 @@ class Valkyrie():
 
         # if depth is 0, the search is complete
         return (best, bestMove) if depth == 0 else best
+
+
     
     def play_computer_game(self):
         MAX_MOVES = 35
@@ -187,3 +188,5 @@ class Valkyrie():
             valuation = self.evaluator(board, self.generator.find_attacks(board)[0])
             print('valuation: ' + str(valuation))
             print(board)
+            
+            
