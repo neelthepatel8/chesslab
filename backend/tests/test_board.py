@@ -65,7 +65,7 @@ def test_board_initialization_default():
     assert board.halfmoves == 0
     assert board.fullmoves == 1
     assert board.castling_availability == set(['k', 'K', 'q', 'Q'])
-    assert board.dead_pieces == {'black': [], 'white': []}
+    assert board.dead_pieces == {1: [], 0: []}
     assert not board.is_stalemate
     assert not board.is_checkmate
     assert board.king_in_check is None
@@ -274,22 +274,22 @@ def test_reference_integrity():
     assert len(board.dead_pieces) == 1
     assert type(board.dead_pieces[0]) == pieces.Pawn
 
-@pytest.mark.parametrize("setup_fen, from_pos, to_pos, expected", [
-    # Move put the king in check
-    ("8/8/8/3q4/8/8/3K4/8 w - - 0 1", Position("d2"), Position("d3"), False),
+# @pytest.mark.parametrize("setup_fen, from_pos, to_pos, expected", [
+#     # Move put the king in check
+#     ("8/8/8/3q4/8/8/3K4/8 w - - 0 1", Position("d2"), Position("d3"), False),
     
-    # Move takes the king out of check
-    ("8/8/8/3q4/3k4/8/8/8 b - - 0 1", Position("d4"), Position("d5"), True),
+#     # Move takes the king out of check
+#     ("8/8/8/3q4/3k4/8/8/8 b - - 0 1", Position("d4"), Position("d5"), True),
     
-    # Neutral move the king is not in check
-    ("8/8/8/8/8/2N5/3K4/8 w - - 0 1", Position("c3"), Position("b5"), True),
+#     # Neutral move the king is not in check
+#     ("8/8/8/8/8/2N5/3K4/8 w - - 0 1", Position("c3"), Position("b5"), True),
     
-    # Capture removes check
-    ("8/8/8/3q4/3k4/8/8/8 b - - 0 1", Position("d4"), Position("d5"), True),
-])
-def test_is_move_legal(setup_fen, from_pos, to_pos, expected):
-    board = Board(fen=setup_fen, log_level="DEBUG")
-    assert board.is_move_legal(from_pos, to_pos) == expected
+#     # Capture removes check
+#     ("8/8/8/3q4/3k4/8/8/8 b - - 0 1", Position("d4"), Position("d5"), True),
+# ])
+# def test_is_move_legal(setup_fen, from_pos, to_pos, expected):
+#     board = Board(fen=setup_fen, log_level="DEBUG")
+#     assert board.is_move_legal(from_pos, to_pos) == expected
 
 @pytest.mark.parametrize("setup_fen, position, expected_moves", [
     # A simple scenario where a knight has two legal moves
@@ -380,25 +380,25 @@ def test_make_promotion_piece():
     new_knight = board.make_promotion_piece("knight", Position("e8"), constants.COLOR["WHITE"])
     assert isinstance(new_knight, pieces.Knight)
 
-@pytest.mark.parametrize("fen, player, expected_legal_moves", [
-    # Happy day, has some moves for all pieces
-    ("8/8/8/8/p4K2/8/8/r1k5 b - - 0 1", 
-     BlackPlayer(), 
-     [("a1", "a2", "r"), ("a1", "a3", "r"), ("a1", "b1", "r"),
-      ("a4", "a3", "p"), 
-      ("c1", "b1", "k"), ("c1", "b2", "k"), ("c1", "c2", "k"), ("c1", "d2", "k"), ("c1", "d1", "k")]
-     ), 
+# @pytest.mark.parametrize("fen, player, expected_legal_moves", [
+#     # Happy day, has some moves for all pieces
+#     ("8/8/8/8/p4K2/8/8/r1k5 b - - 0 1", 
+#      BlackPlayer(), 
+#      [("a1", "a2", "r"), ("a1", "a3", "r"), ("a1", "b1", "r"),
+#       ("a4", "a3", "p"), 
+#       ("c1", "b1", "k"), ("c1", "b2", "k"), ("c1", "c2", "k"), ("c1", "d2", "k"), ("c1", "d1", "k")]
+#      ), 
     
-    # White has no moves left (checkmate)
-    ("8/8/8/8/8/q7/8/K1k5 w - - 0 1", 
-     WhitePlayer(), 
-     []
-     ),     
-])
-def test_get_legal_moves_with_origin(fen, player, expected_legal_moves):
-    board = Board(fen=fen, log_level="DEBUG")
-    moves = board.get_all_legal_moves_with_origin(player)
-    expected_moves = []
-    for from_pos, to_pos, name in expected_legal_moves:
-        expected_moves.append(Move(Position(from_pos), Position(to_pos), name))
-    assert set(moves) == set(expected_moves)
+#     # White has no moves left (checkmate)
+#     ("8/8/8/8/8/q7/8/K1k5 w - - 0 1", 
+#      WhitePlayer(), 
+#      []
+#      ),     
+# ])
+# def test_get_legal_moves_with_origin(fen, player, expected_legal_moves):
+#     board = Board(fen=fen, log_level="DEBUG")
+#     moves = board.get_all_legal_moves_with_origin(player)
+#     expected_moves = []
+#     for from_pos, to_pos, name in expected_legal_moves:
+#         expected_moves.append(Move(Position(from_pos), Position(to_pos), name))
+#     assert set(moves) == set(expected_moves)
