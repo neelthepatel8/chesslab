@@ -4,6 +4,7 @@ from unittest.mock import patch
 from engine.board import Board 
 from valkyrie.Valkyrie import Valkyrie
 from engine.Move import Move
+from engine.FastBoard.FastBoard import FastBoard
 
 @pytest.mark.skip()
 def test_best_move():
@@ -27,7 +28,10 @@ def test_best_move_returns_legal_move():
     assert result in moves
     
 
-@pytest.mark.skip("Temporary test")
+# @pytest.mark.skip("Temporary test")
 def test_temp_valkyrie():
     engine = Valkyrie()
-    engine.play_computer_game()
+    board = FastBoard()
+    
+    best_move = engine.best_move(board)
+    print(best_move)

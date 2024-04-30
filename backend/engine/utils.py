@@ -76,8 +76,8 @@ def fen_to_bitboards(fen):
     }
 
     piece_start_indices = {
-        'R': 12, 'N': 8, 'B': 10, 'Q': 14, 'K': 15, 'P': 0,
-        'r': 28, 'n': 24, 'b': 26, 'q': 30, 'k': 31, 'p': 16
+        'R': 12, 'N': 8, 'B': 10, 'Q': 15, 'K': 14, 'P': 0,
+        'r': 28, 'n': 24, 'b': 26, 'q': 31, 'k': 30, 'p': 16
     }
 
     rows.reverse()
@@ -109,6 +109,7 @@ def bitboard_move_to_object(move):
     }
     start = Position(index=lsb(move.start))
     end = Position(index=lsb(move.end))
+    print(f"Found start and end: ", move.start, lsb(move.start), lsb(move.end))
     piece_type = piece_map[move.pieceType] if move.color == 1 else piece_map[move.pieceType].upper()
     color = move.color 
     capture = move.captureType

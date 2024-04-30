@@ -112,20 +112,19 @@ const Board = () => {
           handleCheckmate();
         } else if (special === config.STALEMATE) {
           handleStalemate(message.data?.fen);
+        } else {
+          if (playMode === "pve") {
+            if (
+              currentPlayer == PIECE_COLOR.WHITE &&
+              special !== config.PROMOTE_POSSIBLE
+            ) {
+              setTimeout(wsRequestEngineMove, 500);
+            }
+          } else {
+            setTimeout(wsRequestEngineMove, 500);
+          }
         }
       });
-
-      console.log("Playmode is: ", playMode);
-      if (playMode === "pve") {
-        if (
-          currentPlayer == PIECE_COLOR.WHITE &&
-          special !== config.PROMOTE_POSSIBLE
-        ) {
-          await setTimeout(wsRequestEngineMove, 500);
-        }
-      } else {
-        await setTimeout(wsRequestEngineMove, 500);
-      }
     }
     setPossibleMoves([]);
     setSelectedSquare([]);
@@ -423,6 +422,8 @@ const Board = () => {
         to_position: coordsToAlgebraic(to_pos[0], to_pos[1]),
       },
     };
+    console.log("Sending message for move: ", message);
+
     sendMessage(message);
   };
 

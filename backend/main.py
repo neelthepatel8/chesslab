@@ -26,6 +26,7 @@ app = FastAPI(debug=True)
 board = None
 valkyrie = None
 fastboard = None 
+in_progress = False
 
 app.add_middleware(
     CORSMiddleware,
@@ -150,6 +151,10 @@ async def make_move(websocket, message):
         move = Move((1 << move_start), (1 << move_end), piece_map[piece.get_name().lower()], piece.get_color(), 1 if is_kill == 3 else None, None, None)
         fastboard += move
     
+    else: 
+        print("Error Making Move ", from_pos, to_pos, move, special)
+        return
+    
     response = {
         'type': 'move_piece',
         'data': {
@@ -194,8 +199,8 @@ async def promote_pawn(websocket, message):
     await websocket.send_text(json.dumps(response))
     
 async def next_move(websocket, message):
-    global board, valkyrie, fastboard
-    
+    global board, valkyrie, fastboard, in_progress
+
     whole_start = time.time()
     
     start_ = time.time()
@@ -215,6 +220,10 @@ async def next_move(websocket, message):
     
     if special >= 0:
         fastboard += best_move
+        
+    else: 
+        print("Error Making Move ", best_move, best_move_object, special)
+        return 
 
     print(f"Board Piece Movement: {end - start}s")
 
@@ -233,6 +242,7 @@ async def next_move(websocket, message):
     whole_end = time.time()
     print(f"Total time taken to process a best move: {whole_end - whole_start}")
     await websocket.send_text(json.dumps(response))
+    in_progress = False
 
 message_handlers = {
     'init': init_board,

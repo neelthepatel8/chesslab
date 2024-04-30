@@ -356,6 +356,13 @@ class Board():
 
     
     def move_piece(self, from_pos: Position, to_pos: Position, simulate=False, detailed_return=False):
+        
+        if self.is_checkmate:
+            return (constants.NO_KILL, constants.CHECKMATE) 
+
+        if self.is_stalemate:
+            return (constants.NO_KILL, constants.STALEMATE)
+        
         self.log(f"Received command for move: {from_pos} -> {to_pos}")
         piece = self.get_piece(from_pos)
         piece_at_pos = self.get_piece(to_pos)

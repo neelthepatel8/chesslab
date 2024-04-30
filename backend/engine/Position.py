@@ -40,8 +40,8 @@ class Position():
                     self.algebraic = self.coords_to_algebraic(self.rank, self.file)
                     self.index = self.lsrcoords[0] * 8 + self.lsrcoords[1]
                 
-            elif index:
-                if index >= 0 and index < 63:
+            elif index is not None:
+                if index >= 0 and index <= 63:
                     self.index = index
                     self.lsrcoords = (index // 8, index % 8)
                     self.rank = 8 - self.lsrcoords[0]
