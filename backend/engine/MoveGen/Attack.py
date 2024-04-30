@@ -121,30 +121,45 @@ def knight_at(index: int) -> int:
 def knight():
     return [knight_at(i) for i in range(64)]
 
-def pawn_at(index: int, color: str) -> int:
-    
-    attacks = 0
-    
-    bitboard = 0
-    
-    bitboard = bitwise.set_bit(bitboard, index)
-    
-    if color == COLOR["BLACK"]:
-        if bitwise.rshift(bitboard, 7) & not_a_file:
-            attacks |= bitwise.rshift(bitboard, 7)
-        if bitwise.rshift(bitboard, 9) & not_h_file:
-            attacks |= bitwise.rshift(bitboard, 9)
-    
-    else:
-        if bitwise.lshift(bitboard, 7) & not_h_file:
-            attacks |= bitwise.lshift(bitboard, 7)
-        if bitwise.lshift(bitboard, 9) & not_a_file:
-            attacks |= bitwise.lshift(bitboard, 9)
-    
-    return attacks
+def pawn_at(index: int, color: int) -> list:
+    moves_and_attacks = []
+    bitboard = 1 << index
 
-def pawn(color: str):
-    return [pawn_at(i, color) for i in range(64)]
+    if color == 1: 
+        if index >= 8:  
+            if bitwise.rshift(bitboard, 8) != 0:
+                moves_and_attacks.append(bitwise.rshift(bitboard, 8))
+            # if index >= 48 and index <= 55: 
+            #     moves_and_attacks.append(bitboard >> 16)
+        if index % 8 != 0: 
+            if bitwise.rshift(bitboard, 9) != 0:
+                moves_and_attacks.append(bitwise.rshift(bitboard, 9))
+        if index % 8 != 7: 
+            if bitwise.rshift(bitboard, 7) != 0:
+                moves_and_attacks.append(bitwise.rshift(bitboard, 7))
+
+    else:
+        if index <= 55: 
+            if (bitboard << 8) != 0:
+                moves_and_attacks.append(bitboard << 8)
+            # if index >= 8 and index <= 15:  
+            #     moves_and_attacks.append(bitboard << 16)
+        if index % 8 != 7:
+            if (bitboard << 9) != 0:
+                moves_and_attacks.append(bitboard << 9)
+        if index % 8 != 0:  
+            if (bitboard << 7) != 0:
+                moves_and_attacks.append(bitboard << 7)
+
+    return moves_and_attacks
+
+
+
+def pawn(color: int):
+    moves = {}
+    for i in range(64):
+        moves[1 << i] = pawn_at(i, color) + [1 << i]
+    return moves
 
 def bishop_at(index: int) -> int:
     

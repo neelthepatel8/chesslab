@@ -161,6 +161,6 @@ def test_movegen_attack_bishop_full_board(bishop_position, board, expected_moves
 # @pytest.mark.skip()
 def test_temp_movegen():
     MoveGen.Attack.init()
-    moves = MoveGen.Attack.rook_move(27, 8796395014144)
-    show_raw(moves)
+    pawn_black = MoveGen.Attack.pawn(0)
+    print(pawn_black)
 

@@ -7,6 +7,7 @@ from engine.Position import Position
 import engine.MoveGen.setup as setup
 from queue import PriorityQueue
 from collections import namedtuple
+from engine.bitmanipulation.utils import lsb
 
 Move = namedtuple('Move', ('start', 'end', 'pieceType', 'color', 'captureType',
                            'captureStrength', 'isPrincipleVariation'))
@@ -115,13 +116,25 @@ class Generator:
         for piece, pieceType in board.pieces.get_color(color):
             
             pieceAttacks = attacks[color][pieceIndex]
-            pieceIndex+=1
+            pieceIndex += 1
             
-            if pieceType == 0: 
+            if pieceType == 0:  # Pawn
                 moveset, attackSet = self.movesets[0][color][piece]
                 blocker = self.masks.pawnBlockers[color][piece]
                 pawnIsBlocked = blocker & board.occupied != 0
+
+                # Single move forward
                 moveMask = 0 if pawnIsBlocked else moveset & ~board.occupied
+
+                ind = lsb(piece)
+                # Double move forward
+                if not pawnIsBlocked and ((color == 1 and ind // 8 == 6) or (color == 0 and ind // 8 == 1)):
+                    # Check if the square two spaces ahead is also empty
+                    double_move_bitboard = 1 << (ind + (16 if color == 0 else -16))
+                    
+                    if not (double_move_bitboard & board.occupied):
+                        moves.push(Move(piece, double_move_bitboard, pieceType, color, None, None, False))
+
                 attackMask = attackSet & enemies
                 legalMoveMask = attackMask | moveMask
                 
@@ -149,6 +162,7 @@ class Generator:
                     moves.push(move)
 
         return moves
+
 
 
     def set_a_principle_variation(self, board, move):
