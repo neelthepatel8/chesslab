@@ -36,7 +36,7 @@ const Board = () => {
   ]);
   const [selectedPromotion, setSelectedPromotion] = useState({});
 
-  const [playMode, setPlayMode] = useState("eve");
+  const [playMode, setPlayMode] = useState("pve");
 
   // Sound Effects:
   const [playMove] = useSound("sfx/move.mp3", { volume: 1 });
@@ -513,7 +513,7 @@ const Board = () => {
 
   return (
     <>
-      <button
+      {/* <button
         onClick={() => {
           setPlayMode("eve");
           wsRequestEngineMove();
@@ -527,7 +527,7 @@ const Board = () => {
         className="absolute left-20 top-40 z-50 rounded-md bg-white px-3 py-1 font-bold hover:opacity-60"
       >
         Player vs Valkyrie
-      </button>
+      </button> */}
       <div className="flex flex-col overflow-hidden drop-shadow-2xl">
         {rows.map((row) => (
           <Row
