@@ -13,6 +13,8 @@ from engine.player.WhitePlayer import WhitePlayer
 
 import logging
 import time 
+import chess
+import chess.engine
 
 from collections import namedtuple
 
@@ -22,6 +24,9 @@ logger = logging.getLogger("chess_backend")
 
 Move = namedtuple('Move', ('start', 'end', 'pieceType', 'color', 'captureType',
                            'captureStrength', 'isPrincipleVariation'))
+
+engine = chess.engine.SimpleEngine.popen_uci("linux/stockfish-ubuntu-x86-64-sse41-popcnt")
+
 app = FastAPI(debug=True)
 board = None
 valkyrie = None
@@ -55,7 +60,21 @@ async def init_board(websocket, message):
         'error': None,
     }
     await websocket.send_text(json.dumps(response))
-    
+
+# async def init_board(websocket, message):
+#     global board
+#     board = chess.Board()  
+
+#     response = {
+#         'type': 'init',
+#         'data': {
+#             'fen': board.fen()  
+#         },
+#         'error': None,
+#     }
+#     await websocket.send_text(json.dumps(response))
+
+
 async def configuration(websocket, message):
     response = {
         'type': 'configuration',
@@ -108,6 +127,43 @@ async def possible_moves(websocket, message):
         'error': None,
     }
     await websocket.send_text(json.dumps(response))
+
+
+# async def make_move(websocket, message):
+#     global board, in_progress
+
+#     if in_progress:
+#         await websocket.send_text(json.dumps({"error": "A move is already in progress"}))
+#         return
+
+#     try:
+#         from_pos = message['data']['from_position']
+#         to_pos = message['data']['to_position']
+
+#         move = chess.Move.from_uci(from_pos + to_pos)
+#         if move not in board.legal_moves:
+#             await websocket.send_text(json.dumps({"error": "Illegal move"}))
+#             return
+
+#         board.push(move)
+
+#         response = {
+#             'type': 'move_piece',
+#             'data': {
+#                 'from_pos': from_pos,
+#                 'to_pos': to_pos,
+#                 'fen': board.fen(),
+#                 'move_success': 1,
+#                 'is_kill': board.is_capture(move),
+#                 'special': board.is_check(), 
+#             },
+#         }
+
+#         await websocket.send_text(json.dumps(response))
+
+#     except Exception as e:
+#         logger.error(f"An error occurred during the make move: {e}", exc_info=True)
+#         await websocket.send_text(json.dumps({"error": str(e)}))
 
 
 async def make_move(websocket, message):
@@ -171,6 +227,72 @@ async def make_move(websocket, message):
 
     await websocket.send_text(json.dumps(response))
 
+# async def promote_pawn(websocket, message):
+#     global board
+
+#     if "data" not in message: 
+#         await websocket.send_text(json.dumps(error_responses.RESPONSE_ERROR_DATA))
+#         return
+
+#     data = message["data"]
+    
+#     if "position" not in data: 
+#         await websocket.send_text(json.dumps(error_responses.RESPONSE_ERROR_POSITION))
+#         return
+#     if "promote_to" not in data: 
+#         await websocket.send_text(json.dumps(error_responses.RESPONSE_ERROR_PROMOTE_TYPE))
+#         return
+
+#     position = data["position"]
+#     promote_to = data["promote_to"]
+
+#     try:
+#         if promote_to not in ['q', 'r', 'b', 'n']:
+#             await websocket.send_text(json.dumps({"error": "Invalid promotion piece type"}))
+#             return
+
+#         promotion_square = chess.parse_square(position)
+
+#         if board.piece_at(promotion_square).piece_type != chess.PAWN:
+#             await websocket.send_text(json.dumps({"error": "Piece is not a pawn"}))
+#             return
+
+#         rank, file = divmod(promotion_square, 8)
+#         if board.turn == chess.WHITE:
+#             from_square = promotion_square - 8  
+#         else:
+#             from_square = promotion_square + 8
+
+#         promotion_move = chess.Move(from_square, promotion_square, promotion=chess.Piece.from_symbol(promote_to).piece_type)
+
+#         if promotion_move not in board.legal_moves:
+#             await websocket.send_text(json.dumps({"error": "Illegal promotion move"}))
+#             return
+
+#         board.push(promotion_move)
+
+#         response = {
+#             'type': 'promote_pawn',
+#             'data': {
+#                 'fen': board.fen(),  
+#                 'promoted': promote_to,
+#                 'move_success': 1,
+#             },
+#         }
+#     except Exception as e:
+#         logger.error(f"Error during pawn promotion: {e}", exc_info=True)
+#         response = {
+#             'type': 'promote_pawn',
+#             'data': {
+#                 'fen': board.fen(),
+#                 'promoted': None,
+#                 'move_success': 0,
+#                 'error': str(e)
+#             },
+#         }
+
+#     await websocket.send_text(json.dumps(response))
+
 async def promote_pawn(websocket, message):
     global board
 
@@ -197,26 +319,68 @@ async def promote_pawn(websocket, message):
     }
 
     await websocket.send_text(json.dumps(response))
+
     
+# async def next_move(websocket, message):
+    # global board, engine, in_progress
+
+    # if in_progress:
+    #     await websocket.send_text(json.dumps({"error": "A move is already in progress"}))
+    #     return
+
+    # in_progress = True
+    
+    # try:
+    #     start_time = time.time()
+    #     result = engine.play(board, chess.engine.Limit(time=2.0)) 
+    #     best_move = result.move
+    #     end_time = time.time()
+
+    #     if not best_move:
+    #         logger.error("Error: Stockfish could not find the best move!")
+    #         await websocket.send_text(json.dumps({"error": "Stockfish could not find the best move"}))
+    #         in_progress = False
+    #         return
+
+    #     logger.debug(f"Best Move: {best_move} found in {end_time - start_time:.2f}s")
+
+    #     board.push(best_move)
+
+    #     response = {
+    #         'type': 'move_piece',
+    #         'data': {
+    #             'from_pos': chess.square_name(best_move.from_square), 
+    #             'to_pos': chess.square_name(best_move.to_square),    
+    #             'fen': board.fen(),                             
+    #             'move_success': 1,
+    #             'is_kill': board.is_capture(best_move),
+    #             'special': board.is_check(),  
+    #         },
+    #     }
+
+    #     await websocket.send_text(json.dumps(response))
+
+    # except Exception as e:
+    #     logger.error(f"An error occurred during the next move: {e}", exc_info=True)
+    #     await websocket.send_text(json.dumps({"error": str(e)}))
+
+    # finally:
+    #     in_progress = False
+
+
 async def next_move(websocket, message):
     global board, valkyrie, fastboard, in_progress
 
-    whole_start = time.time()
     
-    start_ = time.time()
     best_move = valkyrie.best_move(fastboard)
-    end_ = time.time()
     
-    print(f"Best Move search: {end_ - start_}s")
     if not best_move:
         print("Error: Valkyrie could not find the best move!")
         return 
     
     best_move_object = bitboard_move_to_object(best_move)
     
-    start = time.time()
     is_kill, special = board.move_piece(best_move_object.from_pos, best_move_object.to_pos)
-    end = time.time()
     
     if special >= 0:
         fastboard += best_move
@@ -225,7 +389,6 @@ async def next_move(websocket, message):
         print("Error Making Move ", best_move, best_move_object, special)
         return 
 
-    print(f"Board Piece Movement: {end - start}s")
 
     response = {
         'type': 'move_piece',
@@ -239,8 +402,6 @@ async def next_move(websocket, message):
             },
     }
 
-    whole_end = time.time()
-    print(f"Total time taken to process a best move: {whole_end - whole_start}")
     await websocket.send_text(json.dumps(response))
     in_progress = False
 
