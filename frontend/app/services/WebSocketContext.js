@@ -19,8 +19,8 @@ export const WebSocketProvider = ({ children }) => {
   useEffect(() => {
     const ws = new WebSocket(
       process.env.NODE_ENV === "development"
-        ? "ws://localhost:8000/ws"
-        : "wss://chesslab.net:8000/ws",
+        ? "wss://localhost/ws"
+        : "wss://backend-chess-7vc9h.ondigitalocean.app/chesslab-backend2/ws",
     );
 
     ws.onopen = () => {
@@ -65,4 +65,3 @@ export const WebSocketProvider = ({ children }) => {
     </WebSocketContext.Provider>
   );
 };
-

@@ -1,9 +1,9 @@
-version: "3.8"
 services:
     app:
         build:
             context: ./frontend
             dockerfile: Dockerfile.dev
+        platform: linux/amd64
         volumes:
             - ./frontend:/app:delegated
             - /app/node_modules
@@ -20,12 +20,13 @@ services:
     backend:
         build:
             context: ./backend
-            dockerfile: Dockerfile.dev
+            dockerfile: Dockerfile
+        platform: linux/amd64
         volumes:
             - ./backend:/app
         ports:
             - "8000:8000"
         environment:
             - PYTHONUNBUFFERED=1
-        command: python3 -u -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload --log-level 'warning'
+        # command: python3 -u -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload --log-level 'warning'
         tty: false

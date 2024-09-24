@@ -1,9 +1,6 @@
 const { exec } = require("child_process");
 
-const commands = [
-    "docker-compose down",
-    "docker rmi game-backend:latest game-frontend:latest",
-];
+const commands = ["docker compose down"];
 
 commands.forEach((cmd) => {
     exec(cmd, (error, stdout, stderr) => {
@@ -11,3 +8,4 @@ commands.forEach((cmd) => {
         if (stderr) console.log(`stderr: ${stderr}`);
     });
 });
+
